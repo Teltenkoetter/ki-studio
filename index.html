@@ -373,6 +373,8 @@ textarea, input, .img-prompt, .error-msg { user-select: text; }
 .img-tags { display: flex; gap: 4px; flex-shrink: 0; }
 .tag { background: var(--s3); border: 1px solid var(--bd); border-radius: 3px; padding: 1px 5px; font-size: 10px; color: var(--dim); font-family: var(--mono); white-space: nowrap; }
 .tag-hist { background: rgba(255,255,255,0.04); border-color: rgba(255,255,255,0.08); color: rgba(255,255,255,0.32); }
+.tag-seed { cursor: pointer; user-select: all; }
+.tag-seed:hover { background: var(--s4); border-color: var(--bd-hi); color: var(--text); }
 
 .error-card { background: var(--red-bg); border: 1px solid rgba(229,57,53,0.2); border-radius: var(--r); padding: 14px 15px 12px; margin-bottom: 12px; }
 .error-title { font-size: 13px; font-weight: 600; color: #f87171; margin-bottom: 5px; }
@@ -830,7 +832,7 @@ textarea, input, .img-prompt, .error-msg { user-select: text; }
           <li><strong>Temperatur 0–2</strong> — 0 = präzise &amp; deterministisch · 1 = ausgewogen (Standard) · 2 = maximal kreativ &amp; zufällig</li>
           <li><strong>Thinking-Level</strong> — lässt Gemini länger „nachdenken" vor dem Zeichnen. Mehr = bessere Qualität, aber langsamer &amp; teurer. PIN-geschützt.</li>
           <li><strong>System-Kontext</strong> — unsichtbarer Hintergrundprompt: „Aus" = freie Hand · „Expert" = photorealistisch, geometrisch präzise · „Graustufen" = Schwarz-Weiß</li>
-          <li><strong>Auflösung 1K/2K/4K</strong> — Ausgabegröße. 2K bei Imagen Standard/Ultra, 4K nur Gemini.</li>
+          <li><strong>Auflösung</strong> — Gemini: aktuell nur <strong>1K</strong> (~1024 px); 2K/4K in Vorbereitung. Imagen Standard/Ultra: 1K oder <strong>2K</strong> wählbar. Imagen Fast: immer 1K.</li>
         </ul>
       </div>
 
@@ -848,8 +850,8 @@ textarea, input, .img-prompt, .error-msg { user-select: text; }
         <h3>📎 Bilder als Eingabe</h3>
         <ul>
           <li>Bis zu <strong>5 Bilder</strong> hochladen — Klick auf „📎 Bilder" oder Drag &amp; Drop auf das Textfeld</li>
-          <li>Gemini nutzt die Bilder als visuelle Referenz (Stil, Materialien, Geometrie übernehmen)</li>
-          <li>Generiertes Bild direkt mit <strong>„📎 Als Eingabe"</strong> weiterverwenden — kein Download nötig</li>
+          <li>Gemini nutzt die Bilder als visuelle Referenz: Stil übernehmen, Materialien tauschen, auf einem Foto aufbauen</li>
+          <li><strong>„📎 Als Eingabe"</strong> — erscheint beim Überfahren eines generierten Bildes. Lädt dieses Bild direkt als Eingabe für die nächste Generierung. Kein Download, kein erneutes Hochladen nötig — ideal für schrittweise Überarbeitungen.</li>
           <li>Einzelne Bilder mit ✕ entfernen · alle mit „Alle ✕"</li>
           <li>Imagen-Modelle unterstützen <em>keine</em> Bild-Eingabe</li>
         </ul>
@@ -1679,7 +1681,7 @@ function makeImageCard(b64, prompt, elapsed, cost, inputCount, isHistory, seed) 
   var timeTag   = '<span class="tag' + (isHistory ? ' tag-hist' : '') + '">' + now + '</span>';
   var elapsTag  = elapsed ? '<span class="tag">' + elapsed + 's</span>' : '';
   var costTag   = cost ? '<span class="tag">' + cost.toFixed(3).replace('.', ',') + ' €</span>' : '';
-  var seedTag   = (seed !== null && seed !== undefined) ? '<span class="tag" title="Seed: ' + seed + '">🎲 ' + seed + '</span>' : '';
+  var seedTag   = (seed !== null && seed !== undefined) ? '<span class="tag tag-seed" data-act="copy-seed" data-seed="' + seed + '" title="Klicken zum Kopieren">🎲 ' + seed + '</span>' : '';
 
   card.innerHTML =
     '<div class="img-wrap">' +
@@ -1707,6 +1709,19 @@ function makeImageCard(b64, prompt, elapsed, cost, inputCount, isHistory, seed) 
   });
   card.querySelector('.img-wrap').addEventListener('click', function() { openLightbox(url, prompt); });
   card.addEventListener('contextmenu', function(e) { e.preventDefault(); doDownload(url, prompt); });
+  var seedEl = card.querySelector('[data-act="copy-seed"]');
+  if (seedEl) {
+    seedEl.addEventListener('click', function(e) {
+      e.stopPropagation();
+      var sv = seedEl.dataset.seed;
+      navigator.clipboard.writeText(sv).then(function() {
+        showToast('🎲 Seed ' + sv + ' kopiert');
+      }).catch(function() {
+        q('#seed-input').value = sv;
+        showToast('🎲 Seed in Seed-Feld eingetragen');
+      });
+    });
+  }
 
   return card;
 }
@@ -1869,15 +1884,17 @@ function insertTemplate(text) {
   ta.value = text;
   ta.dispatchEvent(new Event('input'));
   closeTmplPanel();
-  ta.focus();
-  var m = text.match(/\[[^\]]+\]/);
-  if (m) {
-    var s = text.indexOf(m[0]);
-    ta.setSelectionRange(s, s + m[0].length);
-  } else {
-    ta.setSelectionRange(text.length, text.length);
-  }
   showToast('Tab → nächsten [Platzhalter] auswählen');
+  setTimeout(function() {
+    ta.focus();
+    var m = text.match(/\[[^\]]+\]/);
+    if (m) {
+      var s = text.indexOf(m[0]);
+      ta.setSelectionRange(s, s + m[0].length);
+    } else {
+      ta.setSelectionRange(text.length, text.length);
+    }
+  }, 50);
 }
 
 /* ── STYLE CHIPS ── */
