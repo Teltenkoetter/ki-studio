@@ -50,6 +50,33 @@ textarea, input, .img-prompt, .error-msg { user-select: text; }
 .screen { display: none; }
 .screen.active { display: flex; }
 
+/* ── PIN MODAL ── */
+.pin-modal-bg {
+  display: none; position: fixed; inset: 0; z-index: 500;
+  background: rgba(0,0,0,0.7); backdrop-filter: blur(4px);
+  align-items: center; justify-content: center;
+}
+.pin-modal-bg.show { display: flex; }
+.pin-modal {
+  background: var(--s1); border: 1px solid var(--bd-hi);
+  border-radius: 14px; padding: 28px 28px 24px; width: 300px;
+  text-align: center;
+}
+.pin-modal h3  { font-size: 15px; font-weight: 700; margin-bottom: 6px; }
+.pin-modal p   { font-size: 12px; color: var(--muted); line-height: 1.55; margin-bottom: 4px; }
+.pin-boxes { display: flex; gap: 9px; justify-content: center; margin: 16px 0 6px; }
+.pin-box {
+  width: 46px; height: 54px; text-align: center;
+  font-size: 22px; font-weight: 700;
+  background: var(--s2); border: 1px solid var(--bd); border-radius: var(--r);
+  color: var(--text); outline: none; font-family: var(--mono);
+  transition: border-color 0.15s, box-shadow 0.15s;
+}
+.pin-box:focus { border-color: var(--accent); box-shadow: 0 0 0 2px rgba(255,255,255,0.07); }
+.pin-box.pin-shake { animation: shake 0.28s ease; border-color: var(--red) !important; }
+.pin-cancel { margin-top: 10px; font-size: 12px; color: var(--muted); background: none; border: none; cursor: pointer; padding: 4px 8px; }
+.pin-cancel:hover { color: var(--text); }
+
 /* ── SETUP ── */
 #screen-setup {
   height: 100vh; height: 100dvh;
@@ -262,6 +289,8 @@ textarea, input, .img-prompt, .error-msg { user-select: text; }
 .prompt-box.drag-over textarea { border-color: rgba(255,255,255,0.35); background: rgba(255,255,255,0.02); }
 
 .cc { position: absolute; bottom: 8px; right: 11px; font-size: 11px; color: var(--dim); font-family: var(--mono); pointer-events: none; }
+.prompt-clear { position: absolute; top: 6px; right: 7px; background: none; border: none; color: var(--dim); font-size: 13px; line-height: 1; cursor: pointer; padding: 2px 4px; border-radius: 4px; display: none; transition: color 0.12s; }
+.prompt-clear:hover { color: var(--text); }
 .cc.near { color: #fb923c; }
 .cc.full { color: var(--red); }
 
@@ -427,6 +456,23 @@ textarea, input, .img-prompt, .error-msg { user-select: text; }
 </style>
 </head>
 <body>
+
+<!-- PIN MODAL -->
+<div class="pin-modal-bg" id="pin-modal-bg">
+  <div class="pin-modal">
+    <h3>🔒 Feature-PIN</h3>
+    <p>Thinking erhöht die Kosten deutlich.<br>Bitte PIN eingeben zum Freischalten.</p>
+    <div class="pin-boxes" id="pin-boxes">
+      <input class="pin-box" type="text" inputmode="numeric" maxlength="1" autocomplete="off">
+      <input class="pin-box" type="text" inputmode="numeric" maxlength="1" autocomplete="off">
+      <input class="pin-box" type="text" inputmode="numeric" maxlength="1" autocomplete="off">
+      <input class="pin-box" type="text" inputmode="numeric" maxlength="1" autocomplete="off">
+      <input class="pin-box" type="text" inputmode="numeric" maxlength="1" autocomplete="off">
+    </div>
+    <div class="field-err" id="pin-err" style="text-align:center;margin-bottom:10px;">Falscher PIN.</div>
+    <button class="pin-cancel" id="pin-cancel">Abbrechen</button>
+  </div>
+</div>
 
 <!-- SETUP -->
 <div id="screen-setup" class="screen active">
@@ -620,6 +666,7 @@ textarea, input, .img-prompt, .error-msg { user-select: text; }
       <div class="prompt-zone">
         <div class="prompt-box" id="prompt-box">
           <textarea id="prompt" placeholder="Prompt eingeben — beschreibe das Bild, das generiert werden soll…" maxlength="800"></textarea>
+          <button class="prompt-clear" id="btn-prompt-clear" title="Prompt leeren">✕</button>
           <span class="cc" id="char-count">0 / 800</span>
         </div>
 
@@ -658,7 +705,7 @@ textarea, input, .img-prompt, .error-msg { user-select: text; }
       <div class="results" id="results">
         <div class="results-hdr" id="results-hdr">
           <span class="results-hdr-title">Ergebnisse <span class="badge" id="results-badge">0</span></span>
-          <button class="btn btn-ghost btn-sm" id="btn-dl-all" style="display:none;">↓ Alle</button>
+          <button class="btn btn-ghost btn-sm" id="btn-dl-all" style="display:none;">↓ Alle PNG</button>
         </div>
         <div id="results-body">
           <div class="results-empty" id="results-empty">
@@ -789,6 +836,7 @@ textarea, input, .img-prompt, .error-msg { user-select: text; }
 'use strict';
 
 /* ── TRACKER ── Hier die Apps-Script-URL eintragen (leer = kein Tracking) */
+var APP_PIN     = '55116';
 var TRACKER_URL = 'https://script.google.com/macros/s/AKfycbyENdn9zOo0k817sBG8jUzEjE2Pew4HOCFbSm08fJaj_IIHVspm4WAHhxKl78-OXlDf/exec';
 
 /* ── CONSTANTS ── */
@@ -822,7 +870,7 @@ var SYS_INSTRUCTIONS = {
 
 /* ── STYLE CHIPS ── */
 var STYLE_CHIPS = [
-  'Photorealistic', 'Pencil sketch', 'Watercolour render', 'Axonometric view',
+  'Photorealistic', 'Line drawing', 'Pencil sketch', 'Watercolour render', 'Axonometric view',
   'Bauhaus', 'Japandi', 'Wabi-Sabi', 'Brutalist', 'Minimalist', 'Mid-Century Modern',
   'Biophilic', 'Deconstructivist'
 ];
@@ -871,9 +919,9 @@ var TEMPLATES = [
       text: 'Create a cohesive interior design mood board for a [ROOM TYPE: e.g. private apartment / boutique hotel lobby / high-end restaurant].\nStyle direction: [STYLE DIRECTION: e.g. warm minimalism / eclectic luxury / biophilic / industrial].\nColour palette: [COLOUR PALETTE: e.g. warm sand, muted sage, deep charcoal, soft terracotta accents].\nMaterials and textures: [MATERIALS: e.g. linen, honed marble, smoked oak, hand-woven rattan, brushed brass].\nMood: [ATMOSPHERE: e.g. calm and restorative / vibrant and layered / timeless and understated].\nProfessional layout, clean composition.' }
   ]},
   { cat: '✂️ Details & Collage', items: [
-    { name: 'Entourage hinzufügen',
+    { name: 'Entourage hinzufügen (Personen, Pflanzen, Fahrzeuge)',
       text: 'Add [ENTOURAGE: e.g. people walking and sitting / parked cars and cyclists / mature trees and planted borders / outdoor furniture and umbrellas] to this architectural image.\nPhotorealistic, architecturally correct scale and proportion.\nIntegrate naturally into the existing scene — maintain the original lighting, shadows, materials, and camera perspective without any changes.' },
-    { name: 'Entourage einkomponieren (2 Bilder)',
+    { name: 'Entourage einkomponieren — 2 Bilder (Compositing)',
       text: 'Image 1 is my architectural render. Image 2 contains [CONTENT: e.g. people / plants / trees / a car] to be composited into it.\nPlace the [CONTENT: e.g. people / plants] from Image 2 into Image 1.\nApply the exact lighting, shadows, and colour grading of Image 1 to all newly added elements — they must appear as if they were always part of the original scene.\nDo not remove or replace any existing elements in Image 1.\nScale all added elements correctly to match the architectural proportions and perspective of Image 1.' },
     { name: 'Cutout für Architekturcollage',
       text: 'Create a high-quality architectural cutout of [SUBJECT: e.g. a standing person in casual clothing / a mature tree in full leaf / a parked car, side view / an indoor plant in a ceramic pot].\nStyle: [RENDERING STYLE: e.g. photorealistic / architectural watercolour / black ink line drawing].\nBackground: pure white, clean edges, suitable for collage use.\nArchitecturally correct scale and proportions.' },
@@ -933,6 +981,7 @@ function doSave() {
   launchApp(k);
 }
 
+/* ── AUTO-LOGIN ── */
 (function() {
   var k = sessionStorage.getItem('nb_key');
   if (k && k.startsWith('AIza') && k.length >= 30) {
@@ -941,6 +990,96 @@ function doSave() {
     launchApp(k);
   }
 })();
+
+/* ── PIN MODAL (Thinking-Schutz) ── */
+function initPinModal() {
+  var bg    = q('#pin-modal-bg');
+  var boxes = Array.prototype.slice.call(document.querySelectorAll('.pin-box'));
+  var errEl = q('#pin-err');
+  var pendingThinkVal = null;
+
+  function getPin() { return boxes.map(function(b) { return b.value; }).join(''); }
+
+  function closePinModal(success) {
+    bg.classList.remove('show');
+    boxes.forEach(function(b) { b.value = ''; });
+    errEl.classList.remove('show');
+    if (!success) {
+      /* reset thinking back to Aus */
+      S.thinking = 0;
+      q('#seg-think').querySelectorAll('.seg-btn').forEach(function(b) {
+        b.classList.toggle('on', b.dataset.v === '0');
+      });
+    }
+  }
+
+  function shakeAndReset() {
+    errEl.classList.add('show');
+    boxes.forEach(function(b) { b.classList.add('pin-shake'); });
+    setTimeout(function() {
+      boxes.forEach(function(b) { b.classList.remove('pin-shake'); b.value = ''; });
+      errEl.classList.remove('show');
+      boxes[0].focus();
+    }, 820);
+  }
+
+  function checkPin() {
+    if (getPin() === APP_PIN) {
+      sessionStorage.setItem('nb_pinok', '1');
+      if (pendingThinkVal !== null) {
+        S.thinking = pendingThinkVal;
+        q('#seg-think').querySelectorAll('.seg-btn').forEach(function(b) {
+          b.classList.toggle('on', parseInt(b.dataset.v) === pendingThinkVal);
+        });
+      }
+      closePinModal(true);
+      showToast('🧠 Thinking freigeschaltet');
+    } else {
+      shakeAndReset();
+    }
+  }
+
+  boxes.forEach(function(box, i) {
+    box.addEventListener('keydown', function(e) {
+      if (e.key === 'Backspace' && !box.value && i > 0) {
+        e.preventDefault();
+        boxes[i - 1].value = '';
+        boxes[i - 1].focus();
+      }
+      if (e.key === 'Enter') checkPin();
+      if (e.key === 'Escape') closePinModal(false);
+    });
+    box.addEventListener('input', function() {
+      box.value = box.value.replace(/\D/g, '').slice(-1);
+      if (box.value && i < boxes.length - 1) boxes[i + 1].focus();
+      if (getPin().length === 5) checkPin();
+    });
+    box.addEventListener('paste', function(e) {
+      e.preventDefault();
+      var pasted = (e.clipboardData || window.clipboardData).getData('text').replace(/\D/g, '').slice(0, 5);
+      pasted.split('').forEach(function(ch, j) { if (boxes[j]) boxes[j].value = ch; });
+      boxes[Math.min(pasted.length, boxes.length - 1)].focus();
+      if (getPin().length === 5) checkPin();
+    });
+  });
+
+  q('#pin-cancel').addEventListener('click', function() { closePinModal(false); });
+  bg.addEventListener('click', function(e) { if (e.target === bg) closePinModal(false); });
+
+  /* Intercept thinking segment clicks */
+  q('#seg-think').addEventListener('click', function(e) {
+    var btn = e.target.closest('.seg-btn');
+    if (!btn) return;
+    var v = parseInt(btn.dataset.v);
+    if (v === 0) return; /* "Aus" — always allowed */
+    if (sessionStorage.getItem('nb_pinok') === '1') return; /* already unlocked */
+    /* Block: show PIN modal */
+    e.stopImmediatePropagation();
+    pendingThinkVal = v;
+    bg.classList.add('show');
+    setTimeout(function() { boxes[0].focus(); }, 80);
+  }, true); /* capture phase → fires before initSeg handler */
+}
 
 function launchApp(key) {
   q('#screen-setup').classList.remove('active');
@@ -961,6 +1100,7 @@ function launchApp(key) {
   initUIEvents();
   initHelp();
   initResize();
+  initPinModal();
   loadHistory();
 }
 
@@ -1186,12 +1326,19 @@ function updateUploadWarning() {
 
 /* ── PROMPT ── */
 function initPrompt() {
-  var ta = q('#prompt');
-  var cc = q('#char-count');
+  var ta  = q('#prompt');
+  var cc  = q('#char-count');
+  var clr = q('#btn-prompt-clear');
   ta.addEventListener('input', function() {
     var n = ta.value.length;
     cc.textContent = n + ' / 800';
     cc.className = 'cc' + (n > 720 ? ' near' : '') + (n >= 800 ? ' full' : '');
+    clr.style.display = n > 0 ? '' : 'none';
+  });
+  clr.addEventListener('click', function() {
+    ta.value = '';
+    ta.dispatchEvent(new Event('input'));
+    ta.focus();
   });
   ta.addEventListener('keydown', function(e) {
     if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') { e.preventDefault(); generate(); }
@@ -1263,6 +1410,7 @@ function generate() {
 
   var t0 = Date.now();
   var inputCount = S.inputImages.length;
+  var usedSeed   = getSeed();
   var promise = S.model.startsWith('imagen') ? callImagen(text) : callGemini(text);
 
   promise.then(function(images) {
@@ -1272,12 +1420,13 @@ function generate() {
     var grid = document.createElement('div');
     grid.className = 'img-grid' + (images.length === 1 ? ' single' : '');
     images.forEach(function(b64) {
-      grid.appendChild(makeImageCard(b64, text, elapsed, cost, inputCount, false));
+      grid.appendChild(makeImageCard(b64, text, elapsed, cost, inputCount, false, usedSeed));
       S.totalImages++;
       S.totalCost += cost;
       saveToHistory(b64, text, S.model, cost, inputCount);
     });
     prependResult(grid);
+    q('.results').scrollTop = 0;
     updateCounts();
     trackCost(S.model, cost * images.length, images.length, text);
   }).catch(function(err) {
@@ -1407,7 +1556,7 @@ function makeLoadingCard() {
   return d;
 }
 
-function makeImageCard(b64, prompt, elapsed, cost, inputCount, isHistory) {
+function makeImageCard(b64, prompt, elapsed, cost, inputCount, isHistory, seed) {
   var url   = 'data:image/png;base64,' + b64;
   var model = isHistory ? '' : S.model;
   var now   = new Date().toLocaleTimeString('de-DE', { hour: '2-digit', minute: '2-digit' });
@@ -1419,6 +1568,7 @@ function makeImageCard(b64, prompt, elapsed, cost, inputCount, isHistory) {
   var timeTag   = '<span class="tag' + (isHistory ? ' tag-hist' : '') + '">' + now + '</span>';
   var elapsTag  = elapsed ? '<span class="tag">' + elapsed + 's</span>' : '';
   var costTag   = cost ? '<span class="tag">' + cost.toFixed(3).replace('.', ',') + ' €</span>' : '';
+  var seedTag   = (seed !== null && seed !== undefined) ? '<span class="tag" title="Seed: ' + seed + '">🎲 ' + seed + '</span>' : '';
 
   card.innerHTML =
     '<div class="img-wrap">' +
@@ -1432,7 +1582,7 @@ function makeImageCard(b64, prompt, elapsed, cost, inputCount, isHistory) {
     '</div>' +
     '<div class="img-meta">' +
       '<span class="img-prompt" title="' + esc(prompt) + '">' + esc(clip(prompt, 80)) + '</span>' +
-      '<div class="img-tags">' + histTag + modelTag + inputTag + timeTag + elapsTag + costTag + '</div>' +
+      '<div class="img-tags">' + histTag + modelTag + inputTag + timeTag + elapsTag + costTag + seedTag + '</div>' +
     '</div>';
 
   card.querySelector('[data-act="lb"]').addEventListener('click', function(e) { e.stopPropagation(); openLightbox(url, prompt); });
@@ -1652,7 +1802,7 @@ function improvePrompt() {
   var btn = q('#btn-improve');
   btn.disabled = true; btn.textContent = '⏳';
   var sysInstr = 'You are an expert prompt engineer for architectural and interior design AI image generation. Expand the given rough description into a detailed, professional image generation prompt. Include spatial description, materials, lighting atmosphere, camera angle and perspective, and architectural style. Return ONLY the improved prompt text in 2-4 concise sentences — no explanation, no preamble, no quotes.';
-  var url  = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=' + S.key;
+  var url  = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=' + S.key;
   var body = {
     systemInstruction: { parts: [{ text: sysInstr }] },
     contents: [{ role: 'user', parts: [{ text: text }] }],
