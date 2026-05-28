@@ -587,16 +587,16 @@ textarea, input, .img-prompt, .error-msg { user-select: text; }
         <div class="pgrp" id="grp-temp">
           <div class="pgrp-lbl" title="0 = präzise / deterministisch · 1 = ausgewogen (Standard) · 2 = maximal kreativ / zufällig">Temperatur ℹ</div>
           <div class="ctrl-slide">
-            <input type="range" id="sl-temp" min="0" max="2" step="0.1" value="1.0">
+            <input type="range" id="sl-temp" min="0" max="2" step="0.1" value="1.0" title="0 = präzise / deterministisch · 1 = ausgewogen (Standard) · 2 = maximal kreativ / zufällig">
             <span class="sv" id="v-temp">1.0</span>
           </div>
         </div>
 
         <div class="pgrp" id="grp-output">
-          <div class="pgrp-lbl">Ausgabe</div>
+          <div class="pgrp-lbl" title="Bild &amp; Text: Gemini generiert das Bild und liefert eine kurze Textbeschreibung — hilfreich für Feedback und Erklärungen. Nur Bilder: nur das Bild, kein Text — schneller und kompakter.">Ausgabe ℹ</div>
           <div class="seg" id="seg-output">
-            <button class="seg-btn on" data-v="IMAGE_TEXT">Bild &amp; Text</button>
-            <button class="seg-btn" data-v="IMAGE">Nur Bilder</button>
+            <button class="seg-btn on" data-v="IMAGE_TEXT" title="Gemini generiert Bild + kurzen Kommentar — gibt Feedback zu Interpretation und Qualität">Bild &amp; Text</button>
+            <button class="seg-btn" data-v="IMAGE" title="Nur das Bild, kein erklärender Text — schneller, weniger Ablenkung">Nur Bilder</button>
           </div>
         </div>
 
@@ -802,31 +802,56 @@ textarea, input, .img-prompt, .error-msg { user-select: text; }
       <div class="help-sec">
         <h3>🚀 Schnellstart</h3>
         <ul>
-          <li><strong>Prompt eingeben</strong> — beschreibe dein Bild auf Deutsch oder Englisch (Englisch für Stilbegriffe empfohlen)</li>
-          <li><strong>📋 Vorlagen</strong> — 23 Architektur- &amp; Innenarchitektur-Prompts. Klicken → einfügen → <strong>Tab</strong> springt zum nächsten [Platzhalter]</li>
-          <li><strong>⚡ Generieren</strong> klicken (oder <strong>Strg+Enter</strong>)</li>
-          <li>Bild anklicken → Vollbild, <strong>↓ PNG</strong> zum Herunterladen</li>
-          <li>Rechtsklick auf ein Bild → sofortiger Download</li>
+          <li><strong>Prompt eingeben</strong> — Beschreibe dein Bild. Englisch für Stilbegriffe empfohlen, Deutsch funktioniert auch.</li>
+          <li><strong>📋 Vorlagen</strong> — 27 Prompts in 5 Kategorien. Klicken → einfügen → <strong>Tab</strong> springt zum nächsten [Platzhalter]</li>
+          <li><strong>✨</strong> — Prompt automatisch mit KI verbessern und ausformulieren</li>
+          <li><strong>✕</strong> — Prompt-Feld leeren</li>
+          <li><strong>⚡ Generieren</strong> klicken oder <strong>Strg+Enter</strong></li>
+          <li>Ergebnis anklicken → Vollbild · <strong>↓ PNG</strong> herunterladen · <strong>📎 Als Eingabe</strong> weiterverwenden</li>
         </ul>
       </div>
 
       <div class="help-sec">
-        <h3>🤖 Modelle</h3>
+        <h3>🤖 Modelle &amp; Kosten</h3>
         <ul>
-          <li><strong>Gemini</strong> — nimmt Bilder als Eingabe, unterstützt Chat-Modus „Aufbauen", Text + Bild als Ausgabe möglich</li>
-          <li><strong>Imagen 4 Fast</strong> — schnell, günstig (~0,02 €), bis 4 Bilder gleichzeitig</li>
-          <li><strong>Imagen 4 Standard / Ultra</strong> — höhere Qualität, 2K-Auflösung wählbar</li>
-          <li>Imagen-Modelle akzeptieren <em>keine</em> Bild-Eingabe — nur Text → Bild</li>
+          <li><strong>Gemini 2.5 Flash</strong> — ~0,04 €/Bild · nimmt Bilder als Eingabe · Chat-Modus „Aufbauen" · Bild + Text als Ausgabe</li>
+          <li><strong>Gemini 3 Pro</strong> — ~0,13 €/Bild · höchste Qualität · langsamer</li>
+          <li><strong>Imagen 4 Fast</strong> — ~0,02 €/Bild · schnell · bis 4 Bilder gleichzeitig · nur Text → Bild</li>
+          <li><strong>Imagen 4 Standard / Ultra</strong> — ~0,04–0,06 € · höhere Qualität · 2K wählbar</li>
+          <li>Imagen akzeptiert <em>keine</em> Bild-Eingabe — ausschließlich Text → Bild</li>
+        </ul>
+      </div>
+
+      <div class="help-sec">
+        <h3>⚙️ Parameter erklärt</h3>
+        <ul>
+          <li><strong>Ausgabe: Bild &amp; Text</strong> — Gemini liefert das Bild + einen kurzen Kommentar zur Interpretation. Hilfreich für Feedback.</li>
+          <li><strong>Ausgabe: Nur Bilder</strong> — nur das Bild, kein Text. Schneller, kompakter.</li>
+          <li><strong>Temperatur 0–2</strong> — 0 = präzise &amp; deterministisch · 1 = ausgewogen (Standard) · 2 = maximal kreativ &amp; zufällig</li>
+          <li><strong>Thinking-Level</strong> — lässt Gemini länger „nachdenken" vor dem Zeichnen. Mehr = bessere Qualität, aber langsamer &amp; teurer. PIN-geschützt.</li>
+          <li><strong>System-Kontext</strong> — unsichtbarer Hintergrundprompt: „Aus" = freie Hand · „Expert" = photorealistisch, geometrisch präzise · „Graustufen" = Schwarz-Weiß</li>
+          <li><strong>Auflösung 1K/2K/4K</strong> — Ausgabegröße. 2K bei Imagen Standard/Ultra, 4K nur Gemini.</li>
+        </ul>
+      </div>
+
+      <div class="help-sec">
+        <h3>🎲 Seeds</h3>
+        <ul>
+          <li>Jedes Bild zeigt unten ein <strong>🎲 Seed-Tag</strong> mit der verwendeten Zufallszahl</li>
+          <li>Seed notieren → ins Seed-Feld eingeben → gleicher Prompt = sehr ähnliches Ergebnis reproduzierbar</li>
+          <li><strong>🎲 Button</strong> — zufälligen Seed generieren · Feld leer lassen = komplett zufällig</li>
+          <li>Seeds funktionieren zuverlässig bei gleichem Modell, Prompt und Einstellungen</li>
         </ul>
       </div>
 
       <div class="help-sec">
         <h3>📎 Bilder als Eingabe</h3>
         <ul>
-          <li>Bis zu <strong>5 Bilder</strong> hochladen — per Klick oder Drag &amp; Drop auf das Textfeld</li>
-          <li>Bilder dienen als visuelle Referenz für Gemini</li>
-          <li>Generierte Bilder mit <strong>„📎 Als Eingabe"</strong> direkt weiterverwenden — kein Download nötig</li>
-          <li>Einzelne Bilder mit ✕ entfernen, alle mit „Alle ✕"</li>
+          <li>Bis zu <strong>5 Bilder</strong> hochladen — Klick auf „📎 Bilder" oder Drag &amp; Drop auf das Textfeld</li>
+          <li>Gemini nutzt die Bilder als visuelle Referenz (Stil, Materialien, Geometrie übernehmen)</li>
+          <li>Generiertes Bild direkt mit <strong>„📎 Als Eingabe"</strong> weiterverwenden — kein Download nötig</li>
+          <li>Einzelne Bilder mit ✕ entfernen · alle mit „Alle ✕"</li>
+          <li>Imagen-Modelle unterstützen <em>keine</em> Bild-Eingabe</li>
         </ul>
       </div>
 
@@ -834,28 +859,18 @@ textarea, input, .img-prompt, .error-msg { user-select: text; }
         <h3>↺ Aufbauen (Chat-Modus)</h3>
         <ul>
           <li>Nur für <strong>Gemini-Modelle</strong> verfügbar</li>
-          <li><strong>„Neue Serie"</strong> — jede Generierung startet unabhängig von vorne</li>
-          <li><strong>„Aufbauen"</strong> — die KI erinnert sich an vorherige Generierungen und verfeinert das Ergebnis schrittweise</li>
-          <li>Beim Modellwechsel wird der Chat-Verlauf automatisch gelöscht</li>
+          <li><strong>„Neue Serie"</strong> — jede Generierung startet unabhängig, kein Kontext aus vorherigen Bildern</li>
+          <li><strong>„Aufbauen"</strong> — Gemini erinnert sich an vorherige Generierungen und verfeinert schrittweise. Ideal für iterative Überarbeitungen.</li>
+          <li>Beim Modellwechsel wird der Chat-Verlauf automatisch zurückgesetzt</li>
         </ul>
       </div>
 
       <div class="help-sec">
-        <h3>⚙️ Parameter</h3>
+        <h3>💾 Verlauf &amp; Speichern</h3>
         <ul>
-          <li><strong>Temperatur</strong> — 0 = präzise/vorhersehbar, 2 = kreativ/zufällig</li>
-          <li><strong>Thinking-Level</strong> — mehr Denkzeit = bessere Qualität, aber langsamer (nur Gemini)</li>
-          <li><strong>Seed</strong> — gleiche Zahl reproduziert ähnliche Ergebnisse; 🎲 für Zufall</li>
-          <li><strong>Auflösung 2K</strong> — doppelte Ausgabegröße bei Imagen Standard &amp; Ultra</li>
-        </ul>
-      </div>
-
-      <div class="help-sec">
-        <h3>💾 Verlauf</h3>
-        <ul>
-          <li>Bilder werden <strong>lokal im Browser gespeichert</strong> — bleiben nach Tab-Schließen erhalten</li>
-          <li>Beim nächsten Öffnen automatisch im Verlauf-Bereich sichtbar</li>
+          <li>Bilder werden <strong>lokal im Browser</strong> gespeichert — bleiben nach Tab-Schließen erhalten</li>
           <li>Max. 8 Bilder im Verlauf; älteste werden automatisch entfernt</li>
+          <li><strong>↓ PNG</strong> — Einzelbild speichern · <strong>Alle PNG</strong> — alle Bilder auf einmal herunterladen</li>
           <li>„Verlauf löschen" entfernt alle gespeicherten Bilder dauerhaft</li>
         </ul>
       </div>
@@ -917,23 +932,7 @@ var STYLE_CHIPS = [
 ];
 
 var TEMPLATES = [
-  { cat: '🏠 Innenarchitektur', items: [
-    { name: 'Leeren Raum einrichten',
-      text: '[ROOM TYPE: e.g. minimalist living room / open-plan office / loft apartment] with [FEATURES: e.g. floor-to-ceiling glazing, exposed concrete ceiling, open layout].\nMateriality: [SURFACES: e.g. brushed oak panels, polished fair-faced concrete, ribbed glass, natural stone floor].\nLight & mood: [LIGHTING: e.g. low afternoon sun in summer, soft shadow play, warm quiet atmosphere].\nCamera: architectural photography, [FOCAL LENGTH: e.g. wide-angle 24mm] at eye level, [PERSPECTIVE: e.g. one-point central / two-point corner], vertical lines perfectly straight. Photorealistic.' },
-    { name: 'Weißmodell → Eingerichteter Raum',
-      text: 'Transform this white/grey architectural model into a fully furnished, photorealistic interior render.\nStyle: [INTERIOR STYLE: e.g. Japandi / Scandinavian minimalism / contemporary luxury / warm industrial].\nMaterials & furniture: [MATERIALS & FURNITURE: e.g. low-profile linen sofa, smoked oak shelving, polished concrete floor, paper pendant lamp].\nLighting: [LIGHTING: e.g. diffuse daylight from large windows, warm accent lighting].\nCamera: [PERSPECTIVE: e.g. wide-angle 24mm at eye level, one-point perspective, vertical lines straight].\nDo not change the geometry or proportions of the architectural model.' },
-    { name: 'Materialien & Oberflächen tauschen',
-      text: 'Change the materials and surface finishes in this image only.\nReplace [MATERIAL FROM: e.g. white painted walls] with [MATERIAL TO: e.g. raw fair-faced concrete].\nReplace [MATERIAL FROM: e.g. light laminate floor] with [MATERIAL TO: e.g. large-format honed travertine tiles].\nReplace [MATERIAL FROM: e.g. standard ceiling] with [MATERIAL TO: e.g. exposed timber beams].\nDo not alter the geometry, floor plan, spatial proportions, furniture placement, lighting, or camera angle in any way. Only change materials and surface finishes.' },
-    { name: 'Möblierung ersetzen',
-      text: 'Replace the furniture and decor in this interior image with a new [INTERIOR STYLE: e.g. mid-century modern / minimalist / eclectic] style.\nNew furniture: [NEW FURNITURE: e.g. low walnut sideboard, curved velvet sofa in deep green, brass pendant lights, woven area rug].\nKeep the architectural structure, walls, floors, ceiling, windows, and all fixed elements completely unchanged.\nMaintain the original lighting and camera perspective.' },
-    { name: 'Einzelnes Element ändern',
-      text: 'Take this image of a furnished room and make ONLY these specific changes: [EDIT: e.g. replace the coffee table with a modern travertine stone one / change the wall colour to deep olive green / swap the pendant light for a sculptural brass fixture / add a large-format art print above the sofa].\nDo NOT alter any other furniture, layout, lighting, colours, architecture, proportions, or camera angle.\nKeep every unchanged element exactly as it appears in the original image.' },
-    { name: 'Kamera & Perspektive setzen',
-      text: 'Render this [ROOM: e.g. living room / office / dining area] from the following camera position:\nPerspective: [PERSPECTIVE: e.g. one-point central perspective facing the main wall / two-point corner perspective].\nCamera height: [CAMERA HEIGHT: e.g. eye level at 1.60m / low angle at 0.80m / elevated at 2.50m].\nFocal length: [FOCAL LENGTH: e.g. wide-angle 24mm / standard 35mm / slight tele 50mm].\nStyle: architectural photography, vertical lines perfectly straight, no lens distortion, natural daylight.\nDo not change anything about the architecture, materials, or interior — only the camera position.' },
-    { name: 'Licht & Stimmung wechseln',
-      text: 'Change only the lighting and atmosphere in this interior image.\nNew lighting: [LIGHTING: e.g. warm evening light with indirect wall sconces / bright overcast midday / golden hour low sun casting long shadows].\nSeason / time of day: [SEASON: e.g. summer afternoon / winter dusk / late evening].\nDo not alter the geometry, materials, furniture, or camera angle in any way. Only lighting and mood should change.' }
-  ]},
-  { cat: '🏗 Architektur & Außen', items: [
+  { cat: '🏗 Architektur & Landschaft', items: [
     { name: 'Neubau aus Skizze / Konzept',
       text: 'Transform this [DRAWING: e.g. sketch / floor plan / concept drawing] into a photorealistic architectural render.\nBuilding type: [BUILDING TYPE: e.g. detached house / apartment building / cultural centre / office pavilion].\nStyle: [ARCHITECTURAL STYLE: e.g. contemporary minimalist / Bauhaus / organic / brutalist].\nFacade materials: [MATERIALS: e.g. fair-faced concrete, dark aluminium frames, weathered oak, oxidized copper cladding].\nSetting: [SETTING: e.g. urban street / wooded hillside / open flat landscape].\nTime of day: [TIME OF DAY: e.g. late afternoon golden hour / bright overcast].\nCamera: [PERSPECTIVE: e.g. street-level two-point perspective, wide-angle 28mm].' },
     { name: 'Fassade überarbeiten',
@@ -950,6 +949,32 @@ var TEMPLATES = [
       text: 'Generate a version of this image showing the building during shell construction phase.\nConstruction stage: [CONSTRUCTION STAGE: e.g. concrete foundation and rising walls / steel frame structure / masonry shell without windows].\nShow construction machinery, building materials, and scaffolding scattered around the site.\nThe surroundings, trees, and landscape should remain the same as in the original image.\nWeather: [WEATHER: e.g. overcast and rainy / bright working day with blue sky].' },
     { name: 'Jahreszeit & Wetter wechseln',
       text: 'Change only the season, weather, and sky in this image.\nNew condition: [SEASON & WEATHER: e.g. winter with snow on the ground, bare trees, low cold sun / summer with lush foliage, deep blue sky, hard shadows / autumn with warm coloured leaves, overcast soft light].\nDo not alter the building, architecture, materials, or landscape structure in any way. Only seasonal vegetation, sky, weather effects, and ground covering should change.' }
+  ]},
+  { cat: '🏠 Innenarchitektur', items: [
+    { name: 'Leeren Raum einrichten',
+      text: '[ROOM TYPE: e.g. minimalist living room / open-plan office / loft apartment] with [FEATURES: e.g. floor-to-ceiling glazing, exposed concrete ceiling, open layout].\nMateriality: [SURFACES: e.g. brushed oak panels, polished fair-faced concrete, ribbed glass, natural stone floor].\nLight & mood: [LIGHTING: e.g. low afternoon sun in summer, soft shadow play, warm quiet atmosphere].\nCamera: architectural photography, [FOCAL LENGTH: e.g. wide-angle 24mm] at eye level, [PERSPECTIVE: e.g. one-point central / two-point corner], vertical lines perfectly straight. Photorealistic.' },
+    { name: 'Weißmodell → Eingerichteter Raum',
+      text: 'Transform this white/grey architectural model into a fully furnished, photorealistic interior render.\nStyle: [INTERIOR STYLE: e.g. Japandi / Scandinavian minimalism / contemporary luxury / warm industrial].\nMaterials & furniture: [MATERIALS & FURNITURE: e.g. low-profile linen sofa, smoked oak shelving, polished concrete floor, paper pendant lamp].\nLighting: [LIGHTING: e.g. diffuse daylight from large windows, warm accent lighting].\nCamera: [PERSPECTIVE: e.g. wide-angle 24mm at eye level, one-point perspective, vertical lines straight].\nDo not change the geometry or proportions of the architectural model.' },
+    { name: 'Materialien & Oberflächen tauschen',
+      text: 'Change the materials and surface finishes in this image only.\nReplace [MATERIAL FROM: e.g. white painted walls] with [MATERIAL TO: e.g. raw fair-faced concrete].\nReplace [MATERIAL FROM: e.g. light laminate floor] with [MATERIAL TO: e.g. large-format honed travertine tiles].\nReplace [MATERIAL FROM: e.g. standard ceiling] with [MATERIAL TO: e.g. exposed timber beams].\nDo not alter the geometry, floor plan, spatial proportions, furniture placement, lighting, or camera angle in any way. Only change materials and surface finishes.' },
+    { name: 'Möblierung ersetzen',
+      text: 'Replace the furniture and decor in this interior image with a new [INTERIOR STYLE: e.g. mid-century modern / minimalist / eclectic] style.\nNew furniture: [NEW FURNITURE: e.g. low walnut sideboard, curved velvet sofa in deep green, brass pendant lights, woven area rug].\nKeep the architectural structure, walls, floors, ceiling, windows, and all fixed elements completely unchanged.\nMaintain the original lighting and camera perspective.' },
+    { name: 'Einzelnes Element ändern',
+      text: 'Take this image of a furnished room and make ONLY these specific changes: [EDIT: e.g. replace the coffee table with a modern travertine stone one / change the wall colour to deep olive green / swap the pendant light for a sculptural brass fixture / add a large-format art print above the sofa].\nDo NOT alter any other furniture, layout, lighting, colours, architecture, proportions, or camera angle.\nKeep every unchanged element exactly as it appears in the original image.' },
+    { name: 'Kamera & Perspektive setzen',
+      text: 'Render this [ROOM: e.g. living room / office / dining area] from the following camera position:\nPerspective: [PERSPECTIVE: e.g. one-point central perspective facing the main wall / two-point corner perspective].\nCamera height: [CAMERA HEIGHT: e.g. eye level at 1.60m / low angle at 0.80m / elevated at 2.50m].\nFocal length: [FOCAL LENGTH: e.g. wide-angle 24mm / standard 35mm / slight tele 50mm].\nStyle: architectural photography, vertical lines perfectly straight, no lens distortion, natural daylight.\nDo not change anything about the architecture, materials, or interior — only the camera position.' },
+    { name: 'Licht & Stimmung wechseln',
+      text: 'Change only the lighting and atmosphere in this interior image.\nNew lighting: [LIGHTING: e.g. warm evening light with indirect wall sconces / bright overcast midday / golden hour low sun casting long shadows].\nSeason / time of day: [SEASON: e.g. summer afternoon / winter dusk / late evening].\nDo not alter the geometry, materials, furniture, or camera angle in any way. Only lighting and mood should change.' }
+  ]},
+  { cat: '📦 Objekt im Raum', items: [
+    { name: '3D-Objekt in beschriebene Szene',
+      text: 'This is a screenshot of a 3D object modelled in [SOFTWARE: e.g. Rhino / SketchUp / Blender].\nPlace this object into the following scene: [SCENE DESCRIPTION: e.g. a minimalist living room with concrete floor and large windows / a sunlit courtyard with gravel and ornamental grasses / a dark gallery space with spotlights].\nMaterial of the object: [MATERIAL: e.g. matte white lacquer / dark patinated steel / natural oak veneer / glossy ceramic].\nLighting: [LIGHTING: e.g. soft diffuse daylight / warm evening ambient light / dramatic directional studio light].\nCamera: [PERSPECTIVE: e.g. three-quarter front view, eye level / frontal elevation / slight bird\'s eye].\nPhotorealistic render, correct scale and proportions, integrated shadows and reflections.' },
+    { name: '3D-Objekt in hochgeladenes Bild setzen',
+      text: 'Image 1 is my room or context photo. Image 2 is a screenshot of my 3D object from [SOFTWARE: e.g. Rhino / SketchUp].\nComposite the 3D object from Image 2 into the scene of Image 1.\nPosition the object [POSITION: e.g. in the centre of the room / against the left wall / in front of the window].\nApply material to the object: [MATERIAL: e.g. brushed concrete / smoked oak / white matte lacquer / polished terrazzo].\nMatch the lighting, shadows, and colour grading of Image 1 exactly — the object must appear as if it was always part of the scene.\nDo not alter anything else in Image 1. Correct architectural scale.' },
+    { name: 'Materialzuweisung auf 3D-Objekt',
+      text: 'This is a [VIEW TYPE: e.g. wireframe / plain render / grey massing model] of a 3D object.\nApply the following materials and finishes to the object:\n[SURFACE 1: e.g. top face → honed white Carrara marble]\n[SURFACE 2: e.g. side panels → brushed stainless steel]\n[SURFACE 3: e.g. base / legs → matte black powder-coated steel]\nKeep the geometry, proportions, and camera angle exactly as in the original image.\nLighting: [LIGHTING: e.g. soft studio light from upper left / neutral grey background / white cyclorama].\nPhotorealistic material rendering, correct reflections and surface texture.' },
+    { name: 'Produktvisualisierung / Studio-Shot',
+      text: 'Create a photorealistic studio product visualisation of the 3D object in this image.\nBackground: [BACKGROUND: e.g. pure white cyclorama / soft gradient warm grey / dark anthracite / neutral light grey linen].\nMaterial: [MATERIAL: e.g. natural oak with visible grain / matte white lacquer / sand-cast aluminium / hand-glazed ceramic].\nLighting: [LIGHTING: e.g. soft diffuse studio light, no hard shadows / dramatic single spotlight from above / three-point lighting setup].\nCamera: [PERSPECTIVE: e.g. three-quarter front view, slight above eye-level / straight frontal elevation / low angle detail shot].\nNo props or context — clean, minimal product photography. High resolution.' }
   ]},
   { cat: '🎨 Stimmung & Stil', items: [
     { name: 'Architekturstil übertragen',
@@ -970,16 +995,6 @@ var TEMPLATES = [
       text: 'Create a photorealistic material sample board / mood board collage.\nMaterials to include: [MATERIAL 1: e.g. honed Carrara marble slab], [MATERIAL 2: e.g. brushed brass sheet], [MATERIAL 3: e.g. smoked oak veneer], [MATERIAL 4: e.g. raw concrete panel], [MATERIAL 5: e.g. woven natural linen fabric].\nArrangement: [ARRANGEMENT: e.g. overlapping samples at different angles / clean flat-lay grid / section-style stacked layout].\nBackground: [BACKGROUND: e.g. pure white / warm grey linen / dark slate].\nStyle: [RENDERING STYLE: e.g. photorealistic studio photography / architectural rendering / editorial flat-lay].\nOptional: add a small colour swatch or material label beneath each sample.' },
     { name: 'Grundriss / Lageplan → Render',
       text: 'Transform this [DRAWING: e.g. floor plan / site plan / section drawing] into a photorealistic architectural render.\nView: [VIEW: e.g. interior perspective / aerial bird\'s eye view / street-level exterior].\nStyle: [ARCHITECTURAL STYLE: e.g. contemporary residential / warm Scandinavian / commercial modern].\nMaterials: [MATERIALS: e.g. concrete, glass, timber, planted green surfaces].\nTime of day: [TIME OF DAY: e.g. bright daylight / late afternoon golden light].\nCamera: [PERSPECTIVE: e.g. wide-angle 28mm at eye level / aerial drone view, straight down].' }
-  ]},
-  { cat: '📦 Objekt im Raum', items: [
-    { name: '3D-Objekt in beschriebene Szene',
-      text: 'This is a screenshot of a 3D object modelled in [SOFTWARE: e.g. Rhino / SketchUp / Blender].\nPlace this object into the following scene: [SCENE DESCRIPTION: e.g. a minimalist living room with concrete floor and large windows / a sunlit courtyard with gravel and ornamental grasses / a dark gallery space with spotlights].\nMaterial of the object: [MATERIAL: e.g. matte white lacquer / dark patinated steel / natural oak veneer / glossy ceramic].\nLighting: [LIGHTING: e.g. soft diffuse daylight / warm evening ambient light / dramatic directional studio light].\nCamera: [PERSPECTIVE: e.g. three-quarter front view, eye level / frontal elevation / slight bird\'s eye].\nPhotorealistic render, correct scale and proportions, integrated shadows and reflections.' },
-    { name: '3D-Objekt in hochgeladenes Bild setzen',
-      text: 'Image 1 is my room or context photo. Image 2 is a screenshot of my 3D object from [SOFTWARE: e.g. Rhino / SketchUp].\nComposite the 3D object from Image 2 into the scene of Image 1.\nPosition the object [POSITION: e.g. in the centre of the room / against the left wall / in front of the window].\nApply material to the object: [MATERIAL: e.g. brushed concrete / smoked oak / white matte lacquer / polished terrazzo].\nMatch the lighting, shadows, and colour grading of Image 1 exactly — the object must appear as if it was always part of the scene.\nDo not alter anything else in Image 1. Correct architectural scale.' },
-    { name: 'Materialzuweisung auf 3D-Objekt',
-      text: 'This is a [VIEW TYPE: e.g. wireframe / plain render / grey massing model] of a 3D object.\nApply the following materials and finishes to the object:\n[SURFACE 1: e.g. top face → honed white Carrara marble]\n[SURFACE 2: e.g. side panels → brushed stainless steel]\n[SURFACE 3: e.g. base / legs → matte black powder-coated steel]\nKeep the geometry, proportions, and camera angle exactly as in the original image.\nLighting: [LIGHTING: e.g. soft studio light from upper left / neutral grey background / white cyclorama].\nPhotorealistic material rendering, correct reflections and surface texture.' },
-    { name: 'Produktvisualisierung / Studio-Shot',
-      text: 'Create a photorealistic studio product visualisation of the 3D object in this image.\nBackground: [BACKGROUND: e.g. pure white cyclorama / soft gradient warm grey / dark anthracite / neutral light grey linen].\nMaterial: [MATERIAL: e.g. natural oak with visible grain / matte white lacquer / sand-cast aluminium / hand-glazed ceramic].\nLighting: [LIGHTING: e.g. soft diffuse studio light, no hard shadows / dramatic single spotlight from above / three-point lighting setup].\nCamera: [PERSPECTIVE: e.g. three-quarter front view, slight above eye-level / straight frontal elevation / low angle detail shot].\nNo props or context — clean, minimal product photography. High resolution.' }
   ]}
 ];
 
@@ -1508,7 +1523,8 @@ function generate() {
   var t0 = Date.now();
   var inputCount = S.inputImages.length;
   var usedSeed   = getSeed();
-  var promise = S.model.startsWith('imagen') ? callImagen(text) : callGemini(text);
+  if (usedSeed === null) usedSeed = Math.floor(Math.random() * 2147483647) + 1;
+  var promise = S.model.startsWith('imagen') ? callImagen(text, usedSeed) : callGemini(text, usedSeed);
 
   promise.then(function(images) {
     var elapsed = ((Date.now() - t0) / 1000).toFixed(1);
@@ -1536,14 +1552,13 @@ function generate() {
 }
 
 /* ── GEMINI API ── */
-function callGemini(prompt) {
+function callGemini(prompt, seed) {
   var modalities = S.outputMode === 'IMAGE' ? ['IMAGE'] : ['IMAGE', 'TEXT'];
   var cfg = { responseModalities: modalities, temperature: S.temp };
   if (S.model.startsWith('gemini-2.5') && S.thinking > 0) {
     cfg.thinkingConfig = { thinkingBudget: S.thinking };
   }
-  var seed = getSeed();
-  if (seed !== null) cfg.seed = seed;
+  if (seed !== null && seed !== undefined) cfg.seed = seed;
 
   var userParts = [];
   S.inputImages.forEach(function(img) {
@@ -1594,7 +1609,7 @@ function callGemini(prompt) {
 }
 
 /* ── IMAGEN API ── */
-function callImagen(prompt) {
+function callImagen(prompt, seed) {
   var params = {
     sampleCount:   S.count,
     aspectRatio:   S.ratio,
@@ -1604,8 +1619,7 @@ function callImagen(prompt) {
   if (S.personGen) params.personGeneration = 'allow_adult';
   var neg = q('#neg-prompt').value.trim();
   if (neg) params.negativePrompt = neg;
-  var seed = getSeed();
-  if (seed !== null) params.seed = seed;
+  if (seed !== null && seed !== undefined) params.seed = seed;
 
   var url  = 'https://generativelanguage.googleapis.com/v1beta/models/' + S.model + ':predict?key=' + S.key;
   var body = { instances: [{ prompt: prompt }], parameters: params };
