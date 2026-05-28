@@ -674,7 +674,8 @@ textarea, input, .img-prompt, .error-msg { user-select: text; }
       <div class="help-sec">
         <h3>🚀 Schnellstart</h3>
         <ul>
-          <li><strong>Prompt eingeben</strong> — beschreibe dein Bild auf Deutsch oder Englisch</li>
+          <li><strong>Prompt eingeben</strong> — beschreibe dein Bild auf Deutsch oder Englisch (Englisch für Stilbegriffe empfohlen)</li>
+          <li><strong>📋 Vorlagen</strong> — 18 Architektur- &amp; Innenarchitektur-Prompts. Klicken → einfügen → <strong>Tab</strong> springt zum nächsten (Platzhalter)</li>
           <li><strong>⚡ Generieren</strong> klicken (oder <strong>Strg+Enter</strong>)</li>
           <li>Bild anklicken → Vollbild, <strong>↓ PNG</strong> zum Herunterladen</li>
           <li>Rechtsklick auf ein Bild → sofortiger Download</li>
@@ -772,47 +773,49 @@ const MODEL_LABEL = {
 
 /* ── TEMPLATES ── */
 var TEMPLATES = [
-  { cat: '🏗 Allgemein', items: [
-    { name: 'Standard Architekturvisualisierung',
-      text: 'PHOTOREALISTIC ARCHITECTURAL VISUALIZATION OF A (BUILDING TYPE: e.g. RESIDENTIAL HOUSE / OFFICE TOWER / MUSEUM). (ARCHITECTURAL STYLE: e.g. BAUHAUS / MODERNIST / BRUTALIST) STYLE. (TIME OF DAY: e.g. GOLDEN HOUR / OVERCAST / NIGHT). SET IN A (ENVIRONMENT: e.g. URBAN / FOREST / WATERFRONT) SETTING. HIGHLY DETAILED, PROFESSIONAL QUALITY.' },
-    { name: 'Stil & Ästhetik erkunden',
-      text: '(BUILDING/SPACE TYPE: e.g. VILLA / LOFT / CAFÉ) IN THE STYLE OF (AESTHETIC: e.g. JAPANDI / WABI-SABI / ART DECO / SCANDINAVIAN MINIMALISM). KEY ELEMENTS: (MATERIAL 1: e.g. RAW CONCRETE), (MATERIAL 2: e.g. WARM OAK WOOD), (COLOR PALETTE: e.g. EARTHY NEUTRALS). PHOTOREALISTIC RENDER.' },
-    { name: 'Mood Board erstellen',
-      text: 'CREATE A COHESIVE MOOD BOARD FOR A (STYLE: e.g. BIOPHILIC / INDUSTRIAL / COASTAL) (SPACE: e.g. LIVING ROOM / HOTEL LOBBY / RESTAURANT) DESIGN. INCLUDE (COLOR PALETTE: e.g. WARM TERRACOTTA AND SAGE), (MATERIALS: e.g. LINEN, TRAVERTINE, RATTAN), (MOOD: e.g. CALM AND NATURAL). PROFESSIONAL INTERIOR DESIGN LAYOUT.' }
+  { cat: '🏠 Innenarchitektur', items: [
+    { name: 'Leeren Raum einrichten',
+      text: '(Raumtyp: z.B. minimalistisches Wohnzimmer / offenes Büro / Loft) mit (Raumbesonderheiten: z.B. raumhoher Verglasung, freiliegender Betondecke, offenem Grundriss).\nMaterialität: (Oberflächen: z.B. gebürstete Eichenpaneele, geschliffener Sichtbeton, geriffeltes Glas, Natursteinboden).\nLicht & Stimmung: (z.B. tiefstehende Nachmittagssonne im Sommer, weicher Schattenwurf, warme und ruhige Atmosphäre).\nKamera: Architekturfotografie, (Brennweite: z.B. Weitwinkel 24mm) auf Augenhöhe, (Perspektive: z.B. Zentralperspektive / Übereckperspektive), vertikale Linien streng gerade. Photorealistisch.' },
+    { name: 'Weißmodell → Eingerichteter Raum',
+      text: 'Transform this white/grey architectural model into a fully furnished, photorealistic interior render.\nStyle: (Einrichtungsstil: z.B. Japandi / Scandinavian minimalism / contemporary luxury / warm industrial).\nMaterials & furniture: (Materialien & Möbel: z.B. low-profile linen sofa, smoked oak shelving, polished concrete floor, paper pendant lamp).\nLighting: (Licht: z.B. diffuse daylight from large windows, warm accent lighting).\nCamera: (Perspektive: z.B. wide-angle 24mm at eye level, one-point perspective, vertical lines straight).\nDo not change the geometry or proportions of the architectural model.' },
+    { name: 'Materialien & Oberflächen tauschen',
+      text: 'Change the materials and surface finishes in this image only.\nReplace (aktuelles Material 1: z.B. white painted walls) with (neues Material 1: z.B. raw fair-faced concrete).\nReplace (aktuelles Material 2: z.B. light laminate floor) with (neues Material 2: z.B. large-format honed travertine tiles).\nReplace (aktuelles Material 3: z.B. standard ceiling) with (neues Material 3: z.B. exposed timber beams).\nDo not alter the geometry, floor plan, spatial proportions, furniture placement, lighting, or camera angle in any way. Only change materials and surface finishes.' },
+    { name: 'Möblierung ersetzen',
+      text: 'Replace the furniture and decor in this interior image with a new (Einrichtungsstil: z.B. mid-century modern / minimalist / eclectic) style.\nNew furniture: (neue Möblierung: z.B. low walnut sideboard, curved velvet sofa in deep green, brass pendant lights, woven area rug).\nKeep the architectural structure, walls, floors, ceiling, windows, and all fixed elements completely unchanged.\nMaintain the original lighting and camera perspective.' },
+    { name: 'Kamera & Perspektive setzen',
+      text: 'Render this (Raum: z.B. living room / office / dining area) from the following camera position:\nPerspective: (Perspektive: z.B. one-point central perspective facing the main wall / two-point corner perspective from front-left).\nCamera height: (Kamerahöhe: z.B. eye level at 1.60m / low angle at 0.80m / elevated at 2.50m).\nFocal length: (Brennweite: z.B. wide-angle 24mm / standard 35mm / slight tele 50mm).\nStyle: architectural photography, vertical lines perfectly straight, no lens distortion, natural daylight.\nDo not change anything about the architecture, materials, or interior — only the camera position.' },
+    { name: 'Licht & Stimmung wechseln',
+      text: 'Change only the lighting and atmosphere in this interior image.\nNew lighting: (Lichtstimmung: z.B. warm evening light with indirect wall sconces / bright overcast midday / golden hour low sun casting long shadows / dramatic artificial night lighting).\nSeason / time of day: (z.B. summer afternoon / winter dusk / late evening).\nDo not alter the geometry, materials, furniture, or camera angle in any way. Only lighting and mood should change.' }
   ]},
-  { cat: '🏠 Innenraum', items: [
-    { name: 'Raumgestaltung — Leerraum',
-      text: 'TRANSFORM THIS EMPTY ROOM INTO A FULLY DESIGNED (ROOM TYPE: e.g. LIVING ROOM / BEDROOM / KITCHEN) IN (STYLE: e.g. MINIMALIST SCANDINAVIAN / WARM MEDITERRANEAN) STYLE. ADD (FURNITURE: e.g. MODULAR SOFA, COFFEE TABLE, PENDANT LIGHT). (COLOR PALETTE: e.g. WARM WHITES AND MUTED GREENS). NATURAL LIGHTING, PHOTOREALISTIC.' },
-    { name: 'Raumgestaltung — Möbliert',
-      text: 'REDESIGN THIS FURNISHED (ROOM TYPE: e.g. LIVING ROOM / OFFICE) IN (TARGET STYLE: e.g. MID-CENTURY MODERN / JAPANDI) STYLE. REPLACE EXISTING FURNITURE WITH (NEW FURNITURE: e.g. LOW PROFILE SOFA, WALNUT SHELVING, PAPER PENDANT LAMPS). KEEP (ELEMENTS: e.g. THE ORIGINAL FLOORING AND WINDOW LAYOUT). PHOTOREALISTIC RENDER.' },
-    { name: 'Bild → Render',
-      text: 'CONVERT THIS (SKETCH / PHOTO / FLOOR PLAN) INTO A HIGH-QUALITY PHOTOREALISTIC ARCHITECTURAL RENDER. (INTERIOR / EXTERIOR) VIEW. (STYLE: e.g. CONTEMPORARY / BAUHAUS) AESTHETIC. (LIGHTING: e.g. WARM AFTERNOON SUNLIGHT). MAINTAIN ORIGINAL PROPORTIONS AND SPATIAL LAYOUT.' },
-    { name: 'Material & Textur austauschen',
-      text: 'CHANGE THE MATERIALS IN THIS INTERIOR IMAGE: REPLACE (CURRENT MATERIAL: e.g. WHITE PAINTED WALLS) WITH (NEW MATERIAL: e.g. EXPOSED BRICK). REPLACE (CURRENT FLOOR: e.g. TILE) WITH (NEW FLOOR: e.g. DARK HERRINGBONE PARQUET). KEEP ALL OTHER ELEMENTS UNCHANGED. PHOTOREALISTIC RESULT.' }
+  { cat: '🏗 Architektur & Außen', items: [
+    { name: 'Neubau aus Skizze / Konzept',
+      text: 'Transform this (Skizze / Grundriss / Konzeptzeichnung) into a photorealistic architectural render.\nBuilding type: (Gebäudetyp: z.B. detached house / apartment building / cultural centre / office pavilion).\nStyle: (Architekturstil: z.B. contemporary minimalist / Bauhaus / organic / brutalist).\nFacade materials: (Materialien: z.B. fair-faced concrete, dark aluminium frames, weathered oak, oxidized copper cladding).\nSetting: (Umgebung: z.B. urban street / wooded hillside / open flat landscape).\nTime of day: (Tageszeit: z.B. late afternoon golden hour / bright overcast).\nCamera: (Perspektive: z.B. street-level two-point perspective, wide-angle 28mm).' },
+    { name: 'Fassade überarbeiten',
+      text: 'Change the facade materials and cladding of this building only.\nReplace (aktuelle Fassade: z.B. white render) with (neue Fassade: z.B. dark Corten steel panels with horizontal ribbing).\nReplace (aktuelles Detail: z.B. standard windows) with (neues Detail: z.B. floor-to-ceiling black aluminium framed glazing).\nDo not alter the building geometry, volume, floor plan, openings, or proportions in any way. Do not change the landscape, surroundings, or sky.' },
+    { name: 'Anderen Winkel / Blickrichtung',
+      text: 'Generate a view of this (Gebäude: z.B. house / apartment block / pavilion) from (neue Blickrichtung: z.B. the front-left corner / a bird\'s eye perspective / street level looking up).\nKeep everything about the building and its surroundings exactly the same — do not change anything about the architecture, materials, landscape, or lighting. Only the camera position and viewing angle should change.' },
+    { name: 'Weißmodell → Fassadenrender',
+      text: 'Transform this white/grey architectural massing model into a photorealistic exterior render.\nStyle: (Architekturstil: z.B. Scandinavian minimalism / raw industrial / warm Mediterranean).\nFacade materials: (Fassadenmaterialien: z.B. pale brick, blackened timber cladding, large glazed surfaces, green planted roof).\nLandscape: (Außenraum: z.B. simple courtyard with ornamental grasses and gravel / mature urban street trees).\nTime of day: (Tageszeit: z.B. overcast bright day / warm late afternoon golden hour).\nDo not change the geometry or proportions of the model.' },
+    { name: 'Rohbauphase / Reverse Engineering',
+      text: 'Generate a version of this image showing the building during shell construction phase.\nConstruction stage: (Bauphase: z.B. concrete foundation and rising walls / steel frame structure / masonry shell without windows).\nShow construction machinery, building materials, and scaffolding scattered around the site.\nThe surroundings, trees, and landscape should remain the same as in the original image.\nWeather: (Wetter: z.B. overcast and rainy / bright working day with blue sky).' },
+    { name: 'Jahreszeit & Wetter wechseln',
+      text: 'Change only the season, weather, and sky in this image.\nNew condition: (Jahreszeit & Wetter: z.B. winter with snow on the ground, bare trees, low cold sun / summer with lush foliage, deep blue sky, hard shadows / autumn with warm coloured leaves, overcast soft light).\nDo not alter the building, architecture, materials, or landscape structure in any way. Only seasonal vegetation, sky, weather effects, and ground covering should change.' }
   ]},
-  { cat: '📐 Pläne & Außen', items: [
-    { name: 'Grundriss → 3D-Render',
-      text: 'TURN THIS FLOOR PLAN INTO A PHOTOREALISTIC (INTERIOR / AERIAL) ARCHITECTURAL RENDER. (STYLE: e.g. CONTEMPORARY / INDUSTRIAL LOFT) DESIGN. (LIGHTING: e.g. BRIGHT DAYLIGHT / GOLDEN HOUR). HIGH DETAIL, PROFESSIONAL QUALITY. SHOW FURNITURE AND MATERIALS.' },
-    { name: 'Lageplan → Aerial Render',
-      text: 'TRANSFORM THIS SITE PLAN INTO A PHOTOREALISTIC AERIAL DRONE RENDER. (URBAN / SUBURBAN / RURAL) SETTING. SEASON: (SEASON: e.g. SUMMER / AUTUMN). TIME OF DAY: (TIME: e.g. MIDDAY / DUSK). SURROUND WITH (LANDSCAPE: e.g. MATURE TREES AND PAVED PLAZAS). BIRDS-EYE PERSPECTIVE.' },
-    { name: 'Bepflanzung & Außenraum',
-      text: 'REDESIGN THE LANDSCAPE OF THIS BUILDING. ADD (PLANTING: e.g. TALL BIRCH TREES, ORNAMENTAL GRASSES, FLOWER BEDS). (LANDSCAPE STYLE: e.g. CONTEMPORARY FORMAL / NATURALISTIC) DESIGN. SEASON: (SEASON). WEATHER: (WEATHER: e.g. BRIGHT SUNSHINE / OVERCAST). PHOTOREALISTIC RENDER.' },
-    { name: 'Umbau / Fassaden-Renovation',
-      text: 'SHOW WHAT THIS (FACADE / EXTERIOR / ROOM) LOOKS LIKE AFTER A RENOVATION IN (TARGET STYLE: e.g. MODERN SCANDINAVIAN). KEY CHANGES: (CHANGES: e.g. NEW DARK METAL CLADDING, LARGE WINDOWS, PLANTED ROOF). KEEP ORIGINAL (ELEMENTS: e.g. STRUCTURAL OUTLINE AND ENTRY). PHOTOREALISTIC VISUALIZATION.' }
+  { cat: '🎨 Stimmung & Stil', items: [
+    { name: 'Architekturstil übertragen',
+      text: 'Transform the architectural and interior style of this image to (Zielstil: z.B. Japandi / Wabi-Sabi / Art Deco / Bauhaus / Tropical Modernism / Nordic brutalism).\nKey characteristics to apply: (Stilmerkmale: z.B. natural materials, muted earth tones, clean horizontal lines, integration of indoor plants).\nMaintain the same spatial composition, room layout, proportions, and camera angle unchanged.' },
+    { name: 'Ausstellungsstand / Showroom',
+      text: 'Create a photorealistic image of a (Nutzungsart: z.B. trade show booth / brand showroom / retail space) for (Marke / Thema: z.B. a furniture brand / architecture office / tech company).\nStyle: (Stil: z.B. Scandinavian minimalist / raw industrial / high-end luxury).\nPrimary materials and colours: (Materialien & Farben: z.B. blackened steel, light oak, matte white surfaces, brand colour accents).\nKey spatial elements: (Raumelemente: z.B. open display tables, a central enclosed meeting room with glass walls, integrated ceiling lighting).\nSetting: (Umgebung: z.B. dark trade show hall with polished concrete floor / bright white gallery space).\nInclude (Personen: z.B. visitors and staff naturally interacting / no people).' },
+    { name: 'Mood Board',
+      text: 'Create a cohesive interior design mood board for a (Raumtyp: z.B. private apartment / boutique hotel lobby / high-end restaurant).\nStyle direction: (Stilrichtung: z.B. warm minimalism / eclectic luxury / biophilic / industrial).\nColour palette: (Farbpalette: z.B. warm sand, muted sage, deep charcoal, soft terracotta accents).\nMaterials and textures: (Materialien: z.B. linen, honed marble, smoked oak, hand-woven rattan, brushed brass).\nMood: (Atmosphäre: z.B. calm and restorative / vibrant and layered / timeless and understated).\nProfessional layout, clean composition.' }
   ]},
-  { cat: '✂️ Spezial', items: [
+  { cat: '✂️ Details & Collage', items: [
     { name: 'Entourage hinzufügen',
-      text: 'ADD (ENTOURAGE: e.g. PEOPLE WALKING / PARKED CARS / MATURE TREES / OUTDOOR FURNITURE) TO THIS ARCHITECTURAL IMAGE. STYLE: REALISTIC, ARCHITECTURALLY CORRECT SCALE. INTEGRATE NATURALLY INTO THE EXISTING SCENE, MAINTAIN ORIGINAL LIGHTING AND SHADOWS.' },
-    { name: 'Cutout für Collage',
-      text: 'CREATE A HIGH-QUALITY ARCHITECTURAL CUTOUT OF A (SUBJECT: e.g. STANDING PERSON / TREE IN LEAF / PARKED CAR) FOR COLLAGE USE. STYLE: (REALISTIC / WATERCOLOR / INK LINE-DRAWING). PURE WHITE BACKGROUND, CLEAN EDGES. ARCHITECTURAL SCALE AND PROPORTION.' },
-    { name: 'Perspektive wechseln',
-      text: 'SHOW THIS (BUILDING / SPACE / ROOM) FROM A (PERSPECTIVE: e.g. BIRD\'S EYE AERIAL / WORM\'S EYE / ISOMETRIC / STREET LEVEL) PERSPECTIVE. MAINTAIN THE SAME DESIGN, MATERIALS AND ATMOSPHERE. (ADDITIONAL: e.g. LATE AFTERNOON SUN, LONG SHADOWS). PHOTOREALISTIC RENDER.' },
-    { name: 'Stil übertragen',
-      text: 'TRANSFORM THE ARCHITECTURAL STYLE OF THIS IMAGE TO (TARGET STYLE: e.g. BRUTALIST / BIOPHILIC / DECONSTRUCTIVIST). MAINTAIN THE SAME SPATIAL COMPOSITION AND PROPORTIONS. KEY CHANGES: (MATERIAL 1: e.g. EXPOSED CONCRETE), (MATERIAL 2: e.g. CORTEN STEEL), (CHARACTERISTIC: e.g. CANTILEVERED VOLUMES). PHOTOREALISTIC.' },
-    { name: '3D-Gebäude aus Skizze',
-      text: 'TURN THIS (SKETCH / CONCEPT DRAWING / PHOTO) INTO A DETAILED 3D PHOTOREALISTIC ARCHITECTURAL VISUALIZATION. (EXTERIOR AERIAL / STREET LEVEL) VIEW. STYLE: (ARCHITECTURAL STYLE: e.g. CONTEMPORARY RESIDENTIAL). ENVIRONMENT: (SETTING: e.g. WOODED HILLSIDE). SEASON: (SEASON). HIGH DETAIL, PROFESSIONAL RENDER.' },
-    { name: 'Konstruktion Timelapse (Still)',
-      text: 'VISUALIZE THE CONSTRUCTION PROGRESS OF A (BUILDING TYPE) FROM (START STAGE: e.g. CONCRETE FOUNDATION / STEEL FRAME) TO (END STAGE: e.g. COMPLETED FACADE). (ARCHITECTURAL STYLE). (AERIAL / EYE-LEVEL) VIEW. PHOTOREALISTIC, CONSTRUCTION SITE ATMOSPHERE WITH MACHINERY AND WORKERS.' }
+      text: 'Add (Entourage: z.B. people walking and sitting / parked cars and cyclists / mature trees and planted borders / outdoor furniture and umbrellas) to this architectural image.\nPhotorealistic, architecturally correct scale and proportion.\nIntegrate naturally into the existing scene — maintain the original lighting, shadows, materials, and camera perspective without any changes.' },
+    { name: 'Cutout für Architekturcollage',
+      text: 'Create a high-quality architectural cutout of (Motiv: z.B. a standing person in casual clothing / a mature tree in full leaf / a parked car, side view / an indoor plant in a ceramic pot).\nStyle: (Darstellungsart: z.B. photorealistic / architectural watercolour / black ink line drawing).\nBackground: pure white, clean edges, suitable for collage use.\nArchitecturally correct scale and proportions.' },
+    { name: 'Grundriss / Lageplan → Render',
+      text: 'Transform this (Grundriss / Lageplan / Schnittzeichnung) into a photorealistic architectural render.\nView: (Ansicht: z.B. interior perspective / aerial bird\'s eye view / street-level exterior).\nStyle: (Architekturstil: z.B. contemporary residential / warm Scandinavian / commercial modern).\nMaterials: (Materialien: z.B. concrete, glass, timber, planted green surfaces).\nTime of day: (Tageszeit: z.B. bright daylight / late afternoon golden light).\nCamera: (Perspektive: z.B. wide-angle 28mm at eye level / aerial drone view, straight down).' }
   ]}
 ];
 
