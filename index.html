@@ -1062,16 +1062,16 @@ function applyParamVisibility() {
   setOff('grp-think',  !m.startsWith('gemini-2.5') && !m.startsWith('gemini-3'));
   setOff('grp-count',  !isImagen);
 
-  /* Auflösung: Gemini → 1K/2K/4K  |  Imagen Std/Ultra → 1K/2K  |  Imagen Fast → versteckt */
-  var imageSizeOff = isImagenFast;
+  /* Auflösung: nur Imagen Std/Ultra → 1K/2K  |  alle anderen → versteckt */
+  var imageSizeOff = !isImagen || isImagenFast;
   setOff('grp-imagesize', imageSizeOff);
   q('#grp-upscale-tip').style.display = imageSizeOff ? '' : 'none';
 
-  /* 4K-Button nur bei Gemini */
+  /* 4K-Button bei Imagen ausblenden (nicht unterstützt) */
   var btn4k = q('#btn-4k-opt');
   if (btn4k) {
-    btn4k.style.display = isImagen ? 'none' : '';
-    if (isImagen && S.imageSize === '4K') {
+    btn4k.style.display = 'none';
+    if (S.imageSize === '4K') {
       S.imageSize = '2K';
       q('#seg-imagesize').querySelectorAll('.seg-btn').forEach(function(b) {
         b.classList.toggle('on', b.dataset.v === '2K');
@@ -1296,13 +1296,6 @@ function callGemini(prompt) {
   if (S.model.startsWith('gemini-2.5') && S.thinking > 0) {
     cfg.thinkingConfig = { thinkingBudget: S.thinking };
   }
-  /* Auflösung & Seitenverhältnis für Gemini */
-  cfg.responseFormat = {
-    image: {
-      imageSize: S.imageSize,
-      aspectRatio: S.ratio
-    }
-  };
   var seed = getSeed();
   if (seed !== null) cfg.seed = seed;
 
