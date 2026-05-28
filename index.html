@@ -1,0 +1,1256 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="theme-color" content="#080808">
+<meta name="description" content="KI-Bildgenerierung mit Google Gemini — Nano Banana Studio">
+<title>🍌 Nano Banana Studio</title>
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg:      #080808;
+  --s1:      #0f0f0f;
+  --s2:      #161616;
+  --s3:      #1e1e1e;
+  --s4:      #262626;
+  --bd:      rgba(255,255,255,0.07);
+  --bd-hi:   rgba(255,255,255,0.13);
+  --text:    #e2e2e2;
+  --muted:   #707070;
+  --dim:     #3a3a3a;
+  --accent:  #f5c518;
+  --acc-bg:  rgba(245,197,24,0.10);
+  --acc-txt: #000;
+  --red:     #e53935;
+  --red-bg:  rgba(229,57,53,0.10);
+  --green:   #4ade80;
+  --r:       10px;
+  --r-sm:    6px;
+  --font:    -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+  --mono:    'SF Mono', 'Fira Code', 'Consolas', monospace;
+  --panel-w: 300px;
+}
+
+html, body {
+  height: 100%;
+  overflow: hidden;
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font);
+  font-size: 13px;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  user-select: none;
+}
+textarea, input, .img-prompt, .error-msg { user-select: text; }
+
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.07); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,0.13); }
+
+.screen { display: none; }
+.screen.active { display: flex; }
+
+/* ── SETUP ── */
+#screen-setup {
+  height: 100vh;
+  height: 100dvh;
+  align-items: center;
+  justify-content: center;
+  background: radial-gradient(ellipse 50% 35% at 50% -5%, rgba(245,197,24,0.05) 0%, transparent 70%);
+}
+.setup-wrap { width: 420px; }
+.setup-logo { text-align: center; margin-bottom: 28px; }
+.setup-logo .icon { font-size: 48px; line-height: 1; display: block; margin-bottom: 10px; }
+.setup-logo h1   { font-size: 20px; font-weight: 700; letter-spacing: -0.4px; }
+.setup-logo .sub { font-size: 12px; color: var(--muted); margin-top: 3px; }
+.setup-card {
+  background: var(--s1);
+  border: 1px solid var(--bd);
+  border-radius: 14px;
+  padding: 28px 24px 24px;
+}
+.setup-card h2    { font-size: 15px; font-weight: 600; margin-bottom: 8px; }
+.setup-card .desc { font-size: 12px; color: var(--muted); line-height: 1.65; margin-bottom: 18px; }
+.warn-box {
+  display: flex; gap: 9px;
+  background: var(--red-bg);
+  border: 1px solid rgba(229,57,53,0.18);
+  border-radius: var(--r-sm);
+  padding: 10px 12px;
+  font-size: 12px; color: #f87171; line-height: 1.55;
+  margin-bottom: 20px;
+}
+.field-lbl {
+  display: block; font-size: 10px; font-weight: 700;
+  text-transform: uppercase; letter-spacing: 0.6px;
+  color: var(--muted); margin-bottom: 6px;
+}
+.input-row { margin-bottom: 16px; }
+.input-row input {
+  width: 100%;
+  background: var(--s2); border: 1px solid var(--bd); border-radius: var(--r);
+  padding: 10px 14px; color: var(--text);
+  font-size: 13px; font-family: var(--mono); outline: none;
+  transition: border-color 0.15s;
+}
+.input-row input:focus   { border-color: var(--accent); }
+.input-row input.err     { border-color: var(--red); }
+.input-row input::placeholder { font-family: var(--font); color: var(--dim); }
+.field-err { font-size: 11px; color: var(--red); margin-top: 5px; display: none; }
+.field-err.show { display: block; }
+
+/* ── BUTTONS ── */
+.btn {
+  display: inline-flex; align-items: center; justify-content: center;
+  gap: 6px; padding: 9px 16px; border-radius: var(--r);
+  font-size: 13px; font-weight: 500; font-family: var(--font);
+  cursor: pointer; border: none;
+  transition: opacity 0.12s, background 0.12s, transform 0.08s;
+  white-space: nowrap; line-height: 1;
+}
+.btn:disabled { opacity: 0.3; cursor: not-allowed; }
+.btn:not(:disabled):active { transform: scale(0.97); }
+.btn-primary { background: var(--accent); color: var(--acc-txt); font-weight: 700; font-size: 14px; }
+.btn-primary:not(:disabled):hover { opacity: 0.88; }
+.btn-secondary { background: transparent; border: 1px solid var(--bd-hi); color: var(--text); }
+.btn-secondary:not(:disabled):hover { background: var(--s3); border-color: rgba(255,255,255,0.18); }
+.btn-ghost { background: transparent; border: none; color: var(--muted); padding: 5px 8px; border-radius: var(--r-sm); }
+.btn-ghost:not(:disabled):hover { color: var(--text); background: var(--s3); }
+.btn-full { width: 100%; }
+.btn-sm   { padding: 6px 12px; font-size: 12px; }
+.btn-icon { padding: 7px 9px; border-radius: var(--r-sm); }
+
+/* ── MAIN ── */
+#screen-main { flex-direction: column; height: 100vh; height: 100dvh; min-width: 780px; }
+
+.header {
+  display: flex; align-items: center;
+  height: 46px; padding: 0 16px;
+  border-bottom: 1px solid var(--bd);
+  background: var(--s1); flex-shrink: 0; gap: 12px;
+}
+.header-title { font-size: 14px; font-weight: 700; letter-spacing: -0.2px; white-space: nowrap; flex: 1; }
+.key-pill {
+  display: flex; align-items: center; gap: 6px;
+  background: var(--s2); border: 1px solid var(--bd); border-radius: 20px;
+  padding: 3px 4px 3px 10px; font-size: 11px; color: var(--muted); cursor: default;
+}
+.key-pill .kv  { font-family: var(--mono); color: var(--text); font-size: 11px; }
+.key-pill .kbtn {
+  background: var(--s3); border: none;
+  width: 18px; height: 18px; border-radius: 50%;
+  color: var(--muted); cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 10px; transition: background 0.12s, color 0.12s; flex-shrink: 0;
+}
+.key-pill .kbtn:hover { background: var(--red); color: #fff; }
+
+.app-body { display: flex; flex: 1; overflow: hidden; min-height: 0; }
+
+/* ── RESIZE HANDLE ── */
+.resize-handle {
+  width: 4px; flex-shrink: 0; background: transparent;
+  cursor: col-resize; position: relative; z-index: 10; transition: background 0.15s;
+}
+.resize-handle:hover, .resize-handle.dragging { background: var(--accent); }
+
+/* ── PARAMS ── */
+.params {
+  width: var(--panel-w); min-width: 220px; max-width: 420px;
+  flex-shrink: 0; background: var(--s1);
+  display: flex; flex-direction: column; overflow: hidden;
+}
+.params-body {
+  overflow-y: auto; flex: 1; padding: 16px 14px;
+  display: flex; flex-direction: column; gap: 20px;
+}
+.pgrp { display: flex; flex-direction: column; gap: 8px; }
+.pgrp-lbl { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.7px; color: var(--dim); }
+.pgrp.off  { opacity: 0.22; pointer-events: none; }
+
+.ctrl-sel {
+  width: 100%; background: var(--s2); border: 1px solid var(--bd); border-radius: var(--r-sm);
+  padding: 8px 28px 8px 10px; color: var(--text); font-size: 13px; font-family: var(--font);
+  outline: none; cursor: pointer; appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath fill='%23666' d='M5 6L0 0h10z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat; background-position: right 10px center;
+  transition: border-color 0.15s;
+}
+.ctrl-sel:focus { border-color: var(--accent); outline: none; }
+.ctrl-sel option { background: #1c1c1c; }
+
+.ctrl-slide { display: flex; align-items: center; gap: 10px; }
+.ctrl-slide input[type=range] {
+  flex: 1; -webkit-appearance: none; height: 3px;
+  background: var(--s4); border-radius: 2px; outline: none; cursor: pointer; border: none;
+}
+.ctrl-slide input[type=range]::-webkit-slider-thumb {
+  -webkit-appearance: none; width: 15px; height: 15px; border-radius: 50%;
+  background: var(--accent); cursor: pointer; border: 2px solid var(--bg);
+  box-shadow: 0 0 0 1px rgba(245,197,24,0.5); transition: box-shadow 0.15s;
+}
+.ctrl-slide input[type=range]::-webkit-slider-thumb:hover { box-shadow: 0 0 0 3px rgba(245,197,24,0.25); }
+.ctrl-slide .sv { font-size: 12px; font-family: var(--mono); color: var(--accent); min-width: 28px; text-align: right; }
+
+.seg { display: flex; background: var(--s2); border: 1px solid var(--bd); border-radius: var(--r-sm); padding: 2px; gap: 2px; }
+.seg-btn {
+  flex: 1; padding: 6px 3px; border-radius: 4px; font-size: 11px; font-family: var(--font);
+  cursor: pointer; color: var(--muted); transition: background 0.12s, color 0.12s;
+  border: none; background: transparent; text-align: center;
+  display: flex; align-items: center; justify-content: center; flex-direction: column; gap: 3px; line-height: 1.2;
+}
+.seg-btn.on { background: var(--accent); color: var(--acc-txt); font-weight: 700; }
+.seg-btn:not(.on):hover { background: var(--s4); color: var(--text); }
+
+.rb { border: 1.5px solid currentColor; border-radius: 1px; display: block; opacity: 0.75; }
+.seg-btn.on .rb { opacity: 1; }
+.r11  { width: 10px; height: 10px; }
+.r43  { width: 13px; height: 10px; }
+.r34  { width: 10px; height: 13px; }
+.r169 { width: 16px; height: 9px; }
+.r916 { width: 9px; height: 16px; }
+
+.ctrl-ta {
+  width: 100%; background: var(--s2); border: 1px solid var(--bd); border-radius: var(--r-sm);
+  padding: 8px 10px; color: var(--text); font-size: 12px; font-family: var(--font);
+  outline: none; resize: none; line-height: 1.5; transition: border-color 0.15s;
+}
+.ctrl-ta:focus { border-color: var(--accent); }
+.ctrl-ta::placeholder { color: var(--dim); }
+
+.tog-row { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+.tog-text { font-size: 13px; }
+.toggle { position: relative; width: 34px; height: 18px; flex-shrink: 0; cursor: pointer; }
+.toggle input { position: absolute; opacity: 0; width: 0; height: 0; }
+.tog-track {
+  position: absolute; inset: 0; background: var(--s4); border: 1px solid var(--bd-hi);
+  border-radius: 9px; transition: background 0.18s, border-color 0.18s;
+}
+.tog-thumb {
+  position: absolute; top: 2px; left: 2px; width: 12px; height: 12px;
+  background: var(--muted); border-radius: 50%; transition: transform 0.18s, background 0.18s;
+}
+.toggle input:checked ~ .tog-track { background: var(--acc-bg); border-color: var(--accent); }
+.toggle input:checked ~ .tog-track .tog-thumb { transform: translateX(16px); background: var(--accent); }
+.param-note { font-size: 11px; color: var(--dim); line-height: 1.45; }
+
+.pgrp-seed {
+  background: var(--s2);
+  border: 1px solid var(--bd-hi);
+  border-radius: var(--r-sm);
+  padding: 10px 10px 8px;
+}
+.pgrp-seed .pgrp-lbl { color: var(--muted); }
+
+.seed-row { display: flex; gap: 5px; }
+.ctrl-num {
+  flex: 1; background: var(--s2); border: 1px solid var(--bd); border-radius: var(--r-sm);
+  padding: 7px 10px; color: var(--text); font-size: 12px; font-family: var(--mono);
+  outline: none; -moz-appearance: textfield; transition: border-color 0.15s;
+}
+.ctrl-num::-webkit-inner-spin-button { display: none; }
+.ctrl-num:focus { border-color: var(--accent); }
+.ctrl-num::placeholder { font-family: var(--font); color: var(--dim); }
+
+/* ── CONTENT ── */
+.content { flex: 1; display: flex; flex-direction: column; overflow: hidden; min-width: 0; border-left: 1px solid var(--bd); }
+
+.prompt-zone { padding: 14px 18px 12px; border-bottom: 1px solid var(--bd); background: var(--s1); flex-shrink: 0; }
+
+.prompt-box { position: relative; margin-bottom: 9px; }
+.prompt-box textarea {
+  width: 100%; height: 88px;
+  background: var(--s2); border: 1px solid var(--bd); border-radius: var(--r);
+  padding: 11px 13px 26px; color: var(--text); font-size: 13px; font-family: var(--font);
+  outline: none; resize: vertical; min-height: 60px; max-height: 240px;
+  line-height: 1.55; transition: border-color 0.15s;
+}
+.prompt-box textarea:focus { border-color: rgba(245,197,24,0.35); }
+.prompt-box textarea::placeholder { color: var(--dim); }
+.prompt-box textarea.shake { animation: shake 0.28s ease; border-color: var(--red) !important; }
+@keyframes shake { 0%,100%{transform:translateX(0)} 25%{transform:translateX(-5px)} 75%{transform:translateX(5px)} }
+.prompt-box.drag-over textarea { border-color: rgba(245,197,24,0.5); background: rgba(245,197,24,0.03); }
+
+.cc { position: absolute; bottom: 8px; right: 11px; font-size: 11px; color: var(--dim); font-family: var(--mono); pointer-events: none; }
+.cc.near { color: #fb923c; }
+.cc.full { color: var(--red); }
+
+/* ── UPLOAD ── */
+.upload-strip {
+  display: flex; align-items: center; gap: 8px; flex-wrap: wrap;
+  background: var(--s2); border: 1px solid var(--bd); border-radius: var(--r-sm);
+  padding: 6px 10px; margin-bottom: 8px;
+}
+.upload-thumbs { display: flex; gap: 6px; flex-wrap: wrap; flex: 1; min-width: 0; }
+.upload-item { position: relative; flex-shrink: 0; }
+.upload-item img { width: 38px; height: 38px; object-fit: cover; border-radius: 4px; display: block; background: var(--s3); }
+.upload-item-rm {
+  position: absolute; top: -4px; right: -4px;
+  width: 14px; height: 14px; border-radius: 50%;
+  background: var(--red); color: #fff; border: none; font-size: 9px;
+  cursor: pointer; display: flex; align-items: center; justify-content: center;
+  line-height: 1; transition: opacity 0.12s;
+}
+.upload-item-rm:hover { opacity: 0.75; }
+.upload-strip-count { font-size: 10px; color: var(--accent); background: var(--acc-bg); border: 1px solid rgba(245,197,24,0.2); border-radius: 4px; padding: 1px 7px; flex-shrink: 0; white-space: nowrap; }
+.upload-warn { font-size: 11px; color: #fb923c; background: rgba(251,146,60,0.07); border: 1px solid rgba(251,146,60,0.18); border-radius: var(--r-sm); padding: 6px 10px; margin-bottom: 8px; line-height: 1.4; }
+
+.chips { display: flex; gap: 5px; overflow-x: auto; padding-bottom: 1px; margin-bottom: 9px; }
+.chips::-webkit-scrollbar { height: 0; }
+.chip {
+  background: var(--s2); border: 1px solid var(--bd); border-radius: 20px;
+  padding: 3px 10px; font-size: 11px; color: var(--muted); cursor: pointer;
+  white-space: nowrap; flex-shrink: 0; max-width: 260px; overflow: hidden; text-overflow: ellipsis;
+  transition: border-color 0.12s, color 0.12s;
+}
+.chip:hover { border-color: var(--accent); color: var(--text); }
+
+.gen-row { display: flex; align-items: center; gap: 10px; }
+.gen-row .btn-primary  { flex: 1; padding: 11px 20px; }
+.gen-row .btn-secondary:first-child { flex: 1; padding: 11px 16px; }
+.gen-row .btn-primary.busy { cursor: wait; opacity: 0.7; }
+
+/* ── RESULTS ── */
+.results { flex: 1; overflow-y: auto; padding: 14px 18px; }
+.results-hdr { display: none; align-items: center; justify-content: space-between; margin-bottom: 12px; }
+.results-hdr.show { display: flex; }
+.results-hdr-title { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.7px; color: var(--dim); display: flex; align-items: center; gap: 8px; }
+.badge { background: var(--s3); border: 1px solid var(--bd); border-radius: 20px; padding: 1px 8px; font-size: 11px; color: var(--muted); font-family: var(--mono); font-weight: 400; }
+
+.results-empty { display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%; gap: 10px; color: var(--dim); text-align: center; padding-bottom: 40px; }
+.empty-icon  { font-size: 36px; opacity: 0.5; }
+.empty-line1 { font-size: 13px; color: var(--muted); }
+.empty-line2 { font-size: 12px; }
+
+.loading-card { background: var(--s2); border: 1px solid var(--bd); border-radius: var(--r); padding: 16px; display: flex; align-items: center; gap: 14px; margin-bottom: 12px; }
+.spinner { width: 18px; height: 18px; border: 2px solid var(--s4); border-top-color: var(--accent); border-radius: 50%; animation: spin 0.7s linear infinite; flex-shrink: 0; }
+@keyframes spin { to { transform: rotate(360deg); } }
+.loading-lbl { font-size: 13px; font-weight: 500; }
+.loading-sub { font-size: 11px; color: var(--muted); margin-top: 2px; }
+
+.img-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 10px; margin-bottom: 12px; }
+.img-grid.single { grid-template-columns: minmax(0, 640px); }
+
+.img-card { background: var(--s2); border: 1px solid var(--bd); border-radius: var(--r); overflow: hidden; transition: border-color 0.18s; }
+.img-card:hover { border-color: var(--bd-hi); }
+.img-wrap { position: relative; overflow: hidden; background: var(--s3); cursor: zoom-in; }
+.img-wrap img { width: 100%; display: block; transition: transform 0.3s ease; }
+.img-card:hover .img-wrap img { transform: scale(1.012); }
+.img-overlay { position: absolute; inset: 0; background: rgba(0,0,0,0.68); display: flex; align-items: center; justify-content: center; gap: 8px; opacity: 0; transition: opacity 0.18s; }
+.img-card:hover .img-overlay { opacity: 1; }
+.img-meta { padding: 9px 11px; display: flex; align-items: center; gap: 7px; }
+.img-prompt { flex: 1; font-size: 11px; color: var(--muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; cursor: default; min-width: 0; }
+.img-tags { display: flex; gap: 4px; flex-shrink: 0; }
+.tag { background: var(--s3); border: 1px solid var(--bd); border-radius: 3px; padding: 1px 5px; font-size: 10px; color: var(--dim); font-family: var(--mono); white-space: nowrap; }
+
+.error-card { background: var(--red-bg); border: 1px solid rgba(229,57,53,0.2); border-radius: var(--r); padding: 14px 15px 12px; margin-bottom: 12px; }
+.error-title { font-size: 13px; font-weight: 600; color: #f87171; margin-bottom: 5px; }
+.error-msg   { font-size: 12px; color: #fca5a5; margin-bottom: 8px; line-height: 1.55; }
+.error-hints { list-style: none; display: flex; flex-direction: column; gap: 2px; }
+.error-hints li { font-size: 11px; color: rgba(252,165,165,0.55); padding-left: 12px; position: relative; }
+.error-hints li::before { content: '›'; position: absolute; left: 0; }
+
+.statusbar { height: calc(28px + env(safe-area-inset-bottom)); border-top: 1px solid var(--bd); background: var(--s1); display: flex; align-items: center; padding: 0 16px; padding-bottom: env(safe-area-inset-bottom); flex-shrink: 0; font-size: 11px; color: var(--muted); overflow: hidden; }
+.sb-item { display: flex; align-items: center; gap: 5px; padding: 0 12px; border-right: 1px solid var(--bd); white-space: nowrap; height: 100%; }
+.sb-item:first-child { padding-left: 0; }
+.sb-item:last-child  { border-right: none; }
+.sb-dot { width: 5px; height: 5px; border-radius: 50%; background: var(--dim); flex-shrink: 0; }
+.sb-dot.on { background: var(--green); box-shadow: 0 0 6px rgba(74,222,128,0.45); }
+.sb-val { color: var(--text); font-family: var(--mono); }
+
+/* ── LIGHTBOX ── */
+.lightbox { display: none; position: fixed; inset: 0; z-index: 500; background: rgba(0,0,0,0.88); align-items: center; justify-content: center; }
+.lightbox.show { display: flex; }
+.lb-bg { position: absolute; inset: 0; cursor: zoom-out; }
+.lb-inner { position: relative; z-index: 1; display: flex; flex-direction: column; align-items: center; gap: 12px; max-width: 90vw; }
+.lb-inner img { display: block; max-width: 88vw; max-height: 80vh; border-radius: var(--r); object-fit: contain; box-shadow: 0 4px 60px rgba(0,0,0,0.6); }
+.lb-close { position: absolute; top: -14px; right: -14px; width: 28px; height: 28px; background: var(--s4); border: 1px solid var(--bd-hi); border-radius: 50%; color: var(--text); display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 13px; transition: background 0.12s; z-index: 2; }
+.lb-close:hover { background: var(--red); }
+.lb-actions { display: flex; gap: 8px; align-items: center; }
+.lb-prompt { font-size: 12px; color: var(--muted); text-align: center; max-width: 600px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; padding: 0 40px; }
+
+/* ── TOAST ── */
+.toast { position: fixed; bottom: 44px; left: 50%; transform: translateX(-50%) translateY(6px); background: var(--s4); border: 1px solid var(--bd-hi); border-radius: 20px; padding: 6px 14px; font-size: 12px; color: var(--text); z-index: 600; opacity: 0; transition: opacity 0.18s, transform 0.18s; pointer-events: none; white-space: nowrap; }
+.toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+</style>
+</head>
+<body>
+
+<!-- SETUP -->
+<div id="screen-setup" class="screen active">
+  <div class="setup-wrap">
+    <div class="setup-logo">
+      <span class="icon">🍌</span>
+      <h1>Nano Banana Studio</h1>
+      <p class="sub">KI-Bildgenerierung · Google Gemini API</p>
+      <p class="sub" style="margin-top:2px;opacity:0.6;">Innenarchitektur · Hochschule Mainz</p>
+    </div>
+    <div class="setup-card">
+      <h2>🔑 API-Key eingeben</h2>
+      <p class="desc">Nano Banana Studio nutzt die Google Gemini API zur Bildgenerierung. Einen gültigen Key bekommst du vom Workshop-Leiter — ein eigener Google-Account ist nicht nötig.</p>
+      <div class="warn-box">
+        <span>⚠️</span>
+        <span><strong>Wichtig:</strong> Diesen Key nie weitergeben — nicht an Personen, nicht in öffentlichen Projekten oder Repositories. Er wird nur im aktuellen Tab gespeichert und beim Schließen automatisch gelöscht.</span>
+      </div>
+      <label class="field-lbl" for="key-input">API-Key</label>
+      <div class="input-row">
+        <input type="password" id="key-input" placeholder="AIzaSy…" autocomplete="off" spellcheck="false">
+        <div class="field-err" id="key-err">Muss mit „AIza" beginnen und mindestens 30 Zeichen lang sein.</div>
+      </div>
+      <label class="field-lbl" for="name-input">Dein Name / Kürzel <span style="color:var(--dim);font-weight:400;text-transform:none;letter-spacing:0;">(optional · für die Kostenübersicht)</span></label>
+      <div class="input-row">
+        <input type="text" id="name-input" placeholder="z. B. Julia M." maxlength="40" autocomplete="name" spellcheck="false">
+      </div>
+      <button class="btn btn-primary btn-full" id="btn-save">Speichern &amp; starten</button>
+    </div>
+    <div style="margin-top:20px;text-align:center;font-size:11px;color:var(--dim);line-height:1.8;">
+      v1.0 · Build Mai 2026<br>
+      Klaus Teltenkötter
+    </div>
+  </div>
+</div>
+
+<!-- MAIN -->
+<div id="screen-main" class="screen">
+  <header class="header">
+    <span class="header-title">🍌 Nano Banana Studio</span>
+    <div class="key-pill" id="key-pill">
+      <span>🔑</span>
+      <span class="kv" id="key-display"></span>
+      <button class="kbtn" id="btn-remove-key" title="Key entfernen">✕</button>
+    </div>
+  </header>
+
+  <div class="app-body">
+    <aside class="params" id="params">
+      <div class="params-body">
+
+        <div class="pgrp">
+          <div class="pgrp-lbl">Modell</div>
+          <select class="ctrl-sel" id="sel-model">
+            <optgroup label="Gemini (Nano Banana)">
+              <option value="gemini-2.5-flash-image">Gemini 2.5 Flash Image</option>
+              <option value="gemini-3.1-flash-image-preview">Gemini 3.1 Flash Image (Preview)</option>
+              <option value="gemini-3-pro-image-preview">Gemini 3 Pro Image (Preview)</option>
+            </optgroup>
+            <optgroup label="Imagen 4 (nur Text zu Bild)">
+              <option value="imagen-4.0-fast-generate-001">Imagen 4 Fast · ~0,02 €/Bild</option>
+              <option value="imagen-4.0-generate-001">Imagen 4 Standard · ~0,04 €</option>
+              <option value="imagen-4.0-ultra-generate-001">Imagen 4 Ultra · ~0,06 €</option>
+            </optgroup>
+          </select>
+        </div>
+
+        <div class="pgrp" id="grp-temp">
+          <div class="pgrp-lbl">Temperatur</div>
+          <div class="ctrl-slide">
+            <input type="range" id="sl-temp" min="0" max="2" step="0.1" value="1.0">
+            <span class="sv" id="v-temp">1.0</span>
+          </div>
+        </div>
+
+        <div class="pgrp" id="grp-output">
+          <div class="pgrp-lbl">Ausgabe</div>
+          <div class="seg" id="seg-output">
+            <button class="seg-btn on" data-v="IMAGE_TEXT">Bild &amp; Text</button>
+            <button class="seg-btn" data-v="IMAGE">Nur Bilder</button>
+          </div>
+        </div>
+
+        <div class="pgrp" id="grp-think">
+          <div class="pgrp-lbl">Thinking-Level <span style="color:var(--dim);font-weight:400;text-transform:none;letter-spacing:0;font-size:10px;">— mehr = besser &amp; langsamer</span></div>
+          <div class="seg" id="seg-think">
+            <button class="seg-btn on" data-v="0">Aus</button>
+            <button class="seg-btn" data-v="1024">Niedrig</button>
+            <button class="seg-btn" data-v="8192">Mittel</button>
+            <button class="seg-btn" data-v="24576">Hoch</button>
+          </div>
+        </div>
+
+        <div class="pgrp">
+          <div class="pgrp-lbl">Seitenverhältnis</div>
+          <div class="seg" id="seg-ratio">
+            <button class="seg-btn on" data-v="1:1"><span class="rb r11"></span>1:1</button>
+            <button class="seg-btn" data-v="4:3"><span class="rb r43"></span>4:3</button>
+            <button class="seg-btn" data-v="3:4"><span class="rb r34"></span>3:4</button>
+            <button class="seg-btn" data-v="16:9"><span class="rb r169"></span>16:9</button>
+            <button class="seg-btn" data-v="9:16"><span class="rb r916"></span>9:16</button>
+          </div>
+        </div>
+
+        <div class="pgrp" id="grp-count">
+          <div class="pgrp-lbl">Anzahl Bilder</div>
+          <div class="seg" id="seg-count">
+            <button class="seg-btn on" data-v="1">1</button>
+            <button class="seg-btn" data-v="2">2</button>
+            <button class="seg-btn" data-v="3">3</button>
+            <button class="seg-btn" data-v="4">4</button>
+          </div>
+        </div>
+
+        <div class="pgrp" id="grp-imagesize">
+          <div class="pgrp-lbl">Auflösung <span style="color:var(--dim);font-weight:400;text-transform:none;letter-spacing:0;font-size:10px;">— nicht für Fast</span></div>
+          <div class="seg" id="seg-imagesize">
+            <button class="seg-btn on" data-v="1K">1K</button>
+            <button class="seg-btn" data-v="2K">2K</button>
+          </div>
+          <p class="param-note">Nur für Imagen Standard &amp; Ultra — bei anderen Modellen nicht verfügbar.</p>
+        </div>
+
+        <div class="pgrp" id="grp-upscale-tip" style="display:none;">
+          <div style="background:var(--acc-bg);border:1px solid rgba(245,197,24,0.2);border-radius:var(--r-sm);padding:9px 11px;">
+            <div style="font-size:11px;font-weight:700;color:var(--accent);margin-bottom:4px;">💡 Höhere Auflösung</div>
+            <div class="param-note" style="color:var(--muted);">Gemini &amp; Imagen Fast geben ~1024 px aus. Für Druckqualität: PNG in Photoshop öffnen → <strong style="color:var(--text);">Bearbeiten → Generative Upscale</strong> (Adobe Firefly) → bis 4× ohne Qualitätsverlust.</div>
+          </div>
+        </div>
+
+        <div class="pgrp" id="grp-neg">
+          <div class="pgrp-lbl">Negativer Prompt</div>
+          <textarea class="ctrl-ta" id="neg-prompt" rows="2" placeholder="Was soll nicht im Bild erscheinen…"></textarea>
+        </div>
+
+        <div class="pgrp" id="grp-safety">
+          <div class="pgrp-lbl">Sicherheitsfilter</div>
+          <div class="tog-row">
+            <span class="tog-text" id="safety-lbl">Standard</span>
+            <label class="toggle">
+              <input type="checkbox" id="tog-safety">
+              <div class="tog-track"><div class="tog-thumb"></div></div>
+            </label>
+          </div>
+          <p class="param-note">Weniger strikt: für künstlerische Projekte. Nur für Volljährige.</p>
+        </div>
+
+        <div class="pgrp pgrp-seed">
+          <div class="pgrp-lbl">Seed <span style="font-weight:400;text-transform:none;letter-spacing:0;font-size:10px;">— für alle Modelle</span></div>
+          <div class="seed-row">
+            <input class="ctrl-num" type="number" id="seed-input" placeholder="Leer = zufällig">
+            <button class="btn btn-secondary btn-icon" id="btn-dice" title="Zufalls-Seed generieren">🎲</button>
+          </div>
+        </div>
+
+      </div>
+    </aside>
+
+    <div class="resize-handle" id="resize-handle"></div>
+
+    <main class="content">
+      <div class="prompt-zone">
+        <div class="prompt-box" id="prompt-box">
+          <textarea id="prompt" placeholder="Prompt eingeben — beschreibe das Bild, das generiert werden soll…" maxlength="800"></textarea>
+          <span class="cc" id="char-count">0 / 800</span>
+        </div>
+
+        <div class="upload-strip" id="upload-strip" style="display:none;">
+          <div class="upload-thumbs" id="upload-thumbs"></div>
+          <span class="upload-strip-count" id="upload-strip-count">0 Bilder</span>
+          <button class="btn btn-ghost" id="btn-clear-imgs" style="padding:3px 8px;font-size:11px;">Alle ✕</button>
+        </div>
+
+        <div class="upload-warn" id="upload-warn" style="display:none;">
+          ⚠️ Imagen-Modelle unterstützen keine Bild-Eingabe — bitte wechsle zu einem Gemini-Modell.
+        </div>
+
+        <input type="file" id="file-input" accept="image/*" multiple style="display:none;">
+        <div class="gen-row">
+          <button class="btn btn-secondary" id="btn-upload" title="Bilder als Eingabe laden — max. 5 (oder auf Textarea ziehen)">📎 Bilder hinzufügen</button>
+          <button class="btn btn-primary" id="btn-gen">⚡ Generieren</button>
+          <div style="flex:1"></div>
+          <button class="btn btn-ghost btn-sm" id="btn-clear" style="display:none;">Ergebnisse leeren</button>
+        </div>
+      </div>
+
+      <div class="results" id="results">
+        <div class="results-hdr" id="results-hdr">
+          <span class="results-hdr-title">Ergebnisse <span class="badge" id="results-badge">0</span></span>
+        </div>
+        <div id="results-body">
+          <div class="results-empty" id="results-empty">
+            <span class="empty-icon">🍌</span>
+            <span class="empty-line1">Noch keine Bilder generiert</span>
+            <span class="empty-line2">Prompt eingeben und auf Generieren klicken — oder Strg+Enter</span>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <footer class="statusbar">
+    <div class="sb-item"><div class="sb-dot" id="sb-dot"></div><span id="sb-api">API inaktiv</span></div>
+    <div class="sb-item">Bilder: <span class="sb-val" id="sb-count">0</span></div>
+    <div class="sb-item">Gesamt: ~<span class="sb-val" id="sb-cost">0,00</span> €</div>
+    <div class="sb-item" id="sb-track-item" style="display:none;">📊 <span class="sb-val" id="sb-track-name">—</span></div>
+    <div class="sb-item">Modell: <span class="sb-val" id="sb-model">—</span></div>
+  </footer>
+</div>
+
+<!-- LIGHTBOX -->
+<div class="lightbox" id="lightbox">
+  <div class="lb-bg" id="lb-bg"></div>
+  <div class="lb-inner">
+    <button class="lb-close" id="lb-close">✕</button>
+    <img id="lb-img" src="" alt="">
+    <div class="lb-prompt" id="lb-prompt"></div>
+    <div class="lb-actions">
+      <button class="btn btn-secondary btn-sm" id="lb-dl">↓ PNG herunterladen</button>
+      <button class="btn btn-secondary btn-sm" id="lb-copy">📋 Prompt kopieren</button>
+      <button class="btn btn-ghost btn-sm" id="lb-again">↺ Nochmal generieren</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+'use strict';
+
+/* ── TRACKER ── Hier die Apps-Script-URL eintragen (leer = kein Tracking) */
+var TRACKER_URL = 'https://script.google.com/macros/s/AKfycbyENdn9zOo0k817sBG8jUzEjE2Pew4HOCFbSm08fJaj_IIHVspm4WAHhxKl78-OXlDf/exec';
+
+/* ── CONSTANTS ── */
+const COSTS = {
+  'gemini-2.5-flash-image':          0.039,
+  'gemini-3.1-flash-image-preview':  0.039,
+  'gemini-3-pro-image-preview':      0.039,
+  'imagen-4.0-fast-generate-001':    0.020,
+  'imagen-4.0-generate-001':         0.040,
+  'imagen-4.0-ultra-generate-001':   0.060
+};
+const MODEL_LABEL = {
+  'gemini-2.5-flash-image':          'Gemini 2.5 Flash',
+  'gemini-3.1-flash-image-preview':  'Gemini 3.1 Flash (Preview)',
+  'gemini-3-pro-image-preview':      'Gemini 3 Pro (Preview)',
+  'imagen-4.0-fast-generate-001':    'Imagen 4 Fast',
+  'imagen-4.0-generate-001':         'Imagen 4 Standard',
+  'imagen-4.0-ultra-generate-001':   'Imagen 4 Ultra'
+};
+const EXAMPLES = [
+  'A minimalist product poster, white background, Bauhaus style',
+  'Isometric city illustration, soft pastel colors, birds-eye view',
+  'Abstract data visualization, flowing lines, dark background, gold accents',
+  'Close-up product texture, marble surface, luxury packaging',
+  'Flat design icon set, 6 icons, technology theme, monochrome'
+];
+
+/* ── STATE ── */
+var S = {
+  key: '',
+  name: 'Anonym',
+  model: 'gemini-2.5-flash-image',
+  temp: 1.0,
+  thinking: 0,
+  ratio: '1:1',
+  count: 1,
+  imageSize: '1K',
+  safetyLess: false,
+  busy: false,
+  totalImages: 0,
+  totalCost: 0,
+  lbUrl: '',
+  lbPrompt: '',
+  inputImages: [],
+  outputMode: 'IMAGE_TEXT'
+};
+
+/* ── HELPERS ── */
+function q(sel) { return document.querySelector(sel); }
+function mk(cls) { var d = document.createElement('div'); d.className = cls; return d; }
+function esc(s) {
+  return String(s)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;');
+}
+function clip(s, n) { return s.length > n ? s.slice(0, n) + '…' : s; }
+function getSeed() { var v = parseInt(q('#seed-input').value); return (isNaN(v) || v <= 0) ? null : v; }
+
+/* ── SETUP ── */
+q('#btn-save').addEventListener('click', doSave);
+q('#key-input').addEventListener('keydown', function(e) {
+  if (e.key === 'Enter') { e.preventDefault(); q('#name-input').focus(); }
+  q('#key-err').classList.remove('show');
+  q('#key-input').classList.remove('err');
+});
+q('#name-input').addEventListener('keydown', function(e) {
+  if (e.key === 'Enter') doSave();
+});
+
+function doSave() {
+  var k = q('#key-input').value.trim();
+  if (!k.startsWith('AIza') || k.length < 30) {
+    q('#key-err').classList.add('show');
+    q('#key-input').classList.add('err');
+    q('#key-input').focus();
+    return;
+  }
+  var name = q('#name-input').value.trim() || 'Anonym';
+  sessionStorage.setItem('nb_key', k);
+  sessionStorage.setItem('nb_name', name);
+  S.key  = k;
+  S.name = name;
+  launchApp(k);
+}
+
+/* Auto-start if key stored */
+(function() {
+  var k = sessionStorage.getItem('nb_key');
+  if (k && k.startsWith('AIza') && k.length >= 30) {
+    S.key  = k;
+    S.name = sessionStorage.getItem('nb_name') || 'Anonym';
+    launchApp(k);
+  }
+})();
+
+function launchApp(key) {
+  q('#screen-setup').classList.remove('active');
+  q('#screen-main').classList.add('active');
+  q('#key-display').textContent = '●●●● ' + key.slice(-4);
+  q('#sb-dot').classList.add('on');
+  q('#sb-api').textContent = 'API aktiv';
+  updateModelStatus();
+  if (TRACKER_URL) {
+    q('#sb-track-item').style.display = '';
+    q('#sb-track-name').textContent = S.name;
+  }
+  initParams();
+  initPrompt();
+  initUpload();
+  initUIEvents();
+  initResize();
+}
+
+/* ── REMOVE KEY ── */
+q('#btn-remove-key').addEventListener('click', function() {
+  if (!confirm('API-Key entfernen und zum Start zurückkehren?')) return;
+  sessionStorage.removeItem('nb_key');
+  location.reload();
+});
+
+/* ── RESIZE PANEL ── */
+function initResize() {
+  var handle = q('#resize-handle');
+  var panel  = q('#params');
+  var dragging = false, startX = 0, startW = 0;
+
+  handle.addEventListener('mousedown', function(e) {
+    dragging = true;
+    startX = e.clientX;
+    startW = panel.offsetWidth;
+    handle.classList.add('dragging');
+    document.body.style.cursor = 'col-resize';
+    document.body.style.userSelect = 'none';
+  });
+  document.addEventListener('mousemove', function(e) {
+    if (!dragging) return;
+    var w = Math.max(220, Math.min(420, startW + (e.clientX - startX)));
+    document.documentElement.style.setProperty('--panel-w', w + 'px');
+    panel.style.width = w + 'px';
+  });
+  document.addEventListener('mouseup', function() {
+    if (!dragging) return;
+    dragging = false;
+    handle.classList.remove('dragging');
+    document.body.style.cursor = '';
+    document.body.style.userSelect = '';
+  });
+}
+
+/* ── PARAMS ── */
+function initParams() {
+  q('#sel-model').addEventListener('change', function(e) {
+    S.model = e.target.value;
+    applyParamVisibility();
+    updateModelStatus();
+  });
+  q('#sl-temp').addEventListener('input', function(e) {
+    S.temp = parseFloat(e.target.value);
+    q('#v-temp').textContent = S.temp.toFixed(1);
+  });
+  initSeg('seg-output', function(v) { S.outputMode = v; });
+  initSeg('seg-think', function(v) { S.thinking = parseInt(v); });
+  initSeg('seg-ratio',  function(v) { S.ratio = v; });
+  initSeg('seg-count',    function(v) { S.count = parseInt(v); });
+  initSeg('seg-imagesize', function(v) { S.imageSize = v; });
+  q('#tog-safety').addEventListener('change', function(e) {
+    S.safetyLess = e.target.checked;
+    q('#safety-lbl').textContent = S.safetyLess ? 'Weniger strikt' : 'Standard';
+  });
+  q('#btn-dice').addEventListener('click', function() {
+    q('#seed-input').value = Math.floor(Math.random() * 2147483647);
+  });
+  applyParamVisibility();
+}
+
+function initSeg(id, cb) {
+  var seg = q('#' + id);
+  seg.querySelectorAll('.seg-btn').forEach(function(btn) {
+    btn.addEventListener('click', function() {
+      seg.querySelectorAll('.seg-btn').forEach(function(b) { b.classList.remove('on'); });
+      btn.classList.add('on');
+      cb(btn.dataset.v);
+    });
+  });
+}
+
+function applyParamVisibility() {
+  var m = S.model;
+  setOff('grp-output',    !m.startsWith('gemini'));
+  setOff('grp-temp',     !m.startsWith('gemini'));
+  setOff('grp-think',    !m.startsWith('gemini-2.5') && !m.startsWith('gemini-3'));
+  setOff('grp-count',    !m.startsWith('imagen'));
+  var imageSizeOff = !m.startsWith('imagen') || m === 'imagen-4.0-fast-generate-001';
+  setOff('grp-imagesize', imageSizeOff);
+  q('#grp-upscale-tip').style.display = imageSizeOff ? '' : 'none';
+  setOff('grp-neg',      !m.startsWith('imagen'));
+  setOff('grp-safety',   !m.startsWith('imagen'));
+  updateUploadWarning();
+}
+
+function setOff(id, off) { q('#' + id).classList.toggle('off', off); }
+
+/* ── UPLOAD ── */
+function initUpload() {
+  var fileInput = q('#file-input');
+  var box = q('#prompt-box');
+
+  q('#btn-upload').addEventListener('click', function() { fileInput.click(); });
+
+  fileInput.addEventListener('change', function(e) {
+    addImageFiles(e.target.files);
+    fileInput.value = '';
+  });
+
+  q('#btn-clear-imgs').addEventListener('click', clearInputImages);
+
+  box.addEventListener('dragover', function(e) {
+    e.preventDefault();
+    var types = Array.from(e.dataTransfer.types);
+    if (types.indexOf('Files') >= 0) box.classList.add('drag-over');
+  });
+  box.addEventListener('dragleave', function() { box.classList.remove('drag-over'); });
+  box.addEventListener('drop', function(e) {
+    e.preventDefault();
+    box.classList.remove('drag-over');
+    var files = Array.from(e.dataTransfer.files).filter(function(f) { return f.type.startsWith('image/'); });
+    if (files.length) addImageFiles(files);
+  });
+}
+
+var MAX_IMAGES = 5;
+
+function addImageFiles(files) {
+  Array.from(files).forEach(function(file) {
+    if (!file.type.startsWith('image/')) return;
+    if (S.inputImages.length >= MAX_IMAGES) {
+      showToast('Maximal ' + MAX_IMAGES + ' Bilder möglich');
+      return;
+    }
+    var reader = new FileReader();
+    reader.onload = function(e) {
+      var dataUrl = e.target.result;
+      var b64  = dataUrl.split(',')[1];
+      var mime = (dataUrl.match(/:(.*?);/) || [])[1] || 'image/png';
+      S.inputImages.push({ b64: b64, mime: mime, name: file.name, dataUrl: dataUrl });
+      renderUploadStrip();
+      updateUploadWarning();
+      showToast('📎 ' + file.name);
+    };
+    reader.readAsDataURL(file);
+  });
+}
+
+function renderUploadStrip() {
+  var strip  = q('#upload-strip');
+  var thumbs = q('#upload-thumbs');
+  var count  = q('#upload-strip-count');
+  thumbs.innerHTML = '';
+  S.inputImages.forEach(function(img, i) {
+    var item = document.createElement('div');
+    item.className = 'upload-item';
+    var el = document.createElement('img');
+    el.src   = img.dataUrl;
+    el.title = img.name;
+    var rm = document.createElement('button');
+    rm.className   = 'upload-item-rm';
+    rm.textContent = '✕';
+    rm.title       = img.name + ' entfernen';
+    rm.addEventListener('click', (function(idx) {
+      return function() {
+        S.inputImages.splice(idx, 1);
+        renderUploadStrip();
+        updateUploadWarning();
+      };
+    })(i));
+    item.appendChild(el);
+    item.appendChild(rm);
+    thumbs.appendChild(item);
+  });
+  var n = S.inputImages.length;
+  count.textContent = n + (n === 1 ? ' Bild' : ' Bilder');
+  strip.style.display = n > 0 ? 'flex' : 'none';
+}
+
+function clearInputImages() {
+  S.inputImages = [];
+  renderUploadStrip();
+  q('#upload-warn').style.display = 'none';
+}
+
+function updateUploadWarning() {
+  var show = S.inputImages.length > 0 && S.model.startsWith('imagen');
+  q('#upload-warn').style.display = show ? 'block' : 'none';
+}
+
+/* ── PROMPT ── */
+function initPrompt() {
+  var ta = q('#prompt');
+  var cc = q('#char-count');
+
+  ta.addEventListener('input', function() {
+    var n = ta.value.length;
+    cc.textContent = n + ' / 800';
+    cc.className = 'cc' + (n > 720 ? ' near' : '') + (n >= 800 ? ' full' : '');
+  });
+
+  ta.addEventListener('keydown', function(e) {
+    if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
+      e.preventDefault();
+      generate();
+    }
+  });
+
+  ta.focus();
+}
+
+/* ── UI EVENTS ── */
+function initUIEvents() {
+  q('#btn-gen').addEventListener('click', generate);
+  q('#btn-clear').addEventListener('click', clearResults);
+  q('#lb-bg').addEventListener('click', closeLightbox);
+  q('#lb-close').addEventListener('click', closeLightbox);
+  q('#lb-dl').addEventListener('click', function() { doDownload(S.lbUrl, S.lbPrompt); });
+  q('#lb-copy').addEventListener('click', function() { copyText(S.lbPrompt); });
+  q('#lb-again').addEventListener('click', function() {
+    closeLightbox();
+    q('#prompt').value = S.lbPrompt;
+    q('#prompt').dispatchEvent(new Event('input'));
+    generate();
+  });
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') closeLightbox();
+  });
+}
+
+/* ── GENERATE ── */
+function generate() {
+  if (S.busy) return;
+  var ta   = q('#prompt');
+  var text = ta.value.trim();
+  if (!text) {
+    ta.classList.add('shake');
+    ta.addEventListener('animationend', function() { ta.classList.remove('shake'); }, { once: true });
+    ta.focus();
+    return;
+  }
+  S.busy = true;
+  var btn = q('#btn-gen');
+  btn.classList.add('busy');
+  btn.disabled = true;
+  btn.textContent = '⏳ Generiert…';
+
+  showResultsHeader();
+  var loading = makeLoadingCard();
+  prependResult(loading);
+
+  var t0 = Date.now();
+  var inputCount = S.inputImages.length;
+  var promise = S.model.startsWith('imagen') ? callImagen(text) : callGemini(text);
+
+  promise.then(function(images) {
+    var elapsed = ((Date.now() - t0) / 1000).toFixed(1);
+    var cost    = COSTS[S.model] || 0.04;
+    loading.remove();
+    var grid = document.createElement('div');
+    grid.className = 'img-grid' + (images.length === 1 ? ' single' : '');
+    images.forEach(function(b64) {
+      grid.appendChild(makeImageCard(b64, text, elapsed, cost, inputCount));
+      S.totalImages++;
+      S.totalCost += cost;
+    });
+    prependResult(grid);
+    updateCounts();
+    trackCost(S.model, cost * images.length, images.length, text);
+  }).catch(function(err) {
+    loading.remove();
+    prependResult(makeErrorCard(err));
+  }).finally(function() {
+    S.busy = false;
+    btn.classList.remove('busy');
+    btn.disabled = false;
+    btn.textContent = '⚡ Generieren';
+  });
+}
+
+/* ── GEMINI API ── */
+function callGemini(prompt) {
+  var modalities = S.outputMode === 'IMAGE' ? ['IMAGE'] : ['IMAGE', 'TEXT'];
+  var cfg = {
+    responseModalities: modalities,
+    temperature: S.temp
+  };
+  if (S.model.startsWith('gemini-2.5') && S.thinking > 0) {
+    cfg.thinkingConfig = { thinkingBudget: S.thinking };
+  }
+  var seed = getSeed();
+  if (seed !== null) cfg.seed = seed;
+
+  var parts = [];
+  S.inputImages.forEach(function(img) {
+    parts.push({ inlineData: { mimeType: img.mime, data: img.b64 } });
+  });
+  parts.push({ text: prompt });
+
+  var url  = 'https://generativelanguage.googleapis.com/v1beta/models/' + S.model + ':generateContent?key=' + S.key;
+  var body = { contents: [{ parts: parts }], generationConfig: cfg };
+
+  return apiFetch(url, body).then(function(data) {
+    var candidates = (data && data.candidates) || [];
+    var allParts   = (candidates[0] && candidates[0].content && candidates[0].content.parts) || [];
+    var images     = allParts.filter(function(p) {
+      return p.inlineData && p.inlineData.mimeType && p.inlineData.mimeType.startsWith('image/');
+    }).map(function(p) { return p.inlineData.data; });
+
+    if (!images.length) {
+      var textPart = allParts.find(function(p) { return p.text; });
+      var preview  = textPart ? textPart.text.slice(0, 100) : '—';
+      return Promise.reject({
+        code: 0,
+        msg: 'Das Modell hat kein Bild erzeugt.',
+        hints: [
+          'Modell antwortete mit Text: „' + preview + '…"',
+          'Prompt bildspezifischer formulieren (z. B. „Draw an image of…").',
+          'Anderes Modell ausprobieren.'
+        ]
+      });
+    }
+    return images;
+  });
+}
+
+/* ── IMAGEN API ── */
+function callImagen(prompt) {
+  var params = {
+    sampleCount:   S.count,
+    aspectRatio:   S.ratio,
+    safetySetting: S.safetyLess ? 'block_few' : 'block_some'
+  };
+  if (S.model !== 'imagen-4.0-fast-generate-001') {
+    params.imageSize = S.imageSize;
+  }
+  var neg = q('#neg-prompt').value.trim();
+  if (neg) params.negativePrompt = neg;
+  var seed = getSeed();
+  if (seed !== null) params.seed = seed;
+
+  var url  = 'https://generativelanguage.googleapis.com/v1beta/models/' + S.model + ':predict?key=' + S.key;
+  var body = { instances: [{ prompt: prompt }], parameters: params };
+
+  return apiFetch(url, body).then(function(data) {
+    var predictions = (data && data.predictions) || [];
+    var images = predictions.map(function(p) { return p.bytesBase64Encoded; }).filter(Boolean);
+    if (!images.length) {
+      return Promise.reject({
+        code: 0,
+        msg: 'Keine Bilder in der API-Antwort.',
+        hints: [
+          'Bild wurde möglicherweise vom Sicherheitsfilter blockiert.',
+          'Prompt ändern oder Sicherheitsfilter auf „Weniger strikt" schalten.'
+        ]
+      });
+    }
+    return images;
+  });
+}
+
+/* ── FETCH ── */
+function apiFetch(url, body) {
+  return fetch(url, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(body)
+  }).catch(function() {
+    return Promise.reject({ code: 0, msg: 'Netzwerkfehler — Google API nicht erreichbar.', hints: ['Internetverbindung prüfen.'] });
+  }).then(function(res) {
+    if (!res.ok) {
+      return res.json().catch(function() { return {}; }).then(function(j) {
+        var m = (j && j.error && j.error.message) || ('HTTP ' + res.status);
+        var hints;
+        if (res.status === 400) hints = ['API-Key ungültig oder abgelaufen.', 'Modell nicht freigeschaltet.', 'Prompt könnte gegen Richtlinien verstoßen.'];
+        else if (res.status === 403) hints = ['Billing nicht aktiviert.', 'Key hat keine Berechtigung für dieses Modell.'];
+        else if (res.status === 429) hints = ['30–60 Sekunden warten und erneut versuchen.', 'Free Quota möglicherweise erschöpft.'];
+        else hints = ['Unbekannter Serverfehler.'];
+        return Promise.reject({ code: res.status, msg: m, hints: hints });
+      });
+    }
+    return res.json();
+  });
+}
+
+/* ── CARD BUILDERS ── */
+function makeLoadingCard() {
+  var d = mk('loading-card');
+  d.innerHTML = '<div class="spinner"></div><div><div class="loading-lbl">Wird generiert…</div><div class="loading-sub">' + (MODEL_LABEL[S.model] || S.model) + ' · ~10–30 Sekunden</div></div>';
+  return d;
+}
+
+function makeImageCard(b64, prompt, elapsed, cost, inputCount) {
+  var url   = 'data:image/png;base64,' + b64;
+  var model = S.model;
+  var now   = new Date().toLocaleTimeString('de-DE', { hour: '2-digit', minute: '2-digit' });
+  var card  = mk('img-card');
+
+  var inputTag = inputCount > 0 ? '<span class="tag">📎 ' + inputCount + '</span>' : '';
+
+  card.innerHTML =
+    '<div class="img-wrap">' +
+      '<img src="' + url + '" alt="" loading="lazy">' +
+      '<div class="img-overlay">' +
+        '<button class="btn btn-secondary btn-sm" data-act="lb">🔍 Vollbild</button>' +
+        '<button class="btn btn-secondary btn-sm" data-act="dl">↓ PNG</button>' +
+        '<button class="btn btn-secondary btn-sm" data-act="again">↺ Neu</button>' +
+        '<button class="btn btn-secondary btn-sm" data-act="copy">📋</button>' +
+      '</div>' +
+    '</div>' +
+    '<div class="img-meta">' +
+      '<span class="img-prompt" title="' + esc(prompt) + '">' + esc(clip(prompt, 80)) + '</span>' +
+      '<div class="img-tags">' +
+        '<span class="tag">' + (MODEL_LABEL[model] || model) + '</span>' +
+        inputTag +
+        '<span class="tag">' + now + '</span>' +
+        '<span class="tag">' + elapsed + 's</span>' +
+        '<span class="tag">' + cost.toFixed(3).replace('.', ',') + ' €</span>' +
+      '</div>' +
+    '</div>';
+
+  card.querySelector('[data-act="lb"]').addEventListener('click', function(e) { e.stopPropagation(); openLightbox(url, prompt); });
+  card.querySelector('[data-act="dl"]').addEventListener('click', function(e) { e.stopPropagation(); doDownload(url, prompt); });
+  card.querySelector('[data-act="again"]').addEventListener('click', function(e) {
+    e.stopPropagation();
+    q('#prompt').value = prompt;
+    q('#prompt').dispatchEvent(new Event('input'));
+    generate();
+  });
+  card.querySelector('[data-act="copy"]').addEventListener('click', function(e) { e.stopPropagation(); copyText(prompt); });
+  card.querySelector('.img-wrap').addEventListener('click', function() { openLightbox(url, prompt); });
+  card.addEventListener('contextmenu', function(e) { e.preventDefault(); doDownload(url, prompt); });
+
+  return card;
+}
+
+function makeErrorCard(err) {
+  var d = mk('error-card');
+  var hints = (err.hints || []).map(function(h) { return '<li>' + esc(h) + '</li>'; }).join('');
+  d.innerHTML =
+    '<div class="error-title">⚠️ Fehler' + (err.code ? ' ' + err.code : '') + '</div>' +
+    '<div class="error-msg">' + esc(err.msg || 'Unbekannter Fehler') + '</div>' +
+    (hints ? '<ul class="error-hints">' + hints + '</ul>' : '');
+  return d;
+}
+
+/* ── RESULTS ── */
+function prependResult(el) {
+  var body = q('#results-body');
+  body.insertBefore(el, body.firstChild);
+}
+
+function showResultsHeader() {
+  var empty = q('#results-empty');
+  if (empty) empty.remove();
+  q('#results-hdr').classList.add('show');
+  q('#btn-clear').style.display = '';
+}
+
+function clearResults() {
+  q('#results-body').innerHTML = '';
+  q('#results-hdr').classList.remove('show');
+  q('#btn-clear').style.display = 'none';
+  S.totalImages = 0;
+  S.totalCost   = 0;
+  updateCounts();
+  var empty = mk('results-empty');
+  empty.id = 'results-empty';
+  empty.innerHTML =
+    '<span class="empty-icon">🍌</span>' +
+    '<span class="empty-line1">Noch keine Bilder generiert</span>' +
+    '<span class="empty-line2">Prompt eingeben und auf Generieren klicken — oder Strg+Enter</span>';
+  q('#results-body').appendChild(empty);
+}
+
+function updateCounts() {
+  q('#sb-count').textContent       = S.totalImages;
+  q('#sb-cost').textContent        = S.totalCost.toFixed(2).replace('.', ',');
+  q('#results-badge').textContent  = S.totalImages;
+}
+
+function updateModelStatus() {
+  q('#sb-model').textContent = MODEL_LABEL[S.model] || S.model;
+}
+
+/* ── LIGHTBOX ── */
+function openLightbox(url, prompt) {
+  S.lbUrl    = url;
+  S.lbPrompt = prompt;
+  q('#lb-img').src = url;
+  q('#lb-prompt').textContent = prompt;
+  q('#lightbox').classList.add('show');
+}
+function closeLightbox() { q('#lightbox').classList.remove('show'); }
+
+/* ── DOWNLOAD / COPY ── */
+function doDownload(url, prompt) {
+  var a      = document.createElement('a');
+  a.href     = url;
+  a.download = 'nanoBanana_' + prompt.slice(0, 30).replace(/[^a-z0-9]/gi, '_').toLowerCase() + '_' + Date.now() + '.png';
+  a.click();
+}
+
+function copyText(text) {
+  navigator.clipboard.writeText(text).then(function() { showToast('✓ Prompt kopiert'); });
+}
+
+/* ── COST TRACKING ── */
+function trackCost(model, totalCost, count, prompt) {
+  if (!TRACKER_URL) return;
+  var payload = JSON.stringify({
+    name:   S.name,
+    model:  model,
+    cost:   totalCost,
+    count:  count,
+    prompt: prompt.slice(0, 120)
+  });
+  fetch(TRACKER_URL, {
+    method:  'POST',
+    mode:    'no-cors',
+    headers: { 'Content-Type': 'text/plain' },
+    body:    payload
+  }).catch(function() {}); /* silent — tracking darf nie die App blockieren */
+}
+
+/* ── TOAST ── */
+var toastTimer;
+function showToast(msg) {
+  var el = q('#toast');
+  el.textContent = msg;
+  el.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(function() { el.classList.remove('show'); }, 2000);
+}
+</script>
+</body>
+</html>
