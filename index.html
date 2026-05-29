@@ -5,8 +5,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="theme-color" content="#080808">
-<meta name="description" content="KI-Bildgenerierung mit Google Gemini — Nano Banana Studio">
-<title>🍌 Nano Banana Studio</title>
+<meta name="description" content="KI-Bildgenerierung · Google Gemini & Black Forest Labs — KI Studio">
+<title>KI Studio</title>
 <style>
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -521,22 +521,21 @@ textarea, input, .img-prompt, .error-msg { user-select: text; }
 <div id="screen-setup" class="screen active">
   <div class="setup-wrap">
     <div class="setup-logo">
-      <span class="icon">🍌</span>
-      <h1>Nano Banana Studio</h1>
-      <p class="sub">KI-Bildgenerierung · Google Gemini API</p>
+      <span class="icon" style="font-size:36px;font-style:normal;">✦</span>
+      <h1>KI Studio</h1>
+      <p class="sub">KI-Bildgenerierung · Google Gemini &amp; Black Forest Labs</p>
       <p class="sub" style="margin-top:2px;opacity:0.6;">Innenarchitektur · Hochschule Mainz</p>
     </div>
     <div class="setup-card">
       <!-- Tabs -->
       <div class="setup-tabs">
-        <button class="setup-tab-btn" id="tab-api" onclick="switchSetupTab('api')">🔑 API-Key</button>
-        <button class="setup-tab-btn on" id="tab-ws" onclick="switchSetupTab('ws')">🎓 Lehre</button>
-        <button class="setup-tab-btn" id="tab-free" onclick="switchSetupTab('free')">🆓 Kostenlos</button>
+        <button class="setup-tab-btn on" id="tab-ws" onclick="switchSetupTab('ws')">🎓 Zugang Lehre</button>
+        <button class="setup-tab-btn" id="tab-api" onclick="switchSetupTab('api')">🔑 Eigener API-Key</button>
       </div>
 
       <!-- Pane: Eigener API-Key -->
       <div class="setup-pane" id="pane-api">
-        <p class="desc">Nano Banana Studio ist kostenlos nutzbar — du brauchst nur einen eigenen <strong>Google Gemini API-Key</strong>. Den erstellst du in weniger als einer Minute, ganz ohne Abo.</p>
+        <p class="desc">KI Studio ist kostenlos nutzbar — du brauchst nur einen eigenen <strong>Google Gemini API-Key</strong>. Den erstellst du in weniger als einer Minute, ganz ohne Abo.</p>
         <div style="background:var(--s2);border:1px solid var(--bd);border-radius:var(--r-sm);padding:11px 13px;margin-bottom:14px;font-size:12px;line-height:1.8;color:var(--muted);">
           <strong style="color:var(--text);display:block;margin-bottom:5px;">So bekommst du deinen API-Key:</strong>
           <span style="color:var(--text);">1.</span> <a href="https://aistudio.google.com/apikey" target="_blank" rel="noopener" style="color:var(--accent);text-decoration:underline;text-underline-offset:2px;">aistudio.google.com/apikey</a> öffnen<br>
@@ -574,41 +573,6 @@ textarea, input, .img-prompt, .error-msg { user-select: text; }
         <button class="btn btn-primary btn-full" id="btn-ws-login">Einloggen</button>
       </div>
 
-      <!-- Pane: Kostenlos mit FLUX -->
-      <div class="setup-pane" id="pane-free">
-        <!-- BFL Branding Card -->
-        <div style="background:linear-gradient(135deg,rgba(34,197,94,0.06) 0%,rgba(16,185,129,0.04) 100%);border:1px solid rgba(34,197,94,0.18);border-radius:var(--r-sm);padding:14px 15px;margin-bottom:18px;">
-          <div style="display:flex;align-items:center;gap:10px;margin-bottom:9px;">
-            <span style="font-size:28px;line-height:1;">🌲</span>
-            <div>
-              <div style="font-size:13px;font-weight:700;color:var(--text);">FLUX.1 · Black Forest Labs</div>
-              <div style="font-size:11px;color:rgba(74,222,128,0.8);margin-top:1px;">Open Source · Freiburg im Breisgau 🇩🇪</div>
-            </div>
-          </div>
-          <p style="font-size:12px;color:var(--muted);line-height:1.65;margin:0;">
-            Weltklasse-KI direkt aus dem Schwarzwald. FLUX.1 ist open-source, läuft komplett kostenlos
-            und erzielt Qualität auf Midjourney-Niveau — entwickelt von ehemaligen Stability-AI- und LMU-Forschern.
-          </p>
-          <div style="display:flex;gap:6px;margin-top:10px;flex-wrap:wrap;">
-            <span style="font-size:10px;background:rgba(34,197,94,0.1);border:1px solid rgba(34,197,94,0.2);border-radius:20px;padding:2px 9px;color:rgba(74,222,128,0.9);">⚡ FLUX.1 Schnell · ~5 Sek</span>
-            <span style="font-size:10px;background:rgba(34,197,94,0.1);border:1px solid rgba(34,197,94,0.2);border-radius:20px;padding:2px 9px;color:rgba(74,222,128,0.9);">🎨 FLUX Realism · photorealistisch</span>
-            <span style="font-size:10px;background:rgba(34,197,94,0.1);border:1px solid rgba(34,197,94,0.2);border-radius:20px;padding:2px 9px;color:rgba(74,222,128,0.9);">💶 0,00 € · kein Login nötig</span>
-          </div>
-        </div>
-        <div id="free-not-configured" style="display:none;background:var(--red-bg);border:1px solid rgba(229,57,53,0.18);border-radius:var(--r-sm);padding:10px 12px;font-size:12px;color:#f87171;margin-bottom:16px;line-height:1.55;">
-          ⚠️ Noch nicht freigeschaltet — bitte beim Kursleiter melden.
-        </div>
-        <label class="field-lbl" for="free-name-input">Dein Name / Kürzel <span style="color:var(--dim);font-weight:400;text-transform:none;letter-spacing:0;">(optional · für die Kostenübersicht)</span></label>
-        <div class="input-row">
-          <input type="text" id="free-name-input" placeholder="z. B. Julia M." maxlength="40" autocomplete="name" spellcheck="false">
-        </div>
-        <button class="btn btn-primary btn-full" id="btn-free-login" style="background:linear-gradient(135deg,#16a34a,#059669);">🌲 Kostenlos starten</button>
-        <p style="margin-top:12px;font-size:11px;color:var(--dim);text-align:center;line-height:1.6;">
-          Nur FLUX-Modelle verfügbar · kein API-Key nötig<br>
-          Modell: <a href="https://blackforestlabs.ai" target="_blank" rel="noopener" style="color:rgba(74,222,128,0.7);text-decoration:none;">Black Forest Labs</a> ·
-          Engine: <a href="https://pollinations.ai" target="_blank" rel="noopener" style="color:rgba(74,222,128,0.7);text-decoration:none;">Pollinations.ai</a>
-        </p>
-      </div>
     </div>
     <div style="margin-top:20px;text-align:center;font-size:11px;color:var(--dim);line-height:1.8;">
       v1.1 · Build Mai 2026<br>Klaus Teltenkötter
@@ -619,7 +583,7 @@ textarea, input, .img-prompt, .error-msg { user-select: text; }
 <!-- MAIN -->
 <div id="screen-main" class="screen">
   <header class="header">
-    <span class="header-title" id="header-title" title="Zurück zum Login" style="cursor:pointer;">🍌 Nano Banana Studio</span>
+    <span class="header-title" id="header-title" title="Zurück zum Login" style="cursor:pointer;">✦ KI Studio</span>
     <button class="lang-btn" id="btn-lang" title="Switch to English">EN</button>
     <button class="help-btn" id="btn-help" title="Hilfe &amp; Übersicht">?</button>
     <div class="key-pill" id="key-pill">
@@ -636,7 +600,7 @@ textarea, input, .img-prompt, .error-msg { user-select: text; }
         <div class="pgrp">
           <div class="pgrp-lbl" data-i18n="lbl-model">Modell</div>
           <select class="ctrl-sel" id="sel-model">
-            <optgroup label="Gemini (Nano Banana)">
+            <optgroup label="Gemini (Google)">
               <option value="gemini-2.5-flash-image">Gemini 2.5 Flash · ~0,04 €/Bild</option>
               <option value="gemini-3.1-flash-image-preview">Gemini 3.1 Flash (Preview) · ~0,05 €</option>
               <option value="gemini-3-pro-image-preview">Gemini 3 Pro (Preview) · ~0,13 €</option>
@@ -818,7 +782,7 @@ textarea, input, .img-prompt, .error-msg { user-select: text; }
         </div>
         <div id="results-body">
           <div class="results-empty" id="results-empty">
-            <span class="empty-icon">🍌</span>
+            <span class="empty-icon">✦</span>
             <span class="empty-line1" data-i18n="empty-line1">Noch keine Bilder generiert</span>
             <span class="empty-line2" data-i18n="empty-line2">Prompt eingeben und auf Generieren klicken</span>
           </div>
@@ -864,7 +828,7 @@ textarea, input, .img-prompt, .error-msg { user-select: text; }
   <div class="lb-bg" id="help-bg"></div>
   <div class="help-inner">
     <div class="help-head">
-      <h2 id="help-title">🍌 Nano Banana Studio — Hilfe</h2>
+      <h2 id="help-title">✦ KI Studio — Hilfe</h2>
       <button class="help-close-btn" id="help-close">✕</button>
     </div>
     <div id="help-body-de" class="help-body">
@@ -1048,7 +1012,7 @@ textarea, input, .img-prompt, .error-msg { user-select: text; }
 var APP_PIN          = '55116';
 var WORKSHOP_PASS    = 'SoSe2026!?!';
 var WORKSHOP_KEY_ENC = 'QVEuQWI4Uk42STM0S25kWldUakFkYWZZOExDU0huUHRsc1pBNnkwaTM0YTRrMjU1aFJNNGc=';
-/* Kostenloser FLUX-Zugang via Pollinations.ai — kein Token nötig */
+/* FLUX via Pollinations.ai (kein Token nötig) */
 var TRACKER_URL = 'https://script.google.com/macros/s/AKfycbyENdn9zOo0k817sBG8jUzEjE2Pew4HOCFbSm08fJaj_IIHVspm4WAHhxKl78-OXlDf/exec';
 
 /* ── CONSTANTS ── */
@@ -1179,7 +1143,7 @@ function setLang(l) {
   var hde = q('#help-body-de'), hen = q('#help-body-en'), ht = q('#help-title');
   if (hde) hde.style.display = l === 'de' ? '' : 'none';
   if (hen) hen.style.display = l === 'en' ? '' : 'none';
-  if (ht)  ht.textContent    = l === 'en' ? '🍌 Nano Banana Studio — Help' : '🍌 Nano Banana Studio — Hilfe';
+  if (ht)  ht.textContent    = l === 'en' ? '✦ KI Studio — Help' : '✦ KI Studio — Hilfe';
   updatePromptHL();
 }
 
@@ -1299,7 +1263,7 @@ function getSeed() { var v = parseInt(q('#seed-input').value); return (isNaN(v) 
 
 /* ── SETUP TABS ── */
 function switchSetupTab(tab) {
-  ['api', 'ws', 'free'].forEach(function(t) {
+  ['ws', 'api'].forEach(function(t) {
     q('#tab-'  + t).classList.toggle('on', t === tab);
     q('#pane-' + t).classList.toggle('on', t === tab);
   });
@@ -1315,21 +1279,6 @@ q('#key-input').addEventListener('keydown', function(e) {
 q('#name-input').addEventListener('keydown', function(e) {
   if (e.key === 'Enter') doSave();
 });
-
-/* ── FREE LOGIN (FLUX) ── */
-q('#btn-free-login').addEventListener('click', doFreeLogin);
-q('#free-name-input').addEventListener('keydown', function(e) { if (e.key === 'Enter') doFreeLogin(); });
-
-function doFreeLogin() {
-  var name = q('#free-name-input').value.trim() || 'Gast';
-  sessionStorage.setItem('nb_free', '1');
-  sessionStorage.setItem('nb_name', name);
-  sessionStorage.removeItem('nb_key');
-  sessionStorage.removeItem('nb_workshop');
-  S.name = name;
-  S.key  = '';
-  launchApp('');
-}
 
 /* ── WORKSHOP LOGIN ── */
 q('#btn-ws-login').addEventListener('click', doWorkshopLogin);
@@ -1381,12 +1330,6 @@ function doWorkshopLogin() {
 
 /* ── AUTO-LOGIN ── */
 (function() {
-  if (sessionStorage.getItem('nb_free') === '1') {
-    S.name = sessionStorage.getItem('nb_name') || 'Gast';
-    S.key  = '';
-    launchApp('');
-    return;
-  }
   var k = sessionStorage.getItem('nb_key');
   if (k && isValidApiKey(k)) {
     S.key  = k;
@@ -1486,16 +1429,13 @@ function initPinModal() {
 }
 
 function launchApp(key) {
-  var isFree = sessionStorage.getItem('nb_free') === '1';
   q('#screen-setup').classList.remove('active');
   q('#screen-main').classList.add('active');
-  q('#key-display').textContent = isFree
-    ? '🌲 Kostenlos'
-    : (sessionStorage.getItem('nb_workshop') === '1'
-      ? '🎓 Workshop'
-      : '●●●● ' + key.slice(-4));
+  q('#key-display').textContent = sessionStorage.getItem('nb_workshop') === '1'
+    ? '🎓 Workshop'
+    : '●●●● ' + key.slice(-4);
   q('#sb-dot').classList.add('on');
-  q('#sb-api').textContent = isFree ? 'FLUX aktiv' : 'API aktiv';
+  q('#sb-api').textContent = 'API aktiv';
   updateModelStatus();
   if (TRACKER_URL) {
     q('#sb-track-item').style.display = '';
@@ -1511,29 +1451,15 @@ function launchApp(key) {
   initResize();
   initPinModal();
   loadHistory();
-  /* Free-Mode: nur FLUX-Modelle zulassen */
-  if (isFree) applyFreeMode();
   setLang(LANG);
 }
 
-function applyFreeMode() {
-  /* Alle nicht-FLUX Optgroups deaktivieren */
-  Array.from(q('#sel-model').querySelectorAll('optgroup')).forEach(function(og) {
-    og.disabled = og.label.indexOf('FLUX') === -1;
-  });
-  q('#sel-model').value = 'pollinations-flux';
-  S.model = 'pollinations-flux';
-  updateModelStatus();
-  applyParamVisibility();
-  q('#grp-think').style.display = 'none';
-}
 
 /* ── REMOVE KEY / BACK TO LOGIN ── */
 function goToLogin() {
   if (!confirm('Zurück zum Login?')) return;
   sessionStorage.removeItem('nb_key');
   sessionStorage.removeItem('nb_workshop');
-  sessionStorage.removeItem('nb_free');
   location.reload();
 }
 q('#btn-remove-key').addEventListener('click', goToLogin);
@@ -1566,12 +1492,6 @@ function initResize() {
 /* ── PARAMS ── */
 function initParams() {
   q('#sel-model').addEventListener('change', function(e) {
-    /* Free-Mode: Nur FLUX erlaubt */
-    if (sessionStorage.getItem('nb_free') === '1' && !e.target.value.startsWith('pollinations')) {
-      e.target.value = S.model; /* zurücksetzen */
-      showToast('Im kostenlosen Modus nur FLUX-Modelle verfügbar');
-      return;
-    }
     S.model = e.target.value;
     S.chatHistory = [];
     updateChatDepth();
@@ -2133,7 +2053,7 @@ function clearResults() {
   var empty = mk('results-empty');
   empty.id = 'results-empty';
   empty.innerHTML =
-    '<span class="empty-icon">🍌</span>' +
+    '<span class="empty-icon">✦</span>' +
     '<span class="empty-line1" data-i18n="empty-line1">' + esc(t('empty-line1')) + '</span>' +
     '<span class="empty-line2" data-i18n="empty-line2">' + esc(t('empty-line2')) + '</span>';
   q('#results-body').appendChild(empty);
@@ -2341,7 +2261,7 @@ function downloadAll() {
     setTimeout(function() {
       var a = document.createElement('a');
       a.href = item.src;
-      a.download = 'nanoBanana_' + String(i + 1).padStart(2, '0') + '_' + item.prompt.slice(0, 24).replace(/[^a-z0-9]/gi, '_').toLowerCase() + '.png';
+      a.download = 'ki-studio_' + String(i + 1).padStart(2, '0') + '_' + item.prompt.slice(0, 24).replace(/[^a-z0-9]/gi, '_').toLowerCase() + '.png';
       a.click();
     }, i * 380);
   });
@@ -2361,7 +2281,7 @@ function closeHelp() { q('#help-modal').classList.remove('show'); }
 function doDownload(url, prompt) {
   var a = document.createElement('a');
   a.href = url;
-  a.download = 'nanoBanana_' + prompt.slice(0, 30).replace(/[^a-z0-9]/gi, '_').toLowerCase() + '_' + Date.now() + '.png';
+  a.download = 'ki-studio_' + prompt.slice(0, 30).replace(/[^a-z0-9]/gi, '_').toLowerCase() + '_' + Date.now() + '.png';
   a.click();
 }
 
