@@ -529,8 +529,9 @@ textarea, input, .img-prompt, .error-msg { user-select: text; }
     <div class="setup-card">
       <!-- Tabs -->
       <div class="setup-tabs">
-        <button class="setup-tab-btn on" id="tab-ws" onclick="switchSetupTab('ws')">🎓 Zugang Lehre</button>
-        <button class="setup-tab-btn" id="tab-api" onclick="switchSetupTab('api')">🔑 Eigener API-Key</button>
+        <button class="setup-tab-btn on" id="tab-ws" onclick="switchSetupTab('ws')">🎓 Lehre</button>
+        <button class="setup-tab-btn" id="tab-api" onclick="switchSetupTab('api')">🔑 API-Key</button>
+        <button class="setup-tab-btn" id="tab-free" onclick="switchSetupTab('free')">🆓 Kostenlos</button>
       </div>
 
       <!-- Pane: Eigener API-Key -->
@@ -560,7 +561,10 @@ textarea, input, .img-prompt, .error-msg { user-select: text; }
 
       <!-- Pane: Zugang Lehre -->
       <div class="setup-pane on" id="pane-ws">
-        <p class="desc">Du hast einen Kurs-Zugang erhalten? Gib das Passwort ein — die App läuft dann mit dem geteilten Kurs-Key.</p>
+        <p class="desc">Du hast einen Kurs-Zugang erhalten? Gib das Kurs-Passwort ein.</p>
+        <div style="background:rgba(251,146,60,0.07);border:1px solid rgba(251,146,60,0.2);border-radius:var(--r-sm);padding:9px 12px;margin-bottom:16px;font-size:11px;color:#fb923c;line-height:1.55;">
+          ⚠️ Das Passwort ist vertraulich — bitte nicht weitergeben. Übermäßige Nutzung durch Dritte kann zur Sperrung des Kurs-Zugangs führen.
+        </div>
         <label class="field-lbl" for="ws-pass-input">Passwort <span style="color:var(--red);font-weight:700;">*</span></label>
         <div class="input-row">
           <input type="password" id="ws-pass-input" placeholder="Kurs-Passwort" autocomplete="off" spellcheck="false">
@@ -571,6 +575,28 @@ textarea, input, .img-prompt, .error-msg { user-select: text; }
           <input type="text" id="ws-name-input" placeholder="z. B. Julia M." maxlength="40" autocomplete="name" spellcheck="false">
         </div>
         <button class="btn btn-primary btn-full" id="btn-ws-login">Einloggen</button>
+      </div>
+
+      <!-- Pane: Kostenlos (FLUX / Pollinations) -->
+      <div class="setup-pane" id="pane-free">
+        <div style="background:rgba(255,255,255,0.03);border:1px solid var(--bd-hi);border-radius:var(--r-sm);padding:13px 15px;margin-bottom:16px;">
+          <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px;">
+            <span style="font-size:22px;line-height:1;">🌲</span>
+            <div>
+              <div style="font-size:13px;font-weight:700;color:var(--text);">FLUX.1 · Black Forest Labs</div>
+              <div style="font-size:11px;color:var(--muted);margin-top:1px;">Open Source · Freiburg im Breisgau 🇩🇪 · kostenlos</div>
+            </div>
+          </div>
+          <p style="font-size:12px;color:var(--muted);line-height:1.6;margin:0;">Weltklasse-Bildgenerierung aus dem Schwarzwald — kein Account, kein API-Key, 0,00 €/Bild.</p>
+        </div>
+        <div style="background:rgba(251,146,60,0.07);border:1px solid rgba(251,146,60,0.2);border-radius:var(--r-sm);padding:9px 12px;margin-bottom:16px;font-size:11px;color:#fb923c;line-height:1.55;">
+          ⚠️ <strong>Nur Text → Bild</strong> — kein Bild-Upload möglich. Für den vollen Workflow (Skizze, Foto als Eingabe) bitte den Kurs-Zugang oder eigenen API-Key nutzen.
+        </div>
+        <label class="field-lbl" for="free-name-input">Dein Name / Kürzel <span style="color:var(--dim);font-weight:400;text-transform:none;letter-spacing:0;">(optional)</span></label>
+        <div class="input-row">
+          <input type="text" id="free-name-input" placeholder="z. B. Julia M." maxlength="40" autocomplete="name" spellcheck="false">
+        </div>
+        <button class="btn btn-primary btn-full" id="btn-free-login">🌲 Kostenlos starten</button>
       </div>
 
     </div>
@@ -611,8 +637,8 @@ textarea, input, .img-prompt, .error-msg { user-select: text; }
               <option value="imagen-4.0-ultra-generate-001">Imagen 4 Ultra · ~0,06 €</option>
             </optgroup>
             <optgroup label="FLUX · Black Forest Labs 🇩🇪 (kostenlos)">
-              <option value="pollinations-flux">FLUX.1 Schnell · kostenlos · ~5 Sek</option>
-              <option value="pollinations-flux-realism">FLUX Realism · kostenlos · photorealistisch</option>
+              <option value="pollinations-flux">FLUX.1 Schnell · kostenlos (nur Text → Bild)</option>
+              <option value="pollinations-flux-realism">FLUX Realism · kostenlos (nur Text → Bild)</option>
             </optgroup>
           </select>
         </div>
@@ -1010,10 +1036,20 @@ textarea, input, .img-prompt, .error-msg { user-select: text; }
 
 /* ── TRACKER ── Hier die Apps-Script-URL eintragen (leer = kein Tracking) */
 var APP_PIN          = '55116';
-var WORKSHOP_PASS    = 'SoSe2026!?!';
 var WORKSHOP_KEY_ENC = 'QVEuQWI4Uk42STM0S25kWldUakFkYWZZOExDU0huUHRsc1pBNnkwaTM0YTRrMjU1aFJNNGc=';
+
+/* Kurs-Logins — Passwörter base64-kodiert (Unicode-sicher) */
+var COURSES = [
+  { gruppe: 'DE1',     label: 'Digitales Entwerfen 1', enc: 'Rm9ybUZvbGxvd3MyNiE=' },
+  { gruppe: 'DE2',     label: 'Digitales Entwerfen 2', enc: 'VGFidWxhUmFzYTI2IQ==' },
+  { gruppe: 'DE3',     label: 'Digitales Entwerfen 3', enc: 'R2VuaXVzTG9jaTI2IQ==' },
+  { gruppe: 'Entwurf', label: 'Entwurf',               enc: 'TGVzc01vcmUyNiE='     },
+  { gruppe: 'Gast1',   label: 'Gast 1',                enc: 'V2Vpw59yYXVtMjYh'    },
+  { gruppe: 'Gast2',   label: 'Gast 2',                enc: 'QmF1aGF1czI2IQ=='    }
+];
+
 /* FLUX via Pollinations.ai (kein Token nötig) */
-var TRACKER_URL = 'https://script.google.com/macros/s/AKfycbyENdn9zOo0k817sBG8jUzEjE2Pew4HOCFbSm08fJaj_IIHVspm4WAHhxKl78-OXlDf/exec';
+var TRACKER_URL = 'https://script.google.com/macros/s/AKfycbx-ThmRGQGyg6yEXV9DgKRYoHQ9qnfkOvog1rwfyIS_JAbOYKXWzbE5k42k5-keL91VTA/exec';
 
 /* ── CONSTANTS ── */
 var HISTORY_KEY = 'nb_history';
@@ -1240,7 +1276,7 @@ var TEMPLATES = [
 
 /* ── STATE ── */
 var S = {
-  key: '', name: 'Anonym', hfKey: '',
+  key: '', name: 'Anonym', hfKey: '', gruppe: '',
   model: 'gemini-2.5-flash-image',
   temp: 1.0, thinking: 0,
   ratio: '1:1', count: 1, imageSize: '1K',
@@ -1263,7 +1299,7 @@ function getSeed() { var v = parseInt(q('#seed-input').value); return (isNaN(v) 
 
 /* ── SETUP TABS ── */
 function switchSetupTab(tab) {
-  ['ws', 'api'].forEach(function(t) {
+  ['ws', 'api', 'free'].forEach(function(t) {
     q('#tab-'  + t).classList.toggle('on', t === tab);
     q('#pane-' + t).classList.toggle('on', t === tab);
   });
@@ -1280,7 +1316,21 @@ q('#name-input').addEventListener('keydown', function(e) {
   if (e.key === 'Enter') doSave();
 });
 
-/* ── WORKSHOP LOGIN ── */
+/* ── FREE LOGIN ── */
+q('#btn-free-login').addEventListener('click', doFreeLogin);
+q('#free-name-input').addEventListener('keydown', function(e) { if (e.key === 'Enter') doFreeLogin(); });
+
+function doFreeLogin() {
+  var name = q('#free-name-input').value.trim() || 'Gast';
+  sessionStorage.setItem('nb_free', '1');
+  sessionStorage.setItem('nb_name', name);
+  sessionStorage.removeItem('nb_key');
+  sessionStorage.removeItem('nb_workshop');
+  S.name = name; S.gruppe = 'Gast-Free'; S.key = '';
+  launchApp('');
+}
+
+/* ── KURS LOGIN ── */
 q('#btn-ws-login').addEventListener('click', doWorkshopLogin);
 q('#ws-pass-input').addEventListener('keydown', function(e) {
   if (e.key === 'Enter') { e.preventDefault(); q('#ws-name-input').focus(); }
@@ -1290,6 +1340,13 @@ q('#ws-pass-input').addEventListener('keydown', function(e) {
 q('#ws-name-input').addEventListener('keydown', function(e) {
   if (e.key === 'Enter') doWorkshopLogin();
 });
+
+function findCourse(pass) {
+  for (var i = 0; i < COURSES.length; i++) {
+    if (decodeURIComponent(escape(atob(COURSES[i].enc))) === pass) return COURSES[i];
+  }
+  return null;
+}
 
 function isValidApiKey(k) {
   return k.length >= 20 && (k.startsWith('AIza') || k.startsWith('AQ.'));
@@ -1312,28 +1369,38 @@ function doSave() {
 }
 
 function doWorkshopLogin() {
-  var pass = q('#ws-pass-input').value;
-  if (pass !== WORKSHOP_PASS) {
+  var pass   = q('#ws-pass-input').value;
+  var course = findCourse(pass);
+  if (!course) {
     q('#ws-err').classList.add('show');
     q('#ws-pass-input').classList.add('err');
     q('#ws-pass-input').focus();
     return;
   }
-  var name = q('#ws-name-input').value.trim() || 'Workshop';
+  var name = q('#ws-name-input').value.trim() || course.label;
   var key  = atob(WORKSHOP_KEY_ENC);
-  sessionStorage.setItem('nb_key', key);
-  sessionStorage.setItem('nb_name', name);
+  sessionStorage.setItem('nb_key',      key);
+  sessionStorage.setItem('nb_name',     name);
   sessionStorage.setItem('nb_workshop', '1');
-  S.key = key; S.name = name;
+  sessionStorage.setItem('nb_gruppe',   course.gruppe);
+  S.key = key; S.name = name; S.gruppe = course.gruppe;
   launchApp(key);
 }
 
 /* ── AUTO-LOGIN ── */
 (function() {
+  if (sessionStorage.getItem('nb_free') === '1') {
+    S.name   = sessionStorage.getItem('nb_name')   || 'Gast';
+    S.gruppe = 'Gast-Free';
+    S.key    = '';
+    launchApp('');
+    return;
+  }
   var k = sessionStorage.getItem('nb_key');
   if (k && isValidApiKey(k)) {
-    S.key  = k;
-    S.name = sessionStorage.getItem('nb_name') || 'Anonym';
+    S.key    = k;
+    S.name   = sessionStorage.getItem('nb_name')   || 'Anonym';
+    S.gruppe = sessionStorage.getItem('nb_gruppe') || '';
     launchApp(k);
   }
 })();
@@ -1429,13 +1496,17 @@ function initPinModal() {
 }
 
 function launchApp(key) {
+  var isFree = sessionStorage.getItem('nb_free') === '1';
+  var gruppe = S.gruppe || sessionStorage.getItem('nb_gruppe') || '';
   q('#screen-setup').classList.remove('active');
   q('#screen-main').classList.add('active');
-  q('#key-display').textContent = sessionStorage.getItem('nb_workshop') === '1'
-    ? '🎓 Workshop'
-    : '●●●● ' + key.slice(-4);
+  q('#key-display').textContent = isFree
+    ? '🌲 Kostenlos'
+    : (sessionStorage.getItem('nb_workshop') === '1'
+        ? '🎓 ' + (gruppe || 'Kurs')
+        : '●●●● ' + key.slice(-4));
   q('#sb-dot').classList.add('on');
-  q('#sb-api').textContent = 'API aktiv';
+  q('#sb-api').textContent = isFree ? 'FLUX aktiv' : 'API aktiv';
   updateModelStatus();
   if (TRACKER_URL) {
     q('#sb-track-item').style.display = '';
@@ -1451,15 +1522,28 @@ function launchApp(key) {
   initResize();
   initPinModal();
   loadHistory();
+  if (isFree) applyFreeMode();
   setLang(LANG);
 }
 
+function applyFreeMode() {
+  Array.from(q('#sel-model').querySelectorAll('optgroup')).forEach(function(og) {
+    og.disabled = og.label.indexOf('FLUX') === -1;
+  });
+  q('#sel-model').value = 'pollinations-flux';
+  S.model = 'pollinations-flux';
+  updateModelStatus();
+  applyParamVisibility();
+  q('#grp-think').style.display = 'none';
+}
 
 /* ── REMOVE KEY / BACK TO LOGIN ── */
 function goToLogin() {
   if (!confirm('Zurück zum Login?')) return;
   sessionStorage.removeItem('nb_key');
   sessionStorage.removeItem('nb_workshop');
+  sessionStorage.removeItem('nb_gruppe');
+  sessionStorage.removeItem('nb_free');
   location.reload();
 }
 q('#btn-remove-key').addEventListener('click', goToLogin);
@@ -1492,6 +1576,12 @@ function initResize() {
 /* ── PARAMS ── */
 function initParams() {
   q('#sel-model').addEventListener('change', function(e) {
+    /* Free-Mode: nur FLUX erlaubt */
+    if (sessionStorage.getItem('nb_free') === '1' && !e.target.value.startsWith('pollinations')) {
+      e.target.value = S.model;
+      showToast('Im kostenlosen Modus nur FLUX-Modelle verfügbar');
+      return;
+    }
     S.model = e.target.value;
     S.chatHistory = [];
     updateChatDepth();
@@ -2292,7 +2382,7 @@ function copyText(text) {
 /* ── COST TRACKING ── */
 function trackCost(model, totalCost, count, prompt) {
   if (!TRACKER_URL) return;
-  var payload = JSON.stringify({ name: S.name, model: model, cost: totalCost, count: count, prompt: prompt.slice(0, 120) });
+  var payload = JSON.stringify({ name: S.name, gruppe: S.gruppe || '—', model: model, cost: totalCost, count: count, prompt: prompt.slice(0, 120) });
   fetch(TRACKER_URL, { method: 'POST', mode: 'no-cors', headers: { 'Content-Type': 'text/plain' }, body: payload }).catch(function() {});
 }
 
