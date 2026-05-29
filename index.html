@@ -1841,7 +1841,7 @@ function callImagen(prompt, seed) {
   var params = {
     sampleCount:   S.count,
     aspectRatio:   S.ratio,
-    safetySetting: S.safetyLess ? 'block_few' : 'block_some'
+    safetySetting: S.safetyLess ? 'block_only_high' : 'block_low_and_above'
   };
   if (S.model !== 'imagen-4.0-fast-generate-001') params.imageSize = S.imageSize;
   if (S.personGen) params.personGeneration = 'allow_adult';
