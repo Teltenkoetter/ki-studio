@@ -2030,17 +2030,27 @@ function callHuggingFace(prompt, seed) {
   }
   if (seed !== null && seed !== undefined) params.seed = seed;
 
-  return fetch('https://api-inference.huggingface.co/models/' + S.model, {
+  /* Neuer HuggingFace Router-Endpoint (2025) */
+  var hfUrl = 'https://router.huggingface.co/hf-inference/models/' + S.model;
+  return fetch(hfUrl, {
     method: 'POST',
     headers: {
-      'Authorization':    'Bearer ' + S.hfKey,
-      'Content-Type':     'application/json',
-      'X-Wait-For-Model': 'true'
+      'Authorization': 'Bearer ' + S.hfKey,
+      'Content-Type':  'application/json'
     },
     body: JSON.stringify({ inputs: prompt, parameters: params })
   })
-  .catch(function() {
-    return Promise.reject({ code: 0, msg: 'Netzwerkfehler — HuggingFace nicht erreichbar.', hints: ['Internetverbindung prüfen.'] });
+  .catch(function(err) {
+    var isCors = err && (err.name === 'TypeError' || err.name === 'NetworkError');
+    return Promise.reject({
+      code: 0,
+      msg: isCors ? 'CORS / Zugriff verweigert — Modell-Lizenz noch nicht akzeptiert?' : 'Netzwerkfehler — HuggingFace nicht erreichbar.',
+      hints: isCors
+        ? ['Einmalig auf huggingface.co einloggen und Lizenz akzeptieren:',
+           '→ huggingface.co/black-forest-labs/FLUX.1-schnell → "Agree and access"',
+           '→ huggingface.co/black-forest-labs/FLUX.1-dev → "Agree and access"']
+        : ['Internetverbindung prüfen.']
+    });
   })
   .then(function(res) {
     if (!res.ok) {
@@ -2048,6 +2058,7 @@ function callHuggingFace(prompt, seed) {
         var m = (j && (j.error || j.message)) || ('HTTP ' + res.status);
         var hints;
         if (res.status === 401) hints = ['HuggingFace Token ungültig — bitte neu eingeben.'];
+        else if (res.status === 403) hints = ['Modell-Lizenz noch nicht akzeptiert.', '→ huggingface.co/black-forest-labs/FLUX.1-schnell öffnen → "Agree and access" klicken.'];
         else if (res.status === 503) hints = ['Modell startet gerade (Cold Start) — 30–60 Sek warten und erneut versuchen.'];
         else if (res.status === 429) hints = ['Rate Limit erreicht — kurz warten und erneut versuchen.'];
         else hints = ['Unbekannter Fehler.'];
