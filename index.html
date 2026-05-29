@@ -1646,14 +1646,15 @@ function applyParamVisibility() {
   setOff('grp-think',  !m.startsWith('gemini-2.5') && !m.startsWith('gemini-3'));
   setOff('grp-count',  !isImagen);
 
-  /* Auflösung: nur Gemini */
-  setOff('grp-imagesize', !isGemini);
-  q('#grp-upscale-tip').style.display = isImagen ? '' : 'none';
-
-  var note = q('#imagesize-note');
-  if (note) {
-    if (isGemini) note.textContent = '1K ≈ 1024 px · 2K ≈ 2048 px · 4K ≈ 4096 px';
-    else          note.textContent = '';
+  /* Auflösung: Gemini bestimmt sie intern — Controls ausblenden */
+  setOff('grp-imagesize', true);
+  q('#grp-upscale-tip').style.display = (isImagen || isGemini) ? '' : 'none';
+  /* Hinweis für Gemini: Auflösung nicht steuerbar */
+  var upscaleTip = q('#grp-upscale-tip');
+  if (upscaleTip) {
+    var tipNote = upscaleTip.querySelector('.param-note');
+    if (isGemini && tipNote) tipNote.innerHTML = 'Gemini gibt ~1024 px aus — nicht steuerbar. Für Druckqualität: PNG in <strong style="color:var(--text);">Photoshop</strong> → <strong style="color:var(--text);">Bearbeiten → Generative Upscale</strong>.';
+    if (isImagen && tipNote) tipNote.innerHTML = 'Imagen Fast gibt ~1024 px aus. Für Druckqualität: PNG in <strong style="color:var(--text);">Photoshop</strong> → <strong style="color:var(--text);">Bearbeiten → Generative Upscale</strong>.';
   }
 
   setOff('grp-neg',     !isImagen);
