@@ -2382,8 +2382,15 @@ function copyText(text) {
 /* ── COST TRACKING ── */
 function trackCost(model, totalCost, count, prompt) {
   if (!TRACKER_URL) return;
-  var payload = JSON.stringify({ name: S.name, gruppe: S.gruppe || '—', model: model, cost: totalCost, count: count, prompt: prompt.slice(0, 120) });
-  fetch(TRACKER_URL, { method: 'POST', mode: 'no-cors', headers: { 'Content-Type': 'text/plain' }, body: payload }).catch(function() {});
+  try {
+    var params = 'name='    + encodeURIComponent(S.name)
+      + '&gruppe=' + encodeURIComponent(S.gruppe || '—')
+      + '&model='  + encodeURIComponent(model)
+      + '&cost='   + totalCost
+      + '&count='  + count
+      + '&prompt=' + encodeURIComponent(prompt.slice(0, 80));
+    new Image().src = TRACKER_URL + '?' + params;
+  } catch(e) {}
 }
 
 /* ── TOAST ── */
