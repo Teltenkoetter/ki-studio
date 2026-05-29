@@ -1737,9 +1737,11 @@ function generate() {
 
   var t0 = Date.now();
   var inputCount = S.inputImages.length;
-  var usedSeed   = getSeed();
-  if (usedSeed === null) usedSeed = Math.floor(Math.random() * 2147483647) + 1;
-  var promise = S.model.startsWith('imagen') ? callImagen(text, usedSeed) : callGemini(text, usedSeed);
+  var isImagen   = S.model.startsWith('imagen');
+  /* Imagen-API unterstützt keinen seed-Parameter — nur für Gemini generieren */
+  var usedSeed   = isImagen ? null : getSeed();
+  if (!isImagen && usedSeed === null) usedSeed = Math.floor(Math.random() * 2147483647) + 1;
+  var promise    = isImagen ? callImagen(text) : callGemini(text, usedSeed);
 
   promise.then(function(images) {
     var elapsed = ((Date.now() - t0) / 1000).toFixed(1);
@@ -1824,7 +1826,7 @@ function callGemini(prompt, seed) {
 }
 
 /* ── IMAGEN API ── */
-function callImagen(prompt, seed) {
+function callImagen(prompt) {
   var params = {
     sampleCount:   S.count,
     aspectRatio:   S.ratio,
@@ -1833,7 +1835,7 @@ function callImagen(prompt, seed) {
   if (S.personGen) params.personGeneration = 'allow_adult';
   var neg = q('#neg-prompt').value.trim();
   if (neg) params.negativePrompt = neg;
-  if (seed !== null && seed !== undefined) params.seed = seed;
+  /* seed nicht senden — Imagen 4 API unterstützt keinen seed-Parameter */
 
   var url  = 'https://generativelanguage.googleapis.com/v1beta/models/' + S.model + ':predict?key=' + S.key;
   var body = { instances: [{ prompt: prompt }], parameters: params };
