@@ -385,7 +385,8 @@ textarea, input, .img-prompt, .error-msg { user-select: text; }
 .img-overlay { position: absolute; inset: 0; background: rgba(0,0,0,0.68); display: flex; align-items: center; justify-content: center; gap: 6px; flex-wrap: wrap; padding: 8px; opacity: 0; transition: opacity 0.18s; }
 .img-card:hover .img-overlay { opacity: 1; }
 .img-meta { padding: 9px 11px; display: flex; align-items: center; gap: 7px; }
-.img-prompt { flex: 1; font-size: 11px; color: var(--muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; cursor: default; min-width: 0; }
+.img-prompt { flex: 1; font-size: 11px; color: var(--muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; cursor: pointer; min-width: 0; transition: color 0.12s; }
+.img-prompt:hover { color: var(--text); }
 .img-tags { display: flex; gap: 4px; flex-shrink: 0; }
 .tag { background: var(--s3); border: 1px solid var(--bd); border-radius: 3px; padding: 1px 5px; font-size: 10px; color: var(--dim); font-family: var(--mono); white-space: nowrap; }
 .tag-hist { background: rgba(255,255,255,0.04); border-color: rgba(255,255,255,0.08); color: rgba(255,255,255,0.32); }
@@ -1536,29 +1537,15 @@ function applyParamVisibility() {
   setOff('grp-think',  !m.startsWith('gemini-2.5') && !m.startsWith('gemini-3'));
   setOff('grp-count',  !isImagen);
 
-  /* Auflösung: nur Imagen Std/Ultra → 1K/2K  |  alle anderen → versteckt */
-  var imageSizeOff = !isImagen || isImagenFast;
-  setOff('grp-imagesize', imageSizeOff);
-  q('#grp-upscale-tip').style.display = imageSizeOff ? '' : 'none';
-
-  /* 4K-Button bei Imagen ausblenden (nicht unterstützt) */
-  var btn4k = q('#btn-4k-opt');
-  if (btn4k) {
-    btn4k.style.display = 'none';
-    if (S.imageSize === '4K') {
-      S.imageSize = '2K';
-      q('#seg-imagesize').querySelectorAll('.seg-btn').forEach(function(b) {
-        b.classList.toggle('on', b.dataset.v === '2K');
-      });
-    }
-  }
+  /* Auflösung: nur Gemini → sichtbar (Imagen-API unterstützt keinen imageSize-Parameter) */
+  setOff('grp-imagesize', !isGemini);
+  q('#grp-upscale-tip').style.display = isImagen ? '' : 'none';
 
   /* Hinweistext */
   var note = q('#imagesize-note');
   if (note) {
-    if (isGemini)    note.textContent = '1K ≈ 1024 px · 2K ≈ 2048 px · 4K ≈ 4096 px';
-    else if (isImagen) note.textContent = '1K ≈ 1024 px · 2K ≈ 2048 px (Standard & Ultra)';
-    else               note.textContent = '';
+    if (isGemini) note.textContent = '1K ≈ 1024 px · 2K ≈ 2048 px · 4K ≈ 4096 px';
+    else          note.textContent = '';
   }
 
   setOff('grp-neg',     !isImagen);
@@ -1843,7 +1830,6 @@ function callImagen(prompt, seed) {
     aspectRatio:   S.ratio,
     safetySetting: S.safetyLess ? 'block_only_high' : 'block_low_and_above'
   };
-  if (S.model !== 'imagen-4.0-fast-generate-001') params.imageSize = S.imageSize;
   if (S.personGen) params.personGeneration = 'allow_adult';
   var neg = q('#neg-prompt').value.trim();
   if (neg) params.negativePrompt = neg;
@@ -1920,7 +1906,7 @@ function makeImageCard(b64, prompt, elapsed, cost, inputCount, isHistory, seed) 
       '</div>' +
     '</div>' +
     '<div class="img-meta">' +
-      '<span class="img-prompt" title="' + esc(prompt) + '">' + esc(clip(prompt, 80)) + '</span>' +
+      '<span class="img-prompt">' + esc(clip(prompt, 80)) + '</span>' +
       '<div class="img-tags">' + histTag + modelTag + inputTag + timeTag + elapsTag + costTag + seedTag + '</div>' +
     '</div>';
 
@@ -1945,6 +1931,19 @@ function makeImageCard(b64, prompt, elapsed, cost, inputCount, isHistory, seed) 
       }).catch(function() {
         q('#seed-input').value = sv;
         showToast('🎲 Seed in Seed-Feld eingetragen');
+      });
+    });
+  }
+
+  var promptEl = card.querySelector('.img-prompt');
+  if (promptEl) {
+    promptEl.title = '📋 Klicken zum Kopieren';
+    promptEl.addEventListener('click', function(e) {
+      e.stopPropagation();
+      navigator.clipboard.writeText(prompt).then(function() {
+        showToast('📋 Prompt kopiert');
+      }).catch(function() {
+        showToast('Kopieren nicht möglich — bitte manuell kopieren');
       });
     });
   }
