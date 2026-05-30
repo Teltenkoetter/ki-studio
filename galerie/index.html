@@ -68,36 +68,26 @@
     object-fit: cover;
     display: block;
   }
-  /* card with input + output: side by side */
-  .card-pair {
-    display: flex;
-    border: 1px solid #e8e8e8;
+  /* standalone input card */
+  .card-input {
     border-radius: 8px;
     overflow: hidden;
+    background: #e0e0e0;
     break-inside: avoid;
   }
-  .card-pair .img-in {
-    width: 50%;
-    flex-shrink: 0;
-    background: #efefef;
-    position: relative;
-  }
-  .card-pair .img-in img {
+  .card-input img {
     width: 100%;
     aspect-ratio: 1 / 1;
     object-fit: cover;
     display: block;
-    opacity: 0.75;
   }
-  .card-pair .img-out {
-    width: 50%;
-    flex-shrink: 0;
+  .card-input .card-body {
+    background: #e0e0e0;
   }
-  .card-pair .img-out img {
-    width: 100%;
-    aspect-ratio: 1 / 1;
-    object-fit: cover;
-    display: block;
+  .card-input .card-num,
+  .card-input .card-name,
+  .card-input .card-cat {
+    color: #fff;
   }
   .card-body {
     padding: 9px 11px 10px;
@@ -255,40 +245,30 @@ function buildGallery() {
       var shortName = name.replace(/^[\d.]+ /, '');
       var numLabel  = num.replace('-', '.');
 
-      var card, body;
-
+      // Input card (grey, interspersed before output)
       if (src.in) {
-        // Pair card: input (grey) left, output right
-        card = document.createElement('div');
-        card.className = 'card-pair';
-
-        var divIn = document.createElement('div');
-        divIn.className = 'img-in';
+        var cardIn = document.createElement('div');
+        cardIn.className = 'card-input';
         var imgIn = document.createElement('img');
         imgIn.src = src.in;
         imgIn.alt = 'Ausgangsbild';
-        divIn.appendChild(imgIn);
-        card.appendChild(divIn);
-
-        var divOut = document.createElement('div');
-        divOut.className = 'img-out';
-        var imgOut = document.createElement('img');
-        imgOut.src = src.out;
-        imgOut.alt = shortName;
-        divOut.appendChild(imgOut);
-        card.appendChild(divOut);
-      } else {
-        // Single card: output only
-        card = document.createElement('div');
-        card.className = 'card';
-        var img = document.createElement('img');
-        img.className = 'card-img';
-        img.src = src.out;
-        img.alt = shortName;
-        card.appendChild(img);
+        cardIn.appendChild(imgIn);
+        var bodyIn = document.createElement('div');
+        bodyIn.className = 'card-body';
+        bodyIn.innerHTML = '<div class="card-name">Ausgangsbild</div>';
+        cardIn.appendChild(bodyIn);
+        grid.appendChild(cardIn);
       }
 
-      body = document.createElement('div');
+      // Output card
+      var card = document.createElement('div');
+      card.className = 'card';
+      var img = document.createElement('img');
+      img.className = 'card-img';
+      img.src = src.out;
+      img.alt = shortName;
+      card.appendChild(img);
+      var body = document.createElement('div');
       body.className = 'card-body';
       body.innerHTML =
         '<div class="card-num">' + numLabel + '</div>' +
