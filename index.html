@@ -627,8 +627,8 @@ textarea, input, .img-prompt, .error-msg { user-select: text; }
           <div class="pgrp-lbl" data-i18n="lbl-model">Modell</div>
           <select class="ctrl-sel" id="sel-model">
             <optgroup label="Gemini (Nano Banana)">
-              <option value="gemini-2.5-flash-image">Gemini 2.5 Flash · ~0,04 €/Bild</option>
-              <option value="gemini-3.1-flash-image-preview">Gemini 3.1 Flash (Preview) · ~0,05 €</option>
+              <option value="gemini-3.1-flash-image-preview">Gemini 3.1 Flash (Preview) · ~0,05 €/Bild</option>
+              <option value="gemini-2.5-flash-image">Gemini 2.5 Flash · ~0,04 €</option>
               <option value="gemini-3-pro-image-preview">Gemini 3 Pro (Preview) · ~0,13 €</option>
             </optgroup>
             <optgroup label="Imagen 4 (nur Text zu Bild)">
@@ -1291,7 +1291,7 @@ var TEMPLATES = [
 /* ── STATE ── */
 var S = {
   key: '', name: 'Anonym', hfKey: '', gruppe: '', lbSeed: null,
-  model: 'gemini-2.5-flash-image',
+  model: 'gemini-3.1-flash-image-preview',
   temp: 1.0, thinking: 0,
   ratio: '1:1', count: 1, imageSize: '1K',
   safetyLess: false,
@@ -1912,7 +1912,7 @@ function generate() {
 /* ── GEMINI API ── */
 function callGemini(prompt, seed) {
   var cfg = { responseModalities: ['IMAGE', 'TEXT'] };
-  if (S.model.startsWith('gemini-2.5') && S.thinking > 0) {
+  if (S.model.startsWith('gemini-') && S.thinking > 0) {
     cfg.thinkingConfig = { thinkingBudget: S.thinking };
   }
   if (seed !== null && seed !== undefined) cfg.seed = seed;
