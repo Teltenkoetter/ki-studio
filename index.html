@@ -622,6 +622,7 @@ textarea, input, .img-prompt, .error-msg { user-select: text; }
     <aside class="params" id="params">
       <div class="params-body">
 
+        <!-- 1. Modell -->
         <div class="pgrp">
           <div class="pgrp-lbl" data-i18n="lbl-model">Modell</div>
           <select class="ctrl-sel" id="sel-model">
@@ -642,22 +643,7 @@ textarea, input, .img-prompt, .error-msg { user-select: text; }
           </select>
         </div>
 
-        <div class="pgrp" id="grp-temp">
-          <div class="pgrp-lbl" data-i18n="lbl-temp" title="0 = präzise / deterministisch · 1 = ausgewogen (Standard) · 2 = maximal kreativ / zufällig">Temperatur ℹ</div>
-          <div class="ctrl-slide">
-            <input type="range" id="sl-temp" min="0" max="2" step="0.1" value="1.0" title="0 = präzise / deterministisch · 1 = ausgewogen (Standard) · 2 = maximal kreativ / zufällig">
-            <span class="sv" id="v-temp">1.0</span>
-          </div>
-        </div>
-
-        <div class="pgrp" id="grp-output">
-          <div class="pgrp-lbl" data-i18n="lbl-output" title="Bild &amp; Text: Gemini generiert das Bild und liefert eine kurze Textbeschreibung — hilfreich für Feedback und Erklärungen. Nur Bilder: nur das Bild, kein Text — schneller und kompakter.">Ausgabe ℹ</div>
-          <div class="seg" id="seg-output">
-            <button class="seg-btn on" data-v="IMAGE_TEXT" data-i18n="btn-img-text" title="Gemini generiert Bild + kurzen Kommentar — gibt Feedback zu Interpretation und Qualität">Bild &amp; Text</button>
-            <button class="seg-btn" data-v="IMAGE" data-i18n="btn-only-img" title="Nur das Bild, kein erklärender Text — schneller, weniger Ablenkung">Nur Bilder</button>
-          </div>
-        </div>
-
+        <!-- 2. System-Kontext -->
         <div class="pgrp" id="grp-sysctx">
           <div class="pgrp-lbl" data-i18n="lbl-sysctx">System-Kontext</div>
           <div class="seg" id="seg-sysctx">
@@ -668,16 +654,7 @@ textarea, input, .img-prompt, .error-msg { user-select: text; }
           <p class="param-note" id="sysctx-note" style="margin-top:5px;"></p>
         </div>
 
-        <div class="pgrp" id="grp-think">
-          <div class="pgrp-lbl" id="lbl-thinking"><span data-i18n="lbl-thinking">Thinking-Level</span> <span id="thinking-note" data-i18n="thinking-note" style="color:var(--dim);font-weight:400;text-transform:none;letter-spacing:0;font-size:10px;">— langsamer &amp; teurer, Effekt bei Bildern begrenzt</span></div>
-          <div class="seg" id="seg-think">
-            <button class="seg-btn on" data-v="0" data-i18n="btn-off" title="Kein Thinking — schnell und günstig">Aus</button>
-            <button class="seg-btn" data-v="1024" data-i18n="btn-low" title="1024 Thinking-Tokens — minimaler Effekt, kaum spürbar">Niedrig</button>
-            <button class="seg-btn" data-v="8192" data-i18n="btn-med" title="8192 Thinking-Tokens — etwas mehr Aufwand bei der Prompt-Interpretation, kein garantierter Qualitätssprung">Mittel</button>
-            <button class="seg-btn" data-v="24576" data-i18n="btn-high" title="24576 Thinking-Tokens — deutlich teurer, Effekt auf Bildqualität unsicher">Hoch</button>
-          </div>
-        </div>
-
+        <!-- 3. Seitenverhältnis -->
         <div class="pgrp">
           <div class="pgrp-lbl" data-i18n="lbl-ratio">Seitenverhältnis</div>
           <div class="seg" id="seg-ratio">
@@ -689,16 +666,7 @@ textarea, input, .img-prompt, .error-msg { user-select: text; }
           </div>
         </div>
 
-        <div class="pgrp" id="grp-count">
-          <div class="pgrp-lbl" data-i18n="lbl-count">Anzahl Bilder</div>
-          <div class="seg" id="seg-count">
-            <button class="seg-btn on" data-v="1">1</button>
-            <button class="seg-btn" data-v="2">2</button>
-            <button class="seg-btn" data-v="3">3</button>
-            <button class="seg-btn" data-v="4">4</button>
-          </div>
-        </div>
-
+        <!-- 4. Auflösung -->
         <div class="pgrp" id="grp-imagesize">
           <div class="pgrp-lbl" data-i18n="lbl-res">Auflösung</div>
           <div class="seg" id="seg-imagesize">
@@ -716,11 +684,44 @@ textarea, input, .img-prompt, .error-msg { user-select: text; }
           </div>
         </div>
 
+        <!-- 5. Anzahl Bilder -->
+        <div class="pgrp" id="grp-count">
+          <div class="pgrp-lbl" data-i18n="lbl-count">Anzahl Bilder</div>
+          <div class="seg" id="seg-count">
+            <button class="seg-btn on" data-v="1">1</button>
+            <button class="seg-btn" data-v="2">2</button>
+            <button class="seg-btn" data-v="3">3</button>
+            <button class="seg-btn" data-v="4">4</button>
+          </div>
+        </div>
+
+        <!-- 6. Thinking-Level -->
+        <div class="pgrp" id="grp-think">
+          <div class="pgrp-lbl" id="lbl-thinking"><span data-i18n="lbl-thinking">Thinking-Level</span> <span id="thinking-note" data-i18n="thinking-note" style="color:var(--dim);font-weight:400;text-transform:none;letter-spacing:0;font-size:10px;">— langsamer &amp; teurer, Effekt bei Bildern begrenzt</span></div>
+          <div class="seg" id="seg-think">
+            <button class="seg-btn on" data-v="0" data-i18n="btn-off" title="Kein Thinking — schnell und günstig">Aus</button>
+            <button class="seg-btn" data-v="1024" data-i18n="btn-low" title="1024 Thinking-Tokens — minimaler Effekt, kaum spürbar">Niedrig</button>
+            <button class="seg-btn" data-v="8192" data-i18n="btn-med" title="8192 Thinking-Tokens — etwas mehr Aufwand bei der Prompt-Interpretation, kein garantierter Qualitätssprung">Mittel</button>
+            <button class="seg-btn" data-v="24576" data-i18n="btn-high" title="24576 Thinking-Tokens — deutlich teurer, Effekt auf Bildqualität unsicher">Hoch</button>
+          </div>
+        </div>
+
+        <!-- 7. Seed -->
+        <div class="pgrp pgrp-seed">
+          <div class="pgrp-lbl">Seed <span style="font-weight:400;text-transform:none;letter-spacing:0;font-size:10px;">— für alle Modelle</span></div>
+          <div class="seed-row">
+            <input class="ctrl-num" type="number" id="seed-input" placeholder="Leer = zufällig">
+            <button class="btn btn-secondary btn-icon" id="btn-dice" title="Zufalls-Seed generieren">🎲</button>
+          </div>
+        </div>
+
+        <!-- 8. Negativer Prompt -->
         <div class="pgrp" id="grp-neg">
           <div class="pgrp-lbl" data-i18n="lbl-neg">Negativer Prompt</div>
           <textarea class="ctrl-ta" id="neg-prompt" rows="2" placeholder="Was soll nicht im Bild erscheinen…"></textarea>
         </div>
 
+        <!-- 9. Sicherheitsfilter -->
         <div class="pgrp" id="grp-safety">
           <div class="pgrp-lbl" data-i18n="lbl-safety">Sicherheitsfilter</div>
           <div class="tog-row">
@@ -739,14 +740,6 @@ textarea, input, .img-prompt, .error-msg { user-select: text; }
             </label>
           </div>
           <p class="param-note" style="margin-top:4px;">Erlaubt realistische Personendarstellung.</p>
-        </div>
-
-        <div class="pgrp pgrp-seed">
-          <div class="pgrp-lbl">Seed <span style="font-weight:400;text-transform:none;letter-spacing:0;font-size:10px;">— für alle Modelle</span></div>
-          <div class="seed-row">
-            <input class="ctrl-num" type="number" id="seed-input" placeholder="Leer = zufällig">
-            <button class="btn btn-secondary btn-icon" id="btn-dice" title="Zufalls-Seed generieren">🎲</button>
-          </div>
         </div>
 
       </div>
@@ -1081,10 +1074,6 @@ var LANG = localStorage.getItem('nb_lang') || 'de';
 var I18N = {
   de: {
     'lbl-model':          'Modell',
-    'lbl-temp':           'Temperatur ℹ',
-    'lbl-output':         'Ausgabe ℹ',
-    'btn-img-text':       'Bild & Text',
-    'btn-only-img':       'Nur Bilder',
     'lbl-sysctx':         'System-Kontext',
     'btn-off':            'Aus',
     'btn-grey':           'Graustufen',
@@ -1116,10 +1105,6 @@ var I18N = {
   },
   en: {
     'lbl-model':          'Model',
-    'lbl-temp':           'Temperature ℹ',
-    'lbl-output':         'Output ℹ',
-    'btn-img-text':       'Image & Text',
-    'btn-only-img':       'Image only',
     'lbl-sysctx':         'System Context',
     'btn-off':            'Off',
     'btn-grey':           'Grayscale',
@@ -1313,7 +1298,7 @@ var S = {
   chatMode: 'new', chatHistory: [],
   busy: false, totalImages: 0, totalCost: 0,
   lbUrl: '', lbPrompt: '',
-  inputImages: [], outputMode: 'IMAGE_TEXT',
+  inputImages: [],
   sysCtx: 'off', personGen: false
 };
 
@@ -1619,11 +1604,6 @@ function initParams() {
     applyParamVisibility();
     updateModelStatus();
   });
-  q('#sl-temp').addEventListener('input', function(e) {
-    S.temp = parseFloat(e.target.value);
-    q('#v-temp').textContent = S.temp.toFixed(1);
-  });
-  initSeg('seg-output',    function(v) { S.outputMode = v; });
   initSeg('seg-think',     function(v) { S.thinking = parseInt(v); });
   initSeg('seg-ratio',     function(v) { S.ratio = v; });
   initSeg('seg-count',     function(v) { S.count = parseInt(v); });
@@ -1688,9 +1668,7 @@ function applyParamVisibility() {
   var isImagen = m.startsWith('imagen');
   var isFlux   = m.startsWith('pollinations');
 
-  setOff('grp-output', !isGemini);
   /* Temperatur hat bei Bildgenerierungsmodellen keinen messbaren Effekt → ausblenden */
-  setOff('grp-temp', true);
   setOff('grp-think',  !m.startsWith('gemini-2.5') && !m.startsWith('gemini-3'));
   setOff('grp-count',  !isImagen);
 
@@ -1933,8 +1911,7 @@ function generate() {
 
 /* ── GEMINI API ── */
 function callGemini(prompt, seed) {
-  var modalities = S.outputMode === 'IMAGE' ? ['IMAGE'] : ['IMAGE', 'TEXT'];
-  var cfg = { responseModalities: modalities, temperature: S.temp };
+  var cfg = { responseModalities: ['IMAGE', 'TEXT'] };
   if (S.model.startsWith('gemini-2.5') && S.thinking > 0) {
     cfg.thinkingConfig = { thinkingBudget: S.thinking };
   }
