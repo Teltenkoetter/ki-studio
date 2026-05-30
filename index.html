@@ -791,7 +791,7 @@ textarea, input, .img-prompt, .error-msg { user-select: text; }
         <div class="mode-row" id="mode-row" style="display:none;">
           <div class="seg" id="seg-mode">
             <button class="seg-btn on" data-v="new" data-i18n="seg-new" title="Jeder Prompt startet frisch — kein Kontext aus vorherigen Generierungen">✦ Neue Serie</button>
-            <button class="seg-btn" data-v="continue" data-i18n="seg-continue" title="Baut auf dem letzten Bild auf — ideal für schrittweise Überarbeitungen">↺ Aufbauen</button>
+            <button class="seg-btn" data-v="continue" data-i18n="seg-continue" title="Gemini erinnert sich an vorherige Prompts (Textkontext) — aber NICHT an das letzte Bild. Für visuelle Iteration: Bild über '📎 Als Eingabe' hinzufügen.">↺ Textkontext</button>
           </div>
           <span class="chat-depth" id="chat-depth" style="display:none;"></span>
         </div>
@@ -925,12 +925,13 @@ textarea, input, .img-prompt, .error-msg { user-select: text; }
       </div>
 
       <div class="help-sec">
-        <h3>↺ Aufbauen (Chat-Modus)</h3>
+        <h3>↺ Textkontext / Neue Serie</h3>
         <ul>
           <li>Nur für <strong>Gemini-Modelle</strong> verfügbar</li>
-          <li><strong>„Neue Serie"</strong> — jede Generierung startet unabhängig, kein Kontext aus vorherigen Bildern</li>
-          <li><strong>„Aufbauen"</strong> — Gemini erinnert sich an vorherige Generierungen und verfeinert schrittweise. Ideal für iterative Überarbeitungen.</li>
-          <li>Beim Modellwechsel wird der Chat-Verlauf automatisch zurückgesetzt</li>
+          <li><strong>„Neue Serie"</strong> — jede Generierung startet unabhängig, kein Kontext aus vorherigen Prompts</li>
+          <li><strong>„Textkontext"</strong> — Gemini erinnert sich an vorherige <em>Prompts</em>, aber <strong>nicht</strong> an das letzte Bild. Nützlich für schrittweise Textverfeinerung (z. B. „jetzt etwas wärmer", „mehr Holz").</li>
+          <li><strong>Für visuelle Iteration:</strong> Bild anklicken → <strong>„📎 Als Eingabe"</strong> → neuen Prompt schreiben. Vorheriges Eingabebild vorher mit ✕ entfernen.</li>
+          <li>Beim Modellwechsel wird der Textverlauf automatisch zurückgesetzt</li>
         </ul>
       </div>
 
@@ -1010,12 +1011,13 @@ textarea, input, .img-prompt, .error-msg { user-select: text; }
       </div>
 
       <div class="help-sec">
-        <h3>↺ Build on (Chat mode)</h3>
+        <h3>↺ Text context / New series</h3>
         <ul>
           <li>Only available for <strong>Gemini models</strong></li>
-          <li><strong>"New series"</strong> — each generation starts independently, no context from previous images</li>
-          <li><strong>"Build on"</strong> — Gemini remembers previous generations and refines step by step. Ideal for iterative revisions.</li>
-          <li>Chat history is automatically reset when switching models</li>
+          <li><strong>"New series"</strong> — each generation starts independently, no context from previous prompts</li>
+          <li><strong>"Text context"</strong> — Gemini remembers previous <em>prompts</em>, but <strong>not</strong> the last image. Useful for gradual text refinement (e.g. "now warmer", "more wood").</li>
+          <li><strong>For visual iteration:</strong> click image → <strong>"📎 As input"</strong> → write new prompt. Remove previous input image with ✕ first.</li>
+          <li>Text history resets automatically when switching models</li>
         </ul>
       </div>
 
@@ -1120,7 +1122,7 @@ var I18N = {
     'btn-dl-all':         '↓ Alle PNG',
     'btn-clear-history':  'Verlauf löschen',
     'seg-new':            '✦ Neue Serie',
-    'seg-continue':       '↺ Aufbauen',
+    'seg-continue':       '↺ Textkontext',
     'results-title':      'Ergebnisse',
     'empty-line1':        'Noch keine Bilder generiert',
     'empty-line2':        'Prompt eingeben und auf Generieren klicken',
@@ -1157,7 +1159,7 @@ var I18N = {
     'btn-dl-all':         '↓ All PNG',
     'btn-clear-history':  'Clear history',
     'seg-new':            '✦ New series',
-    'seg-continue':       '↺ Build on',
+    'seg-continue':       '↺ Text context',
     'results-title':      'Results',
     'empty-line1':        'No images generated yet',
     'empty-line2':        'Enter a prompt and click Generate',
@@ -1244,7 +1246,7 @@ var TEMPLATES = [
     { name: 'Weißmodell → Eingerichteter Raum',
       text: 'Transform this white/grey architectural model into a fully furnished, photorealistic interior render.\nStyle: [INTERIOR STYLE: e.g. Japandi / Scandinavian minimalism / contemporary luxury / warm industrial].\nMaterials & furniture: [MATERIALS & FURNITURE: e.g. low-profile linen sofa, smoked oak shelving, polished concrete floor, paper pendant lamp].\nLighting: [LIGHTING: e.g. diffuse daylight from large windows, warm accent lighting].\nCamera: [PERSPECTIVE: e.g. wide-angle 24mm at eye level, one-point perspective, vertical lines straight].\nDo not change the geometry or proportions of the architectural model.' },
     { name: 'Materialien & Oberflächen tauschen',
-      text: 'Change the materials and surface finishes in this image only.\nReplace [MATERIAL FROM: e.g. white painted walls] with [MATERIAL TO: e.g. raw fair-faced concrete].\nReplace [MATERIAL FROM: e.g. light laminate floor] with [MATERIAL TO: e.g. large-format honed travertine tiles].\nReplace [MATERIAL FROM: e.g. standard ceiling] with [MATERIAL TO: e.g. exposed timber beams].\nDo not alter the geometry, floor plan, spatial proportions, furniture placement, lighting, or camera angle in any way. Only change materials and surface finishes.' },
+      text: '💡 Tipp: Bild 1 = Raum/Modell (Geometrie), Bild 2 = Materialreferenz/Collage (Stil).\nChange the materials and surface finishes in this image only.\nReplace [MATERIAL FROM: e.g. white painted walls] with [MATERIAL TO: e.g. raw fair-faced concrete].\nReplace [MATERIAL FROM: e.g. light laminate floor] with [MATERIAL TO: e.g. large-format honed travertine tiles].\nReplace [MATERIAL FROM: e.g. standard ceiling] with [MATERIAL TO: e.g. exposed timber beams].\nDo not alter the geometry, floor plan, spatial proportions, furniture placement, lighting, or camera angle in any way. Only change materials and surface finishes.' },
     { name: 'Möblierung ersetzen',
       text: 'Replace the furniture and decor in this interior image with a new [INTERIOR STYLE: e.g. mid-century modern / minimalist / eclectic] style.\nNew furniture: [NEW FURNITURE: e.g. low walnut sideboard, curved velvet sofa in deep green, brass pendant lights, woven area rug].\nKeep the architectural structure, walls, floors, ceiling, windows, and all fixed elements completely unchanged.\nMaintain the original lighting and camera perspective.' },
     { name: 'Einzelnes Element ändern',
@@ -1262,7 +1264,7 @@ var TEMPLATES = [
     { name: '3D-Objekt in hochgeladenes Bild setzen',
       text: 'Image 1 is my room or context photo. Image 2 is a screenshot of my 3D object from [SOFTWARE: e.g. Rhino / SketchUp].\nComposite the 3D object from Image 2 into the scene of Image 1.\nPosition the object [POSITION: e.g. in the centre of the room / against the left wall / in front of the window].\nApply material to the object: [MATERIAL: e.g. brushed concrete / smoked oak / white matte lacquer / polished terrazzo].\nMatch the lighting, shadows, and colour grading of Image 1 exactly — the object must appear as if it was always part of the scene.\nDo not alter anything else in Image 1. Correct architectural scale.' },
     { name: 'Materialzuweisung auf 3D-Objekt',
-      text: 'This is a [VIEW TYPE: e.g. wireframe / plain render / grey massing model] of a 3D object.\nApply the following materials and finishes to the object:\n[SURFACE 1: e.g. top face → honed white Carrara marble]\n[SURFACE 2: e.g. side panels → brushed stainless steel]\n[SURFACE 3: e.g. base / legs → matte black powder-coated steel]\nKeep the geometry, proportions, and camera angle exactly as in the original image.\nLighting: [LIGHTING: e.g. soft studio light from upper left / neutral grey background / white cyclorama].\nPhotorealistic material rendering, correct reflections and surface texture.' },
+      text: '💡 Tipp: Bild 1 = 3D-Objekt/Weißmodell (Geometrie), Bild 2 = Materialreferenz/Collage (Oberflächen).\nThis is a [VIEW TYPE: e.g. wireframe / plain render / grey massing model] of a 3D object.\nApply the following materials and finishes to the object:\n[SURFACE 1: e.g. top face → honed white Carrara marble]\n[SURFACE 2: e.g. side panels → brushed stainless steel]\n[SURFACE 3: e.g. base / legs → matte black powder-coated steel]\nKeep the geometry, proportions, and camera angle exactly as in the original image.\nLighting: [LIGHTING: e.g. soft studio light from upper left / neutral grey background / white cyclorama].\nPhotorealistic material rendering, correct reflections and surface texture.' },
     { name: 'Produktvisualisierung / Studio-Shot',
       text: 'Create a photorealistic studio product visualisation of the 3D object in this image.\nBackground: [BACKGROUND: e.g. pure white cyclorama / soft gradient warm grey / dark anthracite / neutral light grey linen].\nMaterial: [MATERIAL: e.g. natural oak with visible grain / matte white lacquer / sand-cast aluminium / hand-glazed ceramic].\nLighting: [LIGHTING: e.g. soft diffuse studio light, no hard shadows / dramatic single spotlight from above / three-point lighting setup].\nCamera: [PERSPECTIVE: e.g. three-quarter front view, slight above eye-level / straight frontal elevation / low angle detail shot].\nNo props or context — clean, minimal product photography. High resolution.' }
   ]},
