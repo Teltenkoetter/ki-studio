@@ -873,7 +873,7 @@ textarea, input, .img-prompt, .error-msg { user-select: text; }
         <h3>🚀 Schnellstart</h3>
         <ul>
           <li><strong>Prompt eingeben</strong> — Beschreibe dein Bild. Englisch für Stilbegriffe empfohlen, Deutsch funktioniert auch.</li>
-          <li><strong>📋 Vorlagen</strong> — 50 Prompts in 8 Kategorien (1 Architektur bis 8 Fotografischer Stil). Klicken → einfügen → <strong>Tab</strong> springt zum nächsten [Platzhalter]</li>
+          <li><strong>📋 Vorlagen</strong> — 50 Prompts in 8 Kategorien (1 Architektur bis 8 Fotografischer Stil). Klicken → einfügen → <strong>[Platzhalter in eckigen Klammern]</strong> durch eigene Begriffe ersetzen</li>
           <li><strong>↗ Promptgalerie</strong> — Beispielbilder zu ausgewählten Vorlagen (im Vorlagen-Panel)</li>
           <li><strong>✨</strong> — Prompt automatisch mit KI verbessern und ausformulieren</li>
           <li><strong>✕</strong> — Prompt-Feld leeren</li>
@@ -941,14 +941,16 @@ textarea, input, .img-prompt, .error-msg { user-select: text; }
         <ul>
           <li>Bilder werden <strong>lokal im Browser</strong> gespeichert — bleiben nach Tab-Schließen erhalten</li>
           <li>Max. 8 Bilder im Verlauf; älteste werden automatisch entfernt</li>
-          <li><strong>↓ PNG</strong> — Einzelbild speichern · <strong>Alle PNG</strong> — alle Bilder auf einmal herunterladen</li>
+          <li><strong>↓ PNG</strong> — Einzelbild speichern (+ <strong>.txt Metadaten</strong> mit Prompt, Modell &amp; Seed, wenn Toggle aktiv) · <strong>Alle PNG</strong> — alle Bilder auf einmal</li>
+          <li><strong>↓ PDF</strong> — alle Vorlagen als druckbares PDF (im Vorlagen-Panel)</li>
           <li>„Verlauf löschen" entfernt alle gespeicherten Bilder dauerhaft</li>
         </ul>
       </div>
 
       <div class="help-sec">
         <h3>💡 Höhere Auflösung</h3>
-        <p>Gemini und Imagen Fast liefern ~1024 px. Für Druckqualität: PNG in <strong>Photoshop</strong> öffnen → <strong>Bearbeiten → Generative Upscale</strong> (Adobe Firefly) → bis 4× Vergrößerung ohne sichtbaren Qualitätsverlust.</p>
+        <p>Gemini und Imagen Fast liefern ~1024 px. <strong>2K und 4K</strong> werden aktuell noch nicht unterstützt und im Laufe des Jahres integriert.</p>
+        <p style="margin-top:6px;">Für Druckqualität jetzt: PNG in <strong>Photoshop</strong> öffnen → <strong>Bearbeiten → Generative Upscale</strong> (Adobe Firefly) → bis 4× Vergrößerung ohne sichtbaren Qualitätsverlust.</p>
       </div>
 
     </div>
@@ -967,7 +969,7 @@ textarea, input, .img-prompt, .error-msg { user-select: text; }
         <h3>🚀 Quick Start</h3>
         <ul>
           <li><strong>Enter a prompt</strong> — Describe your image. English recommended for style terms, German works too.</li>
-          <li><strong>📋 Templates</strong> — 50 prompts in 8 categories (1 Architecture to 8 Photographic Style). Click → insert → <strong>Tab</strong> jumps to next [placeholder]</li>
+          <li><strong>📋 Templates</strong> — 50 prompts in 8 categories (1 Architecture to 8 Photographic Style). Click → insert → replace <strong>[placeholders in square brackets]</strong> with your own terms</li>
           <li><strong>↗ Prompt Gallery</strong> — Example images for selected templates (in the templates panel)</li>
           <li><strong>✨</strong> — Auto-improve and expand the prompt using AI</li>
           <li><strong>✕</strong> — Clear the prompt field</li>
@@ -1035,14 +1037,16 @@ textarea, input, .img-prompt, .error-msg { user-select: text; }
         <ul>
           <li>Images are stored <strong>locally in the browser</strong> — they persist after closing the tab</li>
           <li>Max. 8 images in history; oldest are automatically removed</li>
-          <li><strong>↓ PNG</strong> — save individual image · <strong>All PNG</strong> — download all images at once</li>
+          <li><strong>↓ PNG</strong> — save image (+ <strong>.txt metadata</strong> with prompt, model &amp; seed, when toggle is on) · <strong>All PNG</strong> — download all at once</li>
+          <li><strong>↓ PDF</strong> — all templates as printable PDF (in the templates panel)</li>
           <li>"Clear history" permanently removes all stored images</li>
         </ul>
       </div>
 
       <div class="help-sec">
         <h3>💡 Higher Resolution</h3>
-        <p>Gemini and Imagen Fast output ~1024 px. For print quality: open PNG in <strong>Photoshop</strong> → <strong>Edit → Generative Upscale</strong> (Adobe Firefly) → up to 4× enlargement without visible quality loss.</p>
+        <p>Gemini and Imagen Fast output ~1024 px. <strong>2K and 4K</strong> are not yet supported and will be integrated later this year.</p>
+        <p style="margin-top:6px;">For print quality now: open PNG in <strong>Photoshop</strong> → <strong>Edit → Generative Upscale</strong> (Adobe Firefly) → up to 4× enlargement without visible quality loss.</p>
       </div>
 
     </div>
