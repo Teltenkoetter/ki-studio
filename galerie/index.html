@@ -125,8 +125,13 @@
 
 <header>
   <div class="header-title"><b>KI</b> <span>studio</span></div>
-  <div class="header-meta">Prof. Klaus Teltenkötter &thinsp;|&thinsp; Digitales Entwerfen &thinsp;|&thinsp; Innenarchitektur &thinsp;|&thinsp; Hochschule Mainz</div>
-  <div class="header-sub">Prompt-Galerie &mdash; Beispielbilder zu allen Vorlagen</div>
+  <div class="header-meta">Prof. Klaus Teltenkötter &thinsp;|&thinsp; Digitales Entwerfen &amp; Digitale Fertigung &thinsp;|&thinsp; Innenarchitektur &thinsp;|&thinsp; Hochschule Mainz</div>
+  <div class="header-meta" style="margin-top:4px;font-size:10px;">
+    <a href="https://www.designstrategies.org" target="_blank" style="color:#bbb;text-decoration:none;">www.designstrategies.org</a>
+    &ensp;·&ensp;
+    <a href="https://www.df-mainz.de" target="_blank" style="color:#bbb;text-decoration:none;">www.df-mainz.de</a>
+  </div>
+  <div class="header-sub">Prompt-Galerie &mdash; Beispielbilder zu den Vorlagen</div>
 </header>
 
 <div id="gallery"></div>
@@ -159,11 +164,12 @@ var IMAGES = {
 
 var TEMPLATES = [
   { cat: '1 Architektur & Landschaft', items: [
-    '1.1 Neubau aus Skizze / Konzept',
+    '1.1 Architektur aus Skizze / Konzept',
     '1.2 Fassade überarbeiten',
-    '1.3 Außenraum / Landscaping gestalten',
+    '1.3 Außenraum / Landschaft gestalten',
     '1.4 Anderen Winkel / Blickrichtung',
-    '1.5 Weißmodell → Fassadenrender',
+    '1.5 Weißmodell → Render',
+    '1.10 Farbkodiertes Modell → Materialzuweisung',
     '1.6 Screenshot / 3D-Modell → Render',
     '1.7 Rohbauphase / Reverse Engineering',
     '1.8 Jahreszeit & Wetter wechseln',
@@ -171,13 +177,14 @@ var TEMPLATES = [
   ]},
   { cat: '2 Innenarchitektur', items: [
     '2.1 Leeren Raum einrichten',
-    '2.2 Weißmodell → Eingerichteter Raum',
+    '2.2 Weißmodell → Render',
     '2.3 Materialien & Oberflächen tauschen',
     '2.4 Möblierung ersetzen',
     '2.5 Einzelnes Element ändern',
-    '2.6 Kamera & Perspektive setzen',
+    '2.6 Kamera & Perspektive',
     '2.7 Ausstellungsstand / Showroom',
-    '2.8 Licht & Stimmung wechseln'
+    '2.8 Licht & Stimmung wechseln',
+    '2.9 Farbkodiertes Modell → Materialzuweisung'
   ]},
   { cat: '3 Objekt im Raum', items: [
     '3.1 3D-Objekt in beschriebene Szene',
@@ -189,15 +196,15 @@ var TEMPLATES = [
     '4.1 Weißer Cutout aus Foto',
     '4.2 Maßstabsfigur generieren',
     '4.3 Silhouette / Schattenriss',
-    '4.4 Person in Interieur einsetzen',
+    '4.4 Personen in Raum integrieren',
     '4.5 Personengruppe im Raum',
-    '4.6 Lifestyle-Person für Moodboard',
+    '4.6 Person im Kontext',
     '4.7 Porträt aufwerten',
     '4.8 Hintergrund entfernen / ersetzen',
     '4.9 Person als Architektur-Skizze'
   ]},
   { cat: '5 Stimmung & Stil', items: [
-    '5.1 Architekturstil übertragen',
+    '5.1 Gestaltungsstil übertragen',
     '5.2 Mood Board',
     '5.3 Linienzeichnung / Line Drawing',
     '5.4 Bleistiftskizze / Pencil Sketch',
@@ -205,7 +212,7 @@ var TEMPLATES = [
     '5.6 Axonometrie / Isometrie'
   ]},
   { cat: '6 Optimierung', items: [
-    '6.1 Raum aufräumen / Staging',
+    '6.1 Raum freilegen',
     '6.2 Render-Qualität verbessern — Architektur',
     '6.3 Render-Qualität verbessern — Interieur',
     '6.4 Render-Qualität verbessern — Objekt / Produkt'
@@ -215,6 +222,12 @@ var TEMPLATES = [
     '7.2 Entourage einkomponieren — 2 Bilder',
     '7.3 Cutout für Architekturcollage',
     '7.4 Materialcollage erstellen'
+  ]},
+  { cat: '8 Fotografischer Stil', items: [
+    '8.1 Analogfilm-Ästhetik',
+    '8.2 Großformat-Architekturfotografie',
+    '8.3 Schwarz-Weiß Dokumentation',
+    '8.4 Editoriale Bildsprache'
   ]}
 ];
 
