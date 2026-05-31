@@ -2567,9 +2567,11 @@ function downloadTemplatesPDF() {
       '.item{margin-bottom:14px;padding:10px 12px;border:1px solid #e8e8e8;border-radius:6px;break-inside:avoid;}' +
       '.item-name{font-weight:700;font-size:11px;margin-bottom:5px;}' +
       '.item-text{font-size:10px;color:#444;white-space:pre-wrap;line-height:1.55;}' +
-      '@media print{body{padding:20px 28px;}h2{margin-top:18px;}}' +
+      '.close-btn{position:fixed;top:16px;right:16px;padding:8px 16px;background:#111;color:#fff;border:none;border-radius:6px;font-size:13px;cursor:pointer;font-family:-apple-system,Helvetica,Arial,sans-serif;z-index:999;}' +
+      '@media print{body{padding:20px 28px;}h2{margin-top:18px;}.close-btn{display:none;}}' +
     '</style></head><body>';
-  html += '<h1><b>KI</b> studio</h1>' +
+  html += '<button class="close-btn" onclick="window.close()">✕ Schließen</button>' +
+    '<h1><b>KI</b> studio</h1>' +
     '<p style="font-size:13px;font-weight:500;color:#333;margin:5px 0 4px;letter-spacing:-0.1px;">Prompt-Vorlagen &mdash; ' + TEMPLATES.reduce(function(a,c){return a+c.items.length;},0) + ' Vorlagen in ' + TEMPLATES.length + ' Kategorien</p>' +
     '<p style="font-size:10px;font-weight:300;color:#999;margin:0 0 6px;letter-spacing:0.2px;">Prof. Klaus Teltenkötter &thinsp;|&thinsp; Digitales Entwerfen &amp; Digitale Fertigung &thinsp;|&thinsp; Innenarchitektur &thinsp;|&thinsp; Hochschule Mainz</p>';
   TEMPLATES.forEach(function(cat) {
