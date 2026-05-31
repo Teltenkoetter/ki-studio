@@ -517,9 +517,9 @@ textarea, input, .img-prompt, .error-msg { user-select: text; }
 <div id="screen-setup" class="screen active">
   <div class="setup-wrap">
     <div class="setup-logo">
-      <h1 style="font-size:30px;letter-spacing:-0.5px;font-weight:400;"><span style="font-weight:700;">KI</span> <span style="font-weight:300;">studio</span></h1>
-      <p class="sub">KI-Bildgenerierung · Nano Banana &amp; Black Forest Labs</p>
-      <p class="sub" style="margin-top:2px;opacity:0.6;">Innenarchitektur · Hochschule Mainz</p>
+      <h1 style="font-size:30px;letter-spacing:-0.5px;font-weight:400;"><span style="font-weight:700;">KI</span> <span style="font-weight:300;">Studio</span></h1>
+      <p class="sub">KI-Bildgenerierung für Innenarchitektur und Architektur</p>
+      <p class="sub" style="margin-top:3px;opacity:0.55;">Nano Banana &amp; Black Forest Labs</p>
     </div>
     <div class="setup-card">
       <!-- Tabs -->
@@ -598,10 +598,10 @@ textarea, input, .img-prompt, .error-msg { user-select: text; }
       </div>
 
     </div>
-    <div style="margin-top:20px;text-align:center;font-size:11px;color:var(--dim);line-height:1.9;">
-      <span style="font-weight:300;letter-spacing:0.2px;">Prof. Klaus Teltenkötter &thinsp;|&thinsp; Digitales Entwerfen &amp; Digitale Fertigung</span><br>
-      <span style="font-weight:300;letter-spacing:0.2px;">Innenarchitektur &thinsp;|&thinsp; Hochschule Mainz</span><br>
-      v1.1 · Build Juni 2026
+    <div style="margin-top:20px;text-align:center;font-size:12px;line-height:2.0;">
+      <span style="font-weight:500;color:var(--muted);letter-spacing:0.1px;">Prof. Klaus Teltenkötter</span><span style="font-weight:300;color:var(--dim);letter-spacing:0.1px;"> &thinsp;|&thinsp; <a href="https://www.designstrategies.org" target="_blank" style="color:inherit;text-decoration:none;border-bottom:1px solid var(--bd);">Digitales Entwerfen</a> &amp; <a href="https://www.df-mainz.de" target="_blank" style="color:inherit;text-decoration:none;border-bottom:1px solid var(--bd);">Digitale Fertigung</a></span><br>
+      <span style="font-weight:300;color:var(--dim);letter-spacing:0.1px;">Innenarchitektur &thinsp;|&thinsp; Hochschule Mainz</span><br>
+      <span style="font-weight:300;color:var(--dim);font-size:11px;">v1.1 · Build Juni 2026</span>
     </div>
   </div>
 </div>
@@ -1193,36 +1193,36 @@ var TEMPLATES = [
       text: 'Generate a view of this [BUILDING: e.g. house / apartment block / pavilion] from [VIEW DIRECTION: e.g. the front-left corner / a bird\'s eye perspective / street level looking up].\nKeep everything about the building and its surroundings exactly the same — do not change anything about the architecture, materials, landscape, or lighting. Only the camera position and viewing angle should change.' },
     { name: '1.5 Weißmodell → Render',
       text: 'Transform this white/grey architectural massing model into a photorealistic exterior render.\nStyle: [ARCHITECTURAL STYLE: e.g. Scandinavian minimalism / raw industrial / warm Mediterranean].\nFacade materials: [FACADE MATERIALS: e.g. pale brick, blackened timber cladding, large glazed surfaces, green planted roof].\nLandscape: [OUTDOOR SPACE: e.g. simple courtyard with ornamental grasses and gravel / mature urban street trees].\nTime of day: [TIME OF DAY: e.g. overcast bright day / warm late afternoon golden hour].\nDo not change the geometry or proportions of the model.' },
-    { name: '1.6 Screenshot / 3D-Modell → Render',
+    { name: '1.6 Farbkodiertes Modell → Materialzuweisung',
+      text: 'This 3D model uses color coding to mark different facade zones and material areas.\nAssign the following materials to each color:\n[FARBE 1: e.g. Rot → Sichtbeton [Typ: rau / gewaschen / geschalt]]\n[FARBE 2: e.g. Blau → Glas [Typ: Klarglas / Strukturglas / getönt]]\n[FARBE 3: e.g. Grün → Holzverkleidung [Holztyp: z.B. Lärche / Eiche / Douglasie]]\n[FARBE 4: e.g. Gelb → Metall [Typ: Cortenstahl / Aluminium eloxiert / Zink]]\nDo not change the geometry, proportions, or camera angle of the model.\nLighting: [LIGHTING: e.g. diffuses Tageslicht / goldene Stunde / bewölkt gleichmäßig].\nSetting: [SETTING: e.g. urban / Landschaft / neutraler Hintergrund].\nPhotorealistic architectural render.' },
+    { name: '1.7 Screenshot / 3D-Modell → Render',
       text: 'This is a screenshot of my [MODEL TYPE: e.g. SketchUp model / Rhino render / 3D massing study / CAD drawing].\nTransform it into a photorealistic architectural render. Add realistic sky, surface textures, and materials: [MATERIALS: e.g. fair-faced concrete, weathered timber cladding, large aluminium-framed glazing, planted green roof].\nWeather and time of day: [WEATHER: e.g. bright sunny day with sharp shadows / soft overcast winter light / golden hour sunset with warm glow / twilight with interior lights on].\nAdd [ENTOURAGE: e.g. people walking and sitting around the building / realistic vegetation only / no people].\nDo not change the perspective, building geometry, or camera angle of the original image.\nHigh quality photorealistic architectural rendering.' },
-    { name: '1.7 Rohbauphase / Reverse Engineering',
+    { name: '1.8 Rohbauphase / Reverse Engineering',
       text: 'Generate a version of this image showing the building during shell construction phase.\nConstruction stage: [CONSTRUCTION STAGE: e.g. concrete foundation and rising walls / steel frame structure / masonry shell without windows].\nShow construction machinery, building materials, and scaffolding scattered around the site.\nThe surroundings, trees, and landscape should remain the same as in the original image.\nWeather: [WEATHER: e.g. overcast and rainy / bright working day with blue sky].' },
-    { name: '1.8 Jahreszeit & Wetter wechseln',
+    { name: '1.9 Jahreszeit & Wetter wechseln',
       text: 'Change only the season, weather, and sky in this image.\nNew condition: [SEASON & WEATHER: e.g. winter with snow on the ground, bare trees, low cold sun / summer with lush foliage, deep blue sky, hard shadows / autumn with warm coloured leaves, overcast soft light].\nDo not alter the building, architecture, materials, or landscape structure in any way. Only seasonal vegetation, sky, weather effects, and ground covering should change.' },
-    { name: '1.9 Grundriss / Lageplan → Render',
-      text: 'Transform this [DRAWING: e.g. floor plan / site plan / section drawing] into a photorealistic architectural render.\nView: [VIEW: e.g. interior perspective / aerial bird\'s eye view / street-level exterior].\nStyle: [ARCHITECTURAL STYLE: e.g. contemporary residential / warm Scandinavian / commercial modern].\nMaterials: [MATERIALS: e.g. concrete, glass, timber, planted green surfaces].\nTime of day: [TIME OF DAY: e.g. bright daylight / late afternoon golden light].\nCamera: [PERSPECTIVE: e.g. wide-angle 28mm at eye level / aerial drone view, straight down].' },
-    { name: '1.10 Farbkodiertes Modell → Materialzuweisung',
-      text: 'This 3D model uses color coding to mark different facade zones and material areas.\nAssign the following materials to each color:\n[FARBE 1: e.g. Rot → Sichtbeton [Typ: rau / gewaschen / geschalt]]\n[FARBE 2: e.g. Blau → Glas [Typ: Klarglas / Strukturglas / getönt]]\n[FARBE 3: e.g. Grün → Holzverkleidung [Holztyp: z.B. Lärche / Eiche / Douglasie]]\n[FARBE 4: e.g. Gelb → Metall [Typ: Cortenstahl / Aluminium eloxiert / Zink]]\nDo not change the geometry, proportions, or camera angle of the model.\nLighting: [LIGHTING: e.g. diffuses Tageslicht / goldene Stunde / bewölkt gleichmäßig].\nSetting: [SETTING: e.g. urban / Landschaft / neutraler Hintergrund].\nPhotorealistic architectural render.' }
+    { name: '1.10 Grundriss / Lageplan → Render',
+      text: 'Transform this [DRAWING: e.g. floor plan / site plan / section drawing] into a photorealistic architectural render.\nView: [VIEW: e.g. interior perspective / aerial bird\'s eye view / street-level exterior].\nStyle: [ARCHITECTURAL STYLE: e.g. contemporary residential / warm Scandinavian / commercial modern].\nMaterials: [MATERIALS: e.g. concrete, glass, timber, planted green surfaces].\nTime of day: [TIME OF DAY: e.g. bright daylight / late afternoon golden light].\nCamera: [PERSPECTIVE: e.g. wide-angle 28mm at eye level / aerial drone view, straight down].' }
   ]},
   { cat: '2 Innenarchitektur', items: [
     { name: '2.1 Leeren Raum einrichten',
       text: '[ROOM TYPE: e.g. minimalist living room / open-plan office / loft apartment] with [FEATURES: e.g. floor-to-ceiling glazing, exposed concrete ceiling, open layout].\nMateriality: [SURFACES: e.g. brushed oak panels, polished fair-faced concrete, ribbed glass, natural stone floor].\nLight & mood: [LIGHTING: e.g. low afternoon sun in summer, soft shadow play, warm quiet atmosphere].\nCamera: architectural photography, [FOCAL LENGTH: e.g. wide-angle 24mm] at eye level, [PERSPECTIVE: e.g. one-point central / two-point corner], vertical lines perfectly straight. Photorealistic.' },
     { name: '2.2 Weißmodell → Render',
       text: 'Transform this white/grey architectural model into a fully furnished, photorealistic interior render.\nStyle: [INTERIOR STYLE: e.g. Japandi / Scandinavian minimalism / contemporary luxury / warm industrial].\nMaterials & furniture: [MATERIALS & FURNITURE: e.g. low-profile linen sofa, smoked oak shelving, polished concrete floor, paper pendant lamp].\nLighting: [LIGHTING: e.g. diffuse daylight from large windows, warm accent lighting].\nCamera: [PERSPECTIVE: e.g. wide-angle 24mm at eye level, one-point perspective, vertical lines straight].\nDo not change the geometry or proportions of the architectural model.' },
-    { name: '2.3 Materialien & Oberflächen tauschen',
+    { name: '2.3 Farbkodiertes Modell → Materialzuweisung',
+      text: 'This 3D interior model uses color coding to mark different surface zones.\nAssign the following materials to each color:\n[FARBE 1: e.g. Rot → Sichtbeton [Typ: rau / geglättet / gespachtelt]]\n[FARBE 2: e.g. Blau → Holzoberfläche [Holztyp: z.B. Eiche geräuchert / Birke natur / Nussbaum]]\n[FARBE 3: e.g. Grün → Textil [Fabric-Typ: z.B. Leinen / Wollfilz / Velours / Leder]]\n[FARBE 4: e.g. Gelb → Metall [Typ: z.B. gebürsteter Stahl / Messing matt / Kupfer oxidiert]]\n[FARBE 5: e.g. Grau → Glas [Typ: z.B. Strukturglas / Klarglas / Mattglas / VSG]]\nDo not change geometry, proportions, furniture placement, or camera angle.\nLighting: [LIGHTING: e.g. diffuses Tageslicht von links / warmes Abendlicht / gleichmäßiges Deckenlicht].\nPhotorealistic interior render.' },
+    { name: '2.4 Materialien & Oberflächen tauschen',
       text: '💡 Tipp: Bild 1 = Raum/Modell (Geometrie), Bild 2 = Materialreferenz/Collage (Stil).\nChange the materials and surface finishes in this image only.\nReplace [MATERIAL FROM: e.g. white painted walls] with [MATERIAL TO: e.g. raw fair-faced concrete].\nReplace [MATERIAL FROM: e.g. light laminate floor] with [MATERIAL TO: e.g. large-format honed travertine tiles].\nReplace [MATERIAL FROM: e.g. standard ceiling] with [MATERIAL TO: e.g. exposed timber beams].\nDo not alter the geometry, floor plan, spatial proportions, furniture placement, lighting, or camera angle in any way. Only change materials and surface finishes.' },
-    { name: '2.4 Möblierung ersetzen',
+    { name: '2.5 Möblierung ersetzen',
       text: 'Replace the furniture and decor in this interior image with a new [INTERIOR STYLE: e.g. mid-century modern / minimalist / eclectic] style.\nNew furniture: [NEW FURNITURE: e.g. low walnut sideboard, curved velvet sofa in deep green, brass pendant lights, woven area rug].\nKeep the architectural structure, walls, floors, ceiling, windows, and all fixed elements completely unchanged.\nMaintain the original lighting and camera perspective.' },
-    { name: '2.5 Einzelnes Element ändern',
+    { name: '2.6 Einzelnes Element ändern',
       text: 'Take this image of a furnished room and make ONLY these specific changes: [EDIT: e.g. replace the coffee table with a modern travertine stone one / change the wall colour to deep olive green / swap the pendant light for a sculptural brass fixture / add a large-format art print above the sofa].\nDo NOT alter any other furniture, layout, lighting, colours, architecture, proportions, or camera angle.\nKeep every unchanged element exactly as it appears in the original image.' },
-    { name: '2.6 Kamera & Perspektive',
+    { name: '2.7 Kamera & Perspektive',
       text: 'Render this [ROOM/BUILDING: e.g. Wohnbereich / Arbeitsbereich / Fassade / Außenraum] from the following camera setup:\nPerspektive: [PERSPECTIVE: e.g. Zentralperspektive (Fluchtpunkt mittig) / Übereck-Perspektive (zwei Fluchtpunkte) / Vogelperspektive (bird\'s eye) / Froschperspektive (worm\'s eye) / nicht geneigte Bildebene (parallele Projektion ohne Fluchtpunkte)].\nBrennweite: [FOCAL LENGTH: e.g. Weitwinkel 24mm / 28mm / Standard 35mm / Normalobjektiv 50mm / Leichtes Tele 85mm].\nKamerahöhe: [HEIGHT: e.g. Augenhöhe 1.60m / Niedrig 0.50m / Erhöht 2.50m].\nNeigung: [TILT: e.g. keine Neigung — Bildebene senkrecht / leicht nach oben geneigt / leicht nach unten].\nDo not change anything about the architecture, materials, or spatial layout — only camera position and lens.\nArchitectural photography, vertical lines perfectly straight, professional quality.' },
-    { name: '2.7 Ausstellungsstand / Showroom',
+    { name: '2.8 Ausstellungsstand / Showroom',
       text: 'Create a photorealistic image of a [USE TYPE: e.g. trade show booth / brand showroom / retail space] for [BRAND / THEME: e.g. a furniture brand / architecture office / tech company].\nStyle: [STYLE: e.g. Scandinavian minimalist / raw industrial / high-end luxury].\nPrimary materials and colours: [MATERIALS & COLOURS: e.g. blackened steel, light oak, matte white surfaces, brand colour accents].\nKey spatial elements: [SPATIAL ELEMENTS: e.g. open display tables, a central enclosed meeting room with glass walls, integrated ceiling lighting].\nSetting: [SETTING: e.g. dark trade show hall with polished concrete floor / bright white gallery space].\nInclude [PEOPLE: e.g. visitors and staff naturally interacting / no people].' },
-    { name: '2.8 Licht & Stimmung wechseln',
-      text: 'Change only the lighting and atmosphere in this interior image.\nNew lighting: [LIGHTING: e.g. warm evening light with indirect wall sconces / bright overcast midday / golden hour low sun casting long shadows].\nSeason / time of day: [SEASON: e.g. summer afternoon / winter dusk / late evening].\nDo not alter the geometry, materials, furniture, or camera angle in any way. Only lighting and mood should change.' },
-    { name: '2.9 Farbkodiertes Modell → Materialzuweisung',
-      text: 'This 3D interior model uses color coding to mark different surface zones.\nAssign the following materials to each color:\n[FARBE 1: e.g. Rot → Sichtbeton [Typ: rau / geglättet / gespachtelt]]\n[FARBE 2: e.g. Blau → Holzoberfläche [Holztyp: z.B. Eiche geräuchert / Birke natur / Nussbaum]]\n[FARBE 3: e.g. Grün → Textil [Fabric-Typ: z.B. Leinen / Wollfilz / Velours / Leder]]\n[FARBE 4: e.g. Gelb → Metall [Typ: z.B. gebürsteter Stahl / Messing matt / Kupfer oxidiert]]\n[FARBE 5: e.g. Grau → Glas [Typ: z.B. Strukturglas / Klarglas / Mattglas / VSG]]\nDo not change geometry, proportions, furniture placement, or camera angle.\nLighting: [LIGHTING: e.g. diffuses Tageslicht von links / warmes Abendlicht / gleichmäßiges Deckenlicht].\nPhotorealistic interior render.' }
+    { name: '2.9 Licht & Stimmung wechseln',
+      text: 'Change only the lighting and atmosphere in this interior image.\nNew lighting: [LIGHTING: e.g. warm evening light with indirect wall sconces / bright overcast midday / golden hour low sun casting long shadows].\nSeason / time of day: [SEASON: e.g. summer afternoon / winter dusk / late evening].\nDo not alter the geometry, materials, furniture, or camera angle in any way. Only lighting and mood should change.' }
   ]},
   { cat: '3 Objekt im Raum', items: [
     { name: '3.1 3D-Objekt in beschriebene Szene',
