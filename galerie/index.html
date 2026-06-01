@@ -120,24 +120,26 @@
     .grid { grid-template-columns: repeat(2, 1fr); }
   }
   .back-bar {
-    display: block; width: 100%;
+    display: block;
+    position: relative;
+    width: 100vw;
+    left: 50%; right: 50%;
+    margin-left: -50vw; margin-right: -50vw;
+    margin-bottom: 32px;
     background: #111; color: #fff;
-    padding: 12px 20px;
+    padding: 13px 20px;
     font-size: 13px; font-weight: 600;
     font-family: -apple-system, Helvetica Neue, Arial, sans-serif;
     text-decoration: none; text-align: center;
-    letter-spacing: 0.2px;
-    margin: -40px -48px 32px -48px;
-  }
-  @media (max-width: 600px) {
-    .back-bar { margin: -20px -16px 24px -16px; }
+    letter-spacing: 0.2px; cursor: pointer; border: none;
+    box-sizing: border-box;
   }
   @media print { .back-bar { display: none; } }
 </style>
 </head>
 <body>
 
-<a class="back-bar" href="https://teltenkoetter.github.io/ki-studio/">← Zurück zur App</a>
+<button class="back-bar" onclick="window.close()">← Zurück zur App</button>
 
 <header>
   <div class="header-title"><b>KI</b> <span>studio</span></div>
