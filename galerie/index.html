@@ -119,9 +119,25 @@
     body { padding: 20px 16px; }
     .grid { grid-template-columns: repeat(2, 1fr); }
   }
+  .back-bar {
+    display: block; width: 100%;
+    background: #111; color: #fff;
+    padding: 12px 20px;
+    font-size: 13px; font-weight: 600;
+    font-family: -apple-system, Helvetica Neue, Arial, sans-serif;
+    text-decoration: none; text-align: center;
+    letter-spacing: 0.2px;
+    margin: -40px -48px 32px -48px;
+  }
+  @media (max-width: 600px) {
+    .back-bar { margin: -20px -16px 24px -16px; }
+  }
+  @media print { .back-bar { display: none; } }
 </style>
 </head>
 <body>
+
+<a class="back-bar" href="https://teltenkoetter.github.io/ki-studio/">← Zurück zur App</a>
 
 <header>
   <div class="header-title"><b>KI</b> <span>studio</span></div>
