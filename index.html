@@ -2632,16 +2632,18 @@ function initDrawModal() {
       ctx.beginPath(); ctx.rect(rs.x, rs.y, p.x - rs.x, p.y - rs.y);
       ctx.fill(); ctx.stroke();
     } else if (drawState.mode === 'eraser-rect' && drawState.rectStart) {
-      /* preview dashed outline */
       var snap2 = drawState.history[drawState.history.length - 1];
       if (snap2) ctx.putImageData(snap2, 0, 0);
+      /* show what will be erased: clear preview + dashed border */
+      var rs2 = drawState.rectStart;
+      var rx = Math.min(rs2.x, p.x), ry = Math.min(rs2.y, p.y);
+      var rw = Math.abs(p.x - rs2.x), rh = Math.abs(p.y - rs2.y);
+      ctx.clearRect(rx, ry, rw, rh);
       ctx.globalCompositeOperation = 'source-over';
       ctx.globalAlpha = 1;
-      ctx.strokeStyle = 'rgba(255,255,255,0.7)'; ctx.lineWidth = 2;
+      ctx.strokeStyle = 'rgba(255,255,255,0.8)'; ctx.lineWidth = 2;
       ctx.setLineDash([6, 4]);
-      var rs2 = drawState.rectStart;
-      ctx.beginPath(); ctx.rect(rs2.x, rs2.y, p.x - rs2.x, p.y - rs2.y);
-      ctx.stroke();
+      ctx.beginPath(); ctx.rect(rx, ry, rw, rh); ctx.stroke();
       ctx.setLineDash([]);
     }
   }
@@ -2667,11 +2669,12 @@ function initDrawModal() {
       var pe = getPos(src);
       var snap3 = drawState.history[drawState.history.length - 1];
       if (snap3) ctx.putImageData(snap3, 0, 0);
-      ctx.globalCompositeOperation = 'destination-out';
-      ctx.globalAlpha = 1;
       var re = drawState.rectStart;
-      ctx.fillRect(re.x, re.y, pe.x - re.x, pe.y - re.y);
-      ctx.globalCompositeOperation = 'source-over';
+      /* clearRect works in any drag direction */
+      ctx.clearRect(
+        Math.min(re.x, pe.x), Math.min(re.y, pe.y),
+        Math.abs(pe.x - re.x), Math.abs(pe.y - re.y)
+      );
       drawState.history.push(ctx.getImageData(0, 0, canvas.width, canvas.height));
       drawState.rectStart = null;
     }
