@@ -394,6 +394,16 @@ textarea, input, .img-prompt, .error-msg { user-select: text; }
 .img-prompt:hover { color: var(--text); }
 .img-tags { display: flex; gap: 4px; flex-shrink: 0; }
 .tag { background: var(--s3); border: 1px solid var(--bd); border-radius: 3px; padding: 1px 5px; font-size: 10px; color: var(--dim); font-family: var(--mono); white-space: nowrap; }
+/* ── DRAW MODAL ── */
+.draw-modal { position: fixed; inset: 0; z-index: 900; background: rgba(0,0,0,0.92); display: flex; flex-direction: column; }
+.draw-toolbar { display: flex; align-items: center; gap: 8px; padding: 10px 14px; background: var(--s2); border-bottom: 1px solid var(--bd); flex-shrink: 0; }
+.draw-tool { background: var(--s3); border: 1px solid var(--bd); border-radius: var(--r-sm); padding: 5px 10px; font-size: 14px; cursor: pointer; color: var(--text); transition: background 0.12s; }
+.draw-tool.on { background: var(--accent); border-color: var(--accent); color: #fff; }
+.draw-tool:hover:not(.on) { background: var(--s4); }
+.draw-stage { flex: 1; display: flex; align-items: center; justify-content: center; overflow: hidden; padding: 16px; }
+.draw-stage-inner { position: relative; display: inline-block; cursor: crosshair; }
+.draw-stage-inner img { display: block; max-width: 100%; max-height: calc(100vh - 120px); object-fit: contain; user-select: none; pointer-events: none; }
+#draw-canvas { position: absolute; inset: 0; width: 100%; height: 100%; cursor: crosshair; touch-action: none; }
 .tag-hist { background: rgba(255,255,255,0.04); border-color: rgba(255,255,255,0.08); color: rgba(255,255,255,0.32); }
 .ctrl-pw {
   width: 100%; background: var(--s2); border: 1px solid var(--bd); border-radius: var(--r-sm);
@@ -605,6 +615,24 @@ textarea, input, .img-prompt, .error-msg { user-select: text; }
       <span style="font-weight:500;color:var(--muted);letter-spacing:0.1px;">Prof. Klaus Teltenkötter</span><span style="font-weight:300;color:var(--muted);letter-spacing:0.1px;"> &thinsp;|&thinsp; <a href="https://www.designstrategies.org" target="_blank" style="color:inherit;text-decoration:underline;text-decoration-color:var(--muted);text-underline-offset:3px;">Digitales Entwerfen</a> &amp; <a href="https://www.df-mainz.de" target="_blank" style="color:inherit;text-decoration:underline;text-decoration-color:var(--muted);text-underline-offset:3px;">Digitale Fertigung</a></span><br>
       <span style="font-weight:300;color:var(--muted);letter-spacing:0.1px;"><a href="https://ia-mainz.de/" target="_blank" style="color:inherit;text-decoration:underline;text-decoration-color:var(--muted);text-underline-offset:3px;">Innenarchitektur</a> &thinsp;|&thinsp; <a href="https://www.hs-mainz.de/studium/studiengaenge/gestaltung/bachelor-innenarchitektur/uebersicht/" target="_blank" style="color:inherit;text-decoration:underline;text-decoration-color:var(--muted);text-underline-offset:3px;">Hochschule Mainz</a></span><br>
       <span style="font-weight:300;color:var(--dim);font-size:11px;">v1.1 · Build Juni 2026</span>
+    </div>
+  </div>
+</div>
+
+<!-- DRAW MODAL -->
+<div class="draw-modal" id="draw-modal" style="display:none;">
+  <div class="draw-toolbar">
+    <button class="draw-tool on" id="draw-pen" title="Zeichnen (Rot)">✏️</button>
+    <button class="draw-tool" id="draw-eraser" title="Radierer">⬜</button>
+    <button class="draw-tool" id="draw-clear" title="Markierung löschen">🗑</button>
+    <div style="flex:1;"></div>
+    <button class="btn btn-primary btn-sm" id="draw-use">📎 Als Eingabe verwenden</button>
+    <button class="draw-tool" id="draw-close" title="Schließen">✕</button>
+  </div>
+  <div class="draw-stage">
+    <div class="draw-stage-inner">
+      <img id="draw-img" alt="">
+      <canvas id="draw-canvas"></canvas>
     </div>
   </div>
 </div>
@@ -1440,7 +1468,9 @@ var TEMPLATES = [
     { name: '6.3 Render-Qualität verbessern — Interieur',
       text: 'Improve the photographic and render quality of this interior image while keeping the room, furniture, and layout exactly as they are.\nEnhance: [ENHANCE: e.g. improve lighting realism (soft shadows, natural daylight) / sharpen material textures and reflections / refine colour grading and atmosphere / add photorealistic depth of field / improve specular highlights on surfaces].\nMood: [MOOD: e.g. warm and inviting / bright and airy / dramatic and moody / editorial clean].\nDo not alter the architecture, furniture placement, materials, or camera angle in any way.\nResult: a higher-quality, more photorealistic version of the same interior.' },
     { name: '6.4 Render-Qualität verbessern — Objekt / Produkt',
-      text: 'Improve the render quality and photographic realism of this 3D object or product image while keeping the design and geometry exactly as they are.\nEnhance: [ENHANCE: e.g. improve material realism (reflections, surface texture) / refine studio lighting and shadows / sharpen detail and surface finish / professional product photography colour grading].\nMaterial focus: [MATERIAL: e.g. enhance wood grain and natural texture / improve metal reflections and gloss / refine ceramic glaze and finish].\nDo not change the object\'s design, geometry, proportions, or camera angle.\nResult: a higher-quality, more photorealistic product visualisation.' }
+      text: 'Improve the render quality and photographic realism of this 3D object or product image while keeping the design and geometry exactly as they are.\nEnhance: [ENHANCE: e.g. improve material realism (reflections, surface texture) / refine studio lighting and shadows / sharpen detail and surface finish / professional product photography colour grading].\nMaterial focus: [MATERIAL: e.g. enhance wood grain and natural texture / improve metal reflections and gloss / refine ceramic glaze and finish].\nDo not change the object\'s design, geometry, proportions, or camera angle.\nResult: a higher-quality, more photorealistic product visualisation.' },
+    { name: '6.5 Markierter Bereich → Überarbeitung',
+      text: 'This image contains a red marking/annotation indicating the area to change.\nChange ONLY the marked area: [CHANGE: e.g. replace floor with honed concrete / change wall material to smoked oak panels / replace the sofa with a different model / add a window / change lighting in this zone].\nKeep everything outside the red marking exactly as it is — architecture, materials, furniture, lighting, proportions and camera angle unchanged.\nThe result should look like a natural, seamless continuation of the unchanged areas.' }
   ]},
   { cat: '7 Details & Collage', items: [
     { name: '7.1 Entourage hinzufügen (Personen, Pflanzen, Fahrzeuge)',
@@ -1518,6 +1548,7 @@ var TEMPLATE_NAMES_EN = {
   '6.2 Render-Qualität verbessern — Architektur':   '6.2 Improve Render Quality — Architecture',
   '6.3 Render-Qualität verbessern — Interieur':     '6.3 Improve Render Quality — Interior',
   '6.4 Render-Qualität verbessern — Objekt / Produkt': '6.4 Improve Render Quality — Object / Product',
+  '6.5 Markierter Bereich → Überarbeitung':            '6.5 Marked Area → Edit',
   '7.1 Entourage hinzufügen (Personen, Pflanzen, Fahrzeuge)': '7.1 Add Entourage (People, Plants, Vehicles)',
   '7.2 Entourage einkomponieren — 2 Bilder (Compositing)':    '7.2 Composite Entourage — 2 Images',
   '7.3 Cutout für Architekturcollage':              '7.3 Cutout for Architectural Collage',
@@ -1774,6 +1805,7 @@ function launchApp(key) {
   initPrompt();
   initUpload();
   initTemplates();
+  initDrawModal();
   initUIEvents();
   initHelp();
   initResize();
@@ -2343,6 +2375,7 @@ function makeImageCard(b64, prompt, elapsed, cost, inputCount, isHistory, seed, 
       '<div class="img-overlay">' +
         '<button class="btn btn-secondary btn-sm" data-act="lb">🔍 Vollbild</button>' +
         '<button class="btn btn-secondary btn-sm" data-act="use">📎 Als Eingabe</button>' +
+        '<button class="btn btn-secondary btn-sm" data-act="draw" title="Bereich markieren für gezielte Überarbeitung">✏️ Markieren</button>' +
         '<button class="btn btn-secondary btn-sm" data-act="dl">↓ PNG</button>' +
         '<button class="btn btn-secondary btn-sm" data-act="again">↺ Neu</button>' +
       '</div>' +
@@ -2354,6 +2387,7 @@ function makeImageCard(b64, prompt, elapsed, cost, inputCount, isHistory, seed, 
 
   card.querySelector('[data-act="lb"]').addEventListener('click', function(e) { e.stopPropagation(); openLightbox(url, prompt, seed, model, template, sysCtx); });
   card.querySelector('[data-act="use"]').addEventListener('click', function(e) { e.stopPropagation(); useAsInput(b64); });
+  card.querySelector('[data-act="draw"]').addEventListener('click', function(e) { e.stopPropagation(); openDrawModal(url); });
   card.querySelector('[data-act="dl"]').addEventListener('click', function(e) { e.stopPropagation(); doDownload(url, prompt, seed, model, template, sysCtx); });
   card.querySelector('[data-act="again"]').addEventListener('click', function(e) {
     e.stopPropagation();
@@ -2493,6 +2527,113 @@ function openLightbox(url, prompt, seed, model, template, sysCtx) {
 }
 function closeLightbox() { q('#lightbox').classList.remove('show'); }
 
+/* ── DRAW MODAL ── */
+var drawState = { drawing: false, erasing: false, srcUrl: '' };
+
+function openDrawModal(imgUrl) {
+  var modal  = q('#draw-modal');
+  var img    = q('#draw-img');
+  var canvas = q('#draw-canvas');
+  drawState.srcUrl = imgUrl;
+  img.onload = function() {
+    canvas.width  = img.naturalWidth;
+    canvas.height = img.naturalHeight;
+    var ctx = canvas.getContext('2d');
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+  };
+  img.src = imgUrl;
+  modal.style.display = 'flex';
+  /* default: pen mode */
+  q('#draw-pen').classList.add('on');
+  q('#draw-eraser').classList.remove('on');
+  drawState.erasing = false;
+}
+
+function closeDrawModal() { q('#draw-modal').style.display = 'none'; }
+
+function initDrawModal() {
+  var canvas = q('#draw-canvas');
+  var ctx    = canvas.getContext('2d');
+  var LINE_W = 12;
+  var COLOR  = '#ff2222';
+
+  function getPos(e) {
+    var r = canvas.getBoundingClientRect();
+    var scaleX = canvas.width  / r.width;
+    var scaleY = canvas.height / r.height;
+    var clientX = e.clientX !== undefined ? e.clientX : e.touches[0].clientX;
+    var clientY = e.clientY !== undefined ? e.clientY : e.touches[0].clientY;
+    return { x: (clientX - r.left) * scaleX, y: (clientY - r.top) * scaleY };
+  }
+
+  function startDraw(e) {
+    e.preventDefault();
+    drawState.drawing = true;
+    var p = getPos(e);
+    ctx.beginPath();
+    ctx.moveTo(p.x, p.y);
+    if (drawState.erasing) {
+      ctx.globalCompositeOperation = 'destination-out';
+      ctx.lineWidth = LINE_W * 3;
+    } else {
+      ctx.globalCompositeOperation = 'source-over';
+      ctx.strokeStyle = COLOR;
+      ctx.lineWidth = LINE_W;
+      ctx.lineCap = 'round';
+      ctx.lineJoin = 'round';
+      ctx.globalAlpha = 0.85;
+    }
+  }
+  function moveDraw(e) {
+    if (!drawState.drawing) return;
+    e.preventDefault();
+    var p = getPos(e);
+    ctx.lineTo(p.x, p.y);
+    ctx.stroke();
+    ctx.beginPath();
+    ctx.moveTo(p.x, p.y);
+  }
+  function endDraw(e) { drawState.drawing = false; ctx.beginPath(); }
+
+  canvas.addEventListener('mousedown',  startDraw);
+  canvas.addEventListener('mousemove',  moveDraw);
+  canvas.addEventListener('mouseup',    endDraw);
+  canvas.addEventListener('mouseleave', endDraw);
+  canvas.addEventListener('touchstart', startDraw, { passive: false });
+  canvas.addEventListener('touchmove',  moveDraw,  { passive: false });
+  canvas.addEventListener('touchend',   endDraw);
+
+  q('#draw-pen').addEventListener('click', function() {
+    drawState.erasing = false;
+    q('#draw-pen').classList.add('on');
+    q('#draw-eraser').classList.remove('on');
+  });
+  q('#draw-eraser').addEventListener('click', function() {
+    drawState.erasing = true;
+    q('#draw-eraser').classList.add('on');
+    q('#draw-pen').classList.remove('on');
+  });
+  q('#draw-clear').addEventListener('click', function() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+  });
+  q('#draw-close').addEventListener('click', closeDrawModal);
+
+  q('#draw-use').addEventListener('click', function() {
+    /* Merge: draw image + annotation onto offscreen canvas → base64 */
+    var img = q('#draw-img');
+    var off = document.createElement('canvas');
+    off.width  = img.naturalWidth;
+    off.height = img.naturalHeight;
+    var octx = off.getContext('2d');
+    octx.drawImage(img, 0, 0);
+    octx.drawImage(canvas, 0, 0);
+    var merged = off.toDataURL('image/png').split(',')[1];
+    useAsInput(merged);
+    closeDrawModal();
+    showToast('✏️ Markiertes Bild als Eingabe geladen');
+  });
+}
+
 /* ── TEMPLATES ── */
 function initTemplates() {
   var panel = q('#tmpl-panel');
@@ -2505,7 +2646,7 @@ function initTemplates() {
       '<span class="tmpl-head-title">📋 Prompt-Vorlagen</span>' +
       '<div style="display:flex;gap:4px;">' +
         '<button class="btn btn-ghost" id="tmpl-pdf-btn" title="Alle Vorlagen als PDF" style="padding:3px 8px;font-size:11px;line-height:1;">↓ PDF</button>' +
-        '<a class="btn btn-ghost" id="tmpl-gallery-btn" href="https://teltenkoetter.github.io/ki-studio/galerie/" target="_blank" title="Beispielbilder zu den Vorlagen" style="padding:3px 8px;font-size:11px;line-height:1;text-decoration:none;">↗ Promptgalerie</a>' +
+        '<button class="btn btn-ghost" id="tmpl-gallery-btn" onclick="window.open(\'https://teltenkoetter.github.io/ki-studio/galerie/\',\'_blank\')" title="Beispielbilder zu den Vorlagen" style="padding:3px 8px;font-size:11px;line-height:1;">↗ Promptgalerie</button>' +
         '<button class="btn btn-ghost tmpl-close-x" style="padding:3px 8px;font-size:12px;line-height:1;">✕</button>' +
       '</div>' +
     '</div>' +
