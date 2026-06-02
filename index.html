@@ -398,7 +398,7 @@ textarea, input, .img-prompt, .error-msg { user-select: text; }
 .draw-modal { position: fixed; inset: 0; z-index: 900; background: rgba(0,0,0,0.92); display: flex; flex-direction: column; }
 .draw-toolbar { display: flex; align-items: center; gap: 8px; padding: 10px 14px; background: var(--s2); border-bottom: 1px solid var(--bd); flex-shrink: 0; }
 .draw-tool { background: var(--s3); border: 1px solid var(--bd); border-radius: var(--r-sm); padding: 5px 10px; font-size: 14px; cursor: pointer; color: var(--text); transition: background 0.12s; }
-.draw-tool.on { background: var(--accent); border-color: var(--accent); color: #fff; }
+.draw-tool.on { background: rgba(255,255,255,0.9); border-color: rgba(255,255,255,0.9); color: #111; }
 .draw-tool:hover:not(.on) { background: var(--s4); }
 .draw-stage { flex: 1; display: flex; align-items: center; justify-content: center; overflow: hidden; padding: 16px; }
 .draw-stage-inner { position: relative; display: inline-block; cursor: crosshair; }
@@ -624,7 +624,8 @@ textarea, input, .img-prompt, .error-msg { user-select: text; }
   <div class="draw-toolbar">
     <button class="draw-tool on" id="draw-pen"    title="Freihand zeichnen">✏️</button>
     <button class="draw-tool"    id="draw-rect"   title="Rechteck zeichnen">⬛</button>
-    <button class="draw-tool"    id="draw-eraser" title="Radierer">◻</button>
+    <button class="draw-tool"    id="draw-eraser"      title="Radierer — frei zeichnen">⌫</button>
+    <button class="draw-tool"    id="draw-eraser-rect" title="Auswahlradierer — Rechteck löschen">⬜⌫</button>
     <div style="width:1px;height:22px;background:var(--bd);margin:0 2px;"></div>
     <button class="draw-tool"    id="draw-thin"   title="Dünne Linie" style="font-size:11px;padding:5px 8px;">S</button>
     <button class="draw-tool on" id="draw-thick"  title="Dicke Linie"  style="font-size:13px;font-weight:700;padding:5px 8px;">L</button>
@@ -2563,12 +2564,12 @@ function closeDrawModal() { q('#draw-modal').style.display = 'none'; }
 
 function setDrawMode(mode) {
   drawState.mode = mode;
-  ['draw-pen','draw-rect','draw-eraser'].forEach(function(id) {
+  ['draw-pen','draw-rect','draw-eraser','draw-eraser-rect'].forEach(function(id) {
     q('#' + id).classList.remove('on');
   });
-  var map = { pen: 'draw-pen', rect: 'draw-rect', eraser: 'draw-eraser' };
+  var map = { pen: 'draw-pen', rect: 'draw-rect', eraser: 'draw-eraser', 'eraser-rect': 'draw-eraser-rect' };
   if (map[mode]) q('#' + map[mode]).classList.add('on');
-  q('#draw-canvas').style.cursor = mode === 'eraser' ? 'cell' : 'crosshair';
+  q('#draw-canvas').style.cursor = (mode === 'eraser' || mode === 'eraser-rect') ? 'cell' : 'crosshair';
 }
 
 function initDrawModal() {
@@ -2600,6 +2601,8 @@ function initDrawModal() {
       ctx.globalCompositeOperation = 'destination-out';
       ctx.lineWidth = lineW() * 3;
       ctx.beginPath(); ctx.moveTo(p.x, p.y);
+    } else if (drawState.mode === 'eraser-rect') {
+      drawState.rectStart = p;
     } else if (drawState.mode === 'pen') {
       ctx.globalCompositeOperation = 'source-over';
       ctx.strokeStyle = COLOR; ctx.lineWidth = lineW();
@@ -2619,26 +2622,36 @@ function initDrawModal() {
       ctx.stroke();
       ctx.beginPath(); ctx.moveTo(p.x, p.y);
     } else if (drawState.mode === 'rect' && drawState.rectStart) {
-      /* preview: restore last snapshot, draw rect outline */
       var snap = drawState.history[drawState.history.length - 1];
       if (snap) ctx.putImageData(snap, 0, 0);
       ctx.globalCompositeOperation = 'source-over';
       ctx.globalAlpha = 0.75;
       ctx.strokeStyle = COLOR; ctx.lineWidth = lineW();
       ctx.fillStyle   = 'rgba(255,34,34,0.18)';
-      ctx.setLineDash([]);
       var rs = drawState.rectStart;
-      ctx.beginPath();
-      ctx.rect(rs.x, rs.y, p.x - rs.x, p.y - rs.y);
+      ctx.beginPath(); ctx.rect(rs.x, rs.y, p.x - rs.x, p.y - rs.y);
       ctx.fill(); ctx.stroke();
+    } else if (drawState.mode === 'eraser-rect' && drawState.rectStart) {
+      /* preview dashed outline */
+      var snap2 = drawState.history[drawState.history.length - 1];
+      if (snap2) ctx.putImageData(snap2, 0, 0);
+      ctx.globalCompositeOperation = 'source-over';
+      ctx.globalAlpha = 1;
+      ctx.strokeStyle = 'rgba(255,255,255,0.7)'; ctx.lineWidth = 2;
+      ctx.setLineDash([6, 4]);
+      var rs2 = drawState.rectStart;
+      ctx.beginPath(); ctx.rect(rs2.x, rs2.y, p.x - rs2.x, p.y - rs2.y);
+      ctx.stroke();
+      ctx.setLineDash([]);
     }
   }
 
   function endDraw(e) {
     if (!drawState.drawing) return;
     drawState.drawing = false;
+    var src = e.changedTouches ? { clientX: e.changedTouches[0].clientX, clientY: e.changedTouches[0].clientY } : e;
     if (drawState.mode === 'rect' && drawState.rectStart) {
-      var p  = getPos(e.changedTouches ? { clientX: e.changedTouches[0].clientX, clientY: e.changedTouches[0].clientY } : e);
+      var p  = getPos(src);
       var snap = drawState.history[drawState.history.length - 1];
       if (snap) ctx.putImageData(snap, 0, 0);
       ctx.globalCompositeOperation = 'source-over';
@@ -2646,10 +2659,19 @@ function initDrawModal() {
       ctx.strokeStyle = COLOR; ctx.lineWidth = lineW();
       ctx.fillStyle   = 'rgba(255,34,34,0.18)';
       var rs = drawState.rectStart;
-      ctx.beginPath();
-      ctx.rect(rs.x, rs.y, p.x - rs.x, p.y - rs.y);
+      ctx.beginPath(); ctx.rect(rs.x, rs.y, p.x - rs.x, p.y - rs.y);
       ctx.fill(); ctx.stroke();
-      /* save final rect as new snapshot */
+      drawState.history.push(ctx.getImageData(0, 0, canvas.width, canvas.height));
+      drawState.rectStart = null;
+    } else if (drawState.mode === 'eraser-rect' && drawState.rectStart) {
+      var pe = getPos(src);
+      var snap3 = drawState.history[drawState.history.length - 1];
+      if (snap3) ctx.putImageData(snap3, 0, 0);
+      ctx.globalCompositeOperation = 'destination-out';
+      ctx.globalAlpha = 1;
+      var re = drawState.rectStart;
+      ctx.fillRect(re.x, re.y, pe.x - re.x, pe.y - re.y);
+      ctx.globalCompositeOperation = 'source-over';
       drawState.history.push(ctx.getImageData(0, 0, canvas.width, canvas.height));
       drawState.rectStart = null;
     }
@@ -2665,9 +2687,10 @@ function initDrawModal() {
   canvas.addEventListener('touchmove',  moveDraw,  { passive: false });
   canvas.addEventListener('touchend',   endDraw);
 
-  q('#draw-pen').addEventListener('click',    function() { setDrawMode('pen'); });
-  q('#draw-rect').addEventListener('click',   function() { setDrawMode('rect'); });
-  q('#draw-eraser').addEventListener('click', function() { setDrawMode('eraser'); });
+  q('#draw-pen').addEventListener('click',          function() { setDrawMode('pen'); });
+  q('#draw-rect').addEventListener('click',         function() { setDrawMode('rect'); });
+  q('#draw-eraser').addEventListener('click',       function() { setDrawMode('eraser'); });
+  q('#draw-eraser-rect').addEventListener('click',  function() { setDrawMode('eraser-rect'); });
 
   q('#draw-thin').addEventListener('click', function() {
     drawState.thick = false;
