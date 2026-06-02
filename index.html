@@ -622,12 +622,18 @@ textarea, input, .img-prompt, .error-msg { user-select: text; }
 <!-- DRAW MODAL -->
 <div class="draw-modal" id="draw-modal" style="display:none;">
   <div class="draw-toolbar">
-    <button class="draw-tool on" id="draw-pen" title="Zeichnen (Rot)">✏️</button>
-    <button class="draw-tool" id="draw-eraser" title="Radierer">⬜</button>
-    <button class="draw-tool" id="draw-clear" title="Markierung löschen">🗑</button>
+    <button class="draw-tool on" id="draw-pen"    title="Freihand zeichnen">✏️</button>
+    <button class="draw-tool"    id="draw-rect"   title="Rechteck zeichnen">⬛</button>
+    <button class="draw-tool"    id="draw-eraser" title="Radierer">◻</button>
+    <div style="width:1px;height:22px;background:var(--bd);margin:0 2px;"></div>
+    <button class="draw-tool"    id="draw-thin"   title="Dünne Linie" style="font-size:11px;padding:5px 8px;">S</button>
+    <button class="draw-tool on" id="draw-thick"  title="Dicke Linie"  style="font-size:13px;font-weight:700;padding:5px 8px;">L</button>
+    <div style="width:1px;height:22px;background:var(--bd);margin:0 2px;"></div>
+    <button class="draw-tool"    id="draw-undo"   title="Rückgängig">↩</button>
+    <button class="draw-tool"    id="draw-clear"  title="Alles löschen">🗑</button>
     <div style="flex:1;"></div>
     <button class="btn btn-primary btn-sm" id="draw-use">📎 Als Eingabe verwenden</button>
-    <button class="draw-tool" id="draw-close" title="Schließen">✕</button>
+    <button class="draw-tool"    id="draw-close"  title="Schließen">✕</button>
   </div>
   <div class="draw-stage">
     <div class="draw-stage-inner">
@@ -948,6 +954,7 @@ textarea, input, .img-prompt, .error-msg { user-select: text; }
           <li>Bis zu <strong>5 Bilder</strong> hochladen — Klick auf „📎 Bilder" oder Drag &amp; Drop auf das Textfeld</li>
           <li>Gemini nutzt die Bilder als visuelle Referenz: Stil übernehmen, Materialien tauschen, auf einem Foto aufbauen</li>
           <li><strong>„📎 Als Eingabe"</strong> — erscheint beim Überfahren eines generierten Bildes. Lädt dieses Bild direkt als Eingabe für die nächste Generierung. Kein Download, kein erneutes Hochladen nötig — ideal für schrittweise Überarbeitungen.</li>
+          <li><strong>„✏️ Markieren"</strong> — zeichne mit rotem Stift einen Bereich ein, der überarbeitet werden soll. Anschließend „📎 Als Eingabe verwenden" → markiertes Bild wird als Eingabe geladen. Mit Vorlage <strong>6.5</strong> gezielt beschreiben, was im markierten Bereich geändert werden soll.</li>
           <li>Einzelne Bilder mit ✕ entfernen · alle mit „Alle ✕"</li>
           <li>Imagen-Modelle unterstützen <em>keine</em> Bild-Eingabe</li>
         </ul>
@@ -1044,6 +1051,7 @@ textarea, input, .img-prompt, .error-msg { user-select: text; }
           <li>Upload up to <strong>5 images</strong> — click "📎 Images" or drag &amp; drop onto the text field</li>
           <li>Gemini uses images as visual reference: copy a style, swap materials, build on a photo</li>
           <li><strong>"📎 As input"</strong> — appears when hovering a generated image. Loads it directly as input for the next generation. No download needed — ideal for step-by-step revisions.</li>
+          <li><strong>"✏️ Mark"</strong> — draw a red marking over the area to edit. Then click "📎 Use as input" → the annotated image loads as input. Use template <strong>6.5</strong> to describe what should change in the marked area.</li>
           <li>Remove individual images with ✕ · remove all with "All ✕"</li>
           <li>Imagen models do <em>not</em> support image input</li>
         </ul>
@@ -2528,72 +2536,126 @@ function openLightbox(url, prompt, seed, model, template, sysCtx) {
 function closeLightbox() { q('#lightbox').classList.remove('show'); }
 
 /* ── DRAW MODAL ── */
-var drawState = { drawing: false, erasing: false, srcUrl: '' };
+var drawState = {
+  drawing: false, mode: 'pen', /* pen | rect | eraser */
+  thick: true, srcUrl: '',
+  rectStart: null,
+  history: []   /* array of ImageData snapshots for undo */
+};
 
 function openDrawModal(imgUrl) {
   var modal  = q('#draw-modal');
   var img    = q('#draw-img');
   var canvas = q('#draw-canvas');
-  drawState.srcUrl = imgUrl;
+  drawState.srcUrl   = imgUrl;
+  drawState.history  = [];
   img.onload = function() {
     canvas.width  = img.naturalWidth;
     canvas.height = img.naturalHeight;
-    var ctx = canvas.getContext('2d');
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    canvas.getContext('2d').clearRect(0, 0, canvas.width, canvas.height);
   };
   img.src = imgUrl;
   modal.style.display = 'flex';
-  /* default: pen mode */
-  q('#draw-pen').classList.add('on');
-  q('#draw-eraser').classList.remove('on');
-  drawState.erasing = false;
+  setDrawMode('pen');
 }
 
 function closeDrawModal() { q('#draw-modal').style.display = 'none'; }
 
+function setDrawMode(mode) {
+  drawState.mode = mode;
+  ['draw-pen','draw-rect','draw-eraser'].forEach(function(id) {
+    q('#' + id).classList.remove('on');
+  });
+  var map = { pen: 'draw-pen', rect: 'draw-rect', eraser: 'draw-eraser' };
+  if (map[mode]) q('#' + map[mode]).classList.add('on');
+  q('#draw-canvas').style.cursor = mode === 'eraser' ? 'cell' : 'crosshair';
+}
+
 function initDrawModal() {
   var canvas = q('#draw-canvas');
   var ctx    = canvas.getContext('2d');
-  var LINE_W = 12;
   var COLOR  = '#ff2222';
+
+  function lineW() { return drawState.thick ? 14 : 5; }
 
   function getPos(e) {
     var r = canvas.getBoundingClientRect();
     var scaleX = canvas.width  / r.width;
     var scaleY = canvas.height / r.height;
-    var clientX = e.clientX !== undefined ? e.clientX : e.touches[0].clientX;
-    var clientY = e.clientY !== undefined ? e.clientY : e.touches[0].clientY;
-    return { x: (clientX - r.left) * scaleX, y: (clientY - r.top) * scaleY };
+    var src = e.touches ? e.touches[0] : e;
+    return { x: (src.clientX - r.left) * scaleX, y: (src.clientY - r.top) * scaleY };
+  }
+
+  function saveSnapshot() {
+    drawState.history.push(ctx.getImageData(0, 0, canvas.width, canvas.height));
+    if (drawState.history.length > 30) drawState.history.shift();
   }
 
   function startDraw(e) {
     e.preventDefault();
     drawState.drawing = true;
     var p = getPos(e);
-    ctx.beginPath();
-    ctx.moveTo(p.x, p.y);
-    if (drawState.erasing) {
+    saveSnapshot();
+    if (drawState.mode === 'eraser') {
       ctx.globalCompositeOperation = 'destination-out';
-      ctx.lineWidth = LINE_W * 3;
-    } else {
+      ctx.lineWidth = lineW() * 3;
+      ctx.beginPath(); ctx.moveTo(p.x, p.y);
+    } else if (drawState.mode === 'pen') {
       ctx.globalCompositeOperation = 'source-over';
-      ctx.strokeStyle = COLOR;
-      ctx.lineWidth = LINE_W;
-      ctx.lineCap = 'round';
-      ctx.lineJoin = 'round';
-      ctx.globalAlpha = 0.85;
+      ctx.strokeStyle = COLOR; ctx.lineWidth = lineW();
+      ctx.lineCap = 'round'; ctx.lineJoin = 'round'; ctx.globalAlpha = 0.85;
+      ctx.beginPath(); ctx.moveTo(p.x, p.y);
+    } else if (drawState.mode === 'rect') {
+      drawState.rectStart = p;
     }
   }
+
   function moveDraw(e) {
     if (!drawState.drawing) return;
     e.preventDefault();
     var p = getPos(e);
-    ctx.lineTo(p.x, p.y);
-    ctx.stroke();
-    ctx.beginPath();
-    ctx.moveTo(p.x, p.y);
+    if (drawState.mode === 'pen' || drawState.mode === 'eraser') {
+      ctx.lineTo(p.x, p.y);
+      ctx.stroke();
+      ctx.beginPath(); ctx.moveTo(p.x, p.y);
+    } else if (drawState.mode === 'rect' && drawState.rectStart) {
+      /* preview: restore last snapshot, draw rect outline */
+      var snap = drawState.history[drawState.history.length - 1];
+      if (snap) ctx.putImageData(snap, 0, 0);
+      ctx.globalCompositeOperation = 'source-over';
+      ctx.globalAlpha = 0.75;
+      ctx.strokeStyle = COLOR; ctx.lineWidth = lineW();
+      ctx.fillStyle   = 'rgba(255,34,34,0.18)';
+      ctx.setLineDash([]);
+      var rs = drawState.rectStart;
+      ctx.beginPath();
+      ctx.rect(rs.x, rs.y, p.x - rs.x, p.y - rs.y);
+      ctx.fill(); ctx.stroke();
+    }
   }
-  function endDraw(e) { drawState.drawing = false; ctx.beginPath(); }
+
+  function endDraw(e) {
+    if (!drawState.drawing) return;
+    drawState.drawing = false;
+    if (drawState.mode === 'rect' && drawState.rectStart) {
+      var p  = getPos(e.changedTouches ? { clientX: e.changedTouches[0].clientX, clientY: e.changedTouches[0].clientY } : e);
+      var snap = drawState.history[drawState.history.length - 1];
+      if (snap) ctx.putImageData(snap, 0, 0);
+      ctx.globalCompositeOperation = 'source-over';
+      ctx.globalAlpha = 0.75;
+      ctx.strokeStyle = COLOR; ctx.lineWidth = lineW();
+      ctx.fillStyle   = 'rgba(255,34,34,0.18)';
+      var rs = drawState.rectStart;
+      ctx.beginPath();
+      ctx.rect(rs.x, rs.y, p.x - rs.x, p.y - rs.y);
+      ctx.fill(); ctx.stroke();
+      /* save final rect as new snapshot */
+      drawState.history.push(ctx.getImageData(0, 0, canvas.width, canvas.height));
+      drawState.rectStart = null;
+    }
+    ctx.beginPath();
+    ctx.globalAlpha = 1; ctx.globalCompositeOperation = 'source-over';
+  }
 
   canvas.addEventListener('mousedown',  startDraw);
   canvas.addEventListener('mousemove',  moveDraw);
@@ -2603,27 +2665,38 @@ function initDrawModal() {
   canvas.addEventListener('touchmove',  moveDraw,  { passive: false });
   canvas.addEventListener('touchend',   endDraw);
 
-  q('#draw-pen').addEventListener('click', function() {
-    drawState.erasing = false;
-    q('#draw-pen').classList.add('on');
-    q('#draw-eraser').classList.remove('on');
+  q('#draw-pen').addEventListener('click',    function() { setDrawMode('pen'); });
+  q('#draw-rect').addEventListener('click',   function() { setDrawMode('rect'); });
+  q('#draw-eraser').addEventListener('click', function() { setDrawMode('eraser'); });
+
+  q('#draw-thin').addEventListener('click', function() {
+    drawState.thick = false;
+    q('#draw-thin').classList.add('on'); q('#draw-thick').classList.remove('on');
   });
-  q('#draw-eraser').addEventListener('click', function() {
-    drawState.erasing = true;
-    q('#draw-eraser').classList.add('on');
-    q('#draw-pen').classList.remove('on');
+  q('#draw-thick').addEventListener('click', function() {
+    drawState.thick = true;
+    q('#draw-thick').classList.add('on'); q('#draw-thin').classList.remove('on');
   });
+
+  q('#draw-undo').addEventListener('click', function() {
+    if (!drawState.history.length) return;
+    drawState.history.pop();
+    var prev = drawState.history[drawState.history.length - 1];
+    if (prev) ctx.putImageData(prev, 0, 0);
+    else ctx.clearRect(0, 0, canvas.width, canvas.height);
+  });
+
   q('#draw-clear').addEventListener('click', function() {
+    saveSnapshot();
     ctx.clearRect(0, 0, canvas.width, canvas.height);
   });
+
   q('#draw-close').addEventListener('click', closeDrawModal);
 
   q('#draw-use').addEventListener('click', function() {
-    /* Merge: draw image + annotation onto offscreen canvas → base64 */
     var img = q('#draw-img');
     var off = document.createElement('canvas');
-    off.width  = img.naturalWidth;
-    off.height = img.naturalHeight;
+    off.width = img.naturalWidth; off.height = img.naturalHeight;
     var octx = off.getContext('2d');
     octx.drawImage(img, 0, 0);
     octx.drawImage(canvas, 0, 0);
