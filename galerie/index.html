@@ -179,7 +179,9 @@ var IMAGES = {
   '5-5': { out: 'Klaus_5-5_186394996_10.png'       },
   '5-6': { out: 'Klaus_5-6_1168173000_11.png'      },
   '6-1': { out: 'Klaus_6-1_GPro_1092651690_05.png', in:  'Klaus_6-1_GPro_1092651690_0.jpg' },
-  '7-4': { out: 'Klaus_7-4_32677282_12.png'        }
+  '6-5': { out: 'Klaus_6-5_GPro_671359799_01.png',  in:  'Klaus_6-5_GPro_671359799_0.png'  },
+  '7-4': { out: 'Klaus_7-4_32677282_12.png'        },
+  '8-3': { out: 'Klaus_8-3_GPro_1998767172_03.png' }
 };
 // ────────────────────────────────────────────────────────────────────────────
 
@@ -237,7 +239,9 @@ var TEMPLATES = [
     '6.2 Render-Qualität verbessern — Architektur',
     '6.3 Render-Qualität verbessern — Interieur',
     '6.4 Render-Qualität verbessern — Objekt / Produkt',
-    '6.5 Markierter Bereich → Überarbeitung'
+    '6.5 Markierter Bereich → Überarbeitung',
+    '6.6 Alterungsprozesse entfernen',
+    '6.7 Patina & Verwitterung hinzufügen'
   ]},
   { cat: '7 Details & Collage', items: [
     '7.1 Entourage hinzufügen',
@@ -284,6 +288,7 @@ function buildGallery() {
       if (src.in) {
         var cardIn = document.createElement('div');
         cardIn.className = 'card-input';
+        cardIn.style.gridColumnStart = '1'; /* always start new row */
         var imgIn = document.createElement('img');
         imgIn.src = src.in;
         imgIn.alt = 'Ausgangsbild';
