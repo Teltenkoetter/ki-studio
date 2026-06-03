@@ -614,7 +614,7 @@ textarea, input, .img-prompt, .error-msg { user-select: text; }
     <div style="margin-top:20px;text-align:center;font-size:12px;line-height:2.0;">
       <span style="font-weight:500;color:var(--muted);letter-spacing:0.1px;">Prof. Klaus Teltenkötter</span><span style="font-weight:300;color:var(--muted);letter-spacing:0.1px;"> &thinsp;|&thinsp; <a href="https://www.designstrategies.org" target="_blank" style="color:inherit;text-decoration:underline;text-decoration-color:var(--muted);text-underline-offset:3px;">Digitales Entwerfen</a> &amp; <a href="https://www.df-mainz.de" target="_blank" style="color:inherit;text-decoration:underline;text-decoration-color:var(--muted);text-underline-offset:3px;">Digitale Fertigung</a></span><br>
       <span style="font-weight:300;color:var(--muted);letter-spacing:0.1px;"><a href="https://ia-mainz.de/" target="_blank" style="color:inherit;text-decoration:underline;text-decoration-color:var(--muted);text-underline-offset:3px;">Innenarchitektur</a> &thinsp;|&thinsp; <a href="https://www.hs-mainz.de/studium/studiengaenge/gestaltung/bachelor-innenarchitektur/uebersicht/" target="_blank" style="color:inherit;text-decoration:underline;text-decoration-color:var(--muted);text-underline-offset:3px;">Hochschule Mainz</a></span><br>
-      <span style="font-weight:300;color:var(--dim);font-size:11px;">v1.1 · Build Juni 2026</span>
+      <span style="font-weight:300;color:var(--dim);font-size:11px;">v1.1 · Build Juni 2026<span id="view-count"></span></span>
     </div>
   </div>
 </div>
@@ -1113,6 +1113,20 @@ var COURSES = [
 /* FLUX via Pollinations.ai (kein Token nötig) */
 var TRACKER_URL = 'https://script.google.com/macros/s/AKfycbxtKc7OSeIHt9qEYF4EOoYgDXohfazAsW2wGXtm_LB0dn3fvsR_AlDpsZrEOc7NR3-g8w/exec';
 
+/* ── PAGE VIEW COUNTER ── */
+(function() {
+  if (!TRACKER_URL) return;
+  fetch(TRACKER_URL + '?event=pageview')
+    .then(function(r) { return r.json(); })
+    .then(function(d) {
+      if (d && d.views) {
+        var el = document.getElementById('view-count');
+        if (el) el.textContent = ' · ' + Number(d.views).toLocaleString('de-DE') + ' Aufrufe';
+      }
+    })
+    .catch(function() {}); /* silent fail */
+})();
+
 /* ── CONSTANTS ── */
 var HISTORY_KEY = 'nb_history';
 var MAX_HISTORY = 8;
@@ -1479,7 +1493,11 @@ var TEMPLATES = [
     { name: '6.4 Render-Qualität verbessern — Objekt / Produkt',
       text: 'Improve the render quality and photographic realism of this 3D object or product image while keeping the design and geometry exactly as they are.\nEnhance: [ENHANCE: e.g. improve material realism (reflections, surface texture) / refine studio lighting and shadows / sharpen detail and surface finish / professional product photography colour grading].\nMaterial focus: [MATERIAL: e.g. enhance wood grain and natural texture / improve metal reflections and gloss / refine ceramic glaze and finish].\nDo not change the object\'s design, geometry, proportions, or camera angle.\nResult: a higher-quality, more photorealistic product visualisation.' },
     { name: '6.5 Markierter Bereich → Überarbeitung',
-      text: 'This image contains a red marking/annotation indicating the area to change.\nChange ONLY the marked area: [CHANGE: e.g. replace floor with honed concrete / change wall material to smoked oak panels / replace the sofa with a different model / add a window / change lighting in this zone].\nKeep everything outside the red marking exactly as it is — architecture, materials, furniture, lighting, proportions and camera angle unchanged.\nThe result should look like a natural, seamless continuation of the unchanged areas.' }
+      text: 'This image contains a red marking/annotation indicating the area to change.\nChange ONLY the marked area: [CHANGE: e.g. replace floor with honed concrete / change wall material to smoked oak panels / replace the sofa with a different model / add a window / change lighting in this zone].\nKeep everything outside the red marking exactly as it is — architecture, materials, furniture, lighting, proportions and camera angle unchanged.\nThe result should look like a natural, seamless continuation of the unchanged areas.' },
+    { name: '6.6 Alterungsprozesse entfernen',
+      text: 'Remove all signs of ageing, weathering and material degradation from this image — restore all surfaces to a clean, freshly built or recently renovated condition.\nRemove: [AGING SIGNS: e.g. rust stains and corrosion / weather discolouration and dirt deposits / surface cracks and unevenness / moss, lichen and biological growth / peeling and flaking paint / water damage and calcification marks / UV fading and material breakdown]\nApply to: [AREAS: e.g. all surfaces / facade only / floor and walls / specific material zones]\nResult: [RESULT: e.g. freshly built — new materials, no wear / recently renovated — clean but realistic / contemporary restoration — modern finish]\nDo not change the architecture, geometry, spatial layout, lighting, or camera angle.\nAll restored surfaces should look photorealistic and materially authentic.' },
+    { name: '6.7 Patina & Verwitterung hinzufügen',
+      text: 'Add realistic ageing, weathering and patina to the surfaces in this image.\nAging type: [AGING TYPE: e.g. natural weathering over 20–30 years / industrial patina / historical character / subtle lived-in quality / deliberately aged aesthetic]\nAdd: [EFFECTS: e.g. rust streaks and corrosion on metal / moss and lichen on stone and concrete / UV discolouration and greying on timber / water stains and calcification / concrete carbonation and surface erosion / oxidised copper or brass patina / worn and layered paint surfaces / biological growth on joints and ledges]\nApply to: [AREAS: e.g. all exterior surfaces / facade materials / specific zones]\nIntensity: [INTENSITY: e.g. subtle — slight weathering only / medium — clearly aged / strong — heavily weathered]\nDo not change the architecture, geometry, spatial layout, or camera angle.\nThe ageing should look entirely natural and photorealistic — not artificial or exaggerated.' }
   ]},
   { cat: '7 Details & Collage', items: [
     { name: '7.1 Entourage hinzufügen (Personen, Pflanzen, Fahrzeuge)',
@@ -1558,6 +1576,8 @@ var TEMPLATE_NAMES_EN = {
   '6.3 Render-Qualität verbessern — Interieur':     '6.3 Improve Render Quality — Interior',
   '6.4 Render-Qualität verbessern — Objekt / Produkt': '6.4 Improve Render Quality — Object / Product',
   '6.5 Markierter Bereich → Überarbeitung':            '6.5 Marked Area → Edit',
+  '6.6 Alterungsprozesse entfernen':                   '6.6 Remove Weathering & Ageing',
+  '6.7 Patina & Verwitterung hinzufügen':              '6.7 Add Patina & Weathering',
   '7.1 Entourage hinzufügen (Personen, Pflanzen, Fahrzeuge)': '7.1 Add Entourage (People, Plants, Vehicles)',
   '7.2 Entourage einkomponieren — 2 Bilder (Compositing)':    '7.2 Composite Entourage — 2 Images',
   '7.3 Cutout für Architekturcollage':              '7.3 Cutout for Architectural Collage',
