@@ -1115,16 +1115,15 @@ var TRACKER_URL = 'https://script.google.com/macros/s/AKfycbxtKc7OSeIHt9qEYF4EOo
 
 /* ── PAGE VIEW COUNTER ── */
 (function() {
-  if (!TRACKER_URL) return;
-  fetch(TRACKER_URL + '?event=pageview')
+  fetch('https://api.counterapi.dev/v1/ki-studio-mainz/views/up')
     .then(function(r) { return r.json(); })
     .then(function(d) {
-      if (d && d.views) {
+      if (d && d.count) {
         var el = document.getElementById('view-count');
-        if (el) el.textContent = ' · ' + Number(d.views).toLocaleString('de-DE') + ' Aufrufe';
+        if (el) el.textContent = ' · ' + Number(d.count).toLocaleString('de-DE') + ' Aufrufe';
       }
     })
-    .catch(function() {}); /* silent fail */
+    .catch(function() {});
 })();
 
 /* ── CONSTANTS ── */
