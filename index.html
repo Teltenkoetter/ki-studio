@@ -505,6 +505,15 @@ textarea, input, .img-prompt, .error-msg { user-select: text; }
 .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
 /* ── MOBILE ── */
 @media (max-width: 767px) {
+  /* Login */
+  #screen-setup { align-items: stretch; justify-content: flex-start; overflow-y: auto; padding: 24px 16px 32px; }
+  .setup-wrap { width: 100%; max-width: 420px; margin: 0 auto; }
+  .setup-logo { margin-bottom: 20px; }
+  .setup-logo h1 { font-size: 26px; }
+  .setup-card { padding: 20px 16px 18px; border-radius: 10px; }
+  .setup-tab-btn { font-size: 11px; padding: 7px 6px; }
+
+  /* Sidebar */
   .params {
     position: fixed; top: 46px; left: 0; bottom: 0;
     width: 82vw; max-width: 300px; min-width: 0;
@@ -528,6 +537,16 @@ textarea, input, .img-prompt, .error-msg { user-select: text; }
     color: var(--muted); font-size: 16px; cursor: pointer; flex-shrink: 0;
   }
   .prompt-zone { position: sticky; top: 0; z-index: 10; }
+
+  /* Gen-row: 2 Zeilen auf Mobile */
+  .gen-row { flex-wrap: wrap; gap: 8px; }
+  /* Zeile 1: Upload + Vorlagen (füllen Zeile → erzwingen Wrap) */
+  #btn-upload  { order: 1; flex: 1 1 40%; }
+  #btn-tmpl    { order: 2; flex: 1 1 40%; }
+  /* Zeile 2: Optimieren + Generieren */
+  #btn-improve { order: 3; flex: 0 0 auto; }
+  #btn-gen     { order: 3; flex: 1 1 auto; }
+  #btn-clear   { order: 4; }
 }
 </style>
 </head>
