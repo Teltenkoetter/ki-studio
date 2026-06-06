@@ -505,15 +505,23 @@ textarea, input, .img-prompt, .error-msg { user-select: text; }
 .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
 /* ── MOBILE ── */
 @media (max-width: 767px) {
-  /* Login */
-  #screen-setup { align-items: stretch; justify-content: flex-start; overflow-y: auto; padding: 24px 16px 32px; }
-  .setup-wrap { width: 100%; max-width: 420px; margin: 0 auto; }
-  .setup-logo { margin-bottom: 20px; }
-  .setup-logo h1 { font-size: 26px; }
-  .setup-card { padding: 20px 16px 18px; border-radius: 10px; }
-  .setup-tab-btn { font-size: 11px; padding: 7px 6px; }
+  html, body { overflow-x: hidden; max-width: 100vw; }
 
-  /* Sidebar */
+  /* Login */
+  #screen-setup { align-items: stretch; justify-content: flex-start; overflow-y: auto; overflow-x: hidden; padding: 20px 16px 32px; }
+  .setup-wrap { width: 100%; max-width: 100%; }
+  .setup-logo { margin-bottom: 18px; }
+  .setup-logo h1 { font-size: 26px; }
+  .setup-card { padding: 18px 14px 16px; border-radius: 10px; }
+  .setup-tab-btn { font-size: 11px; padding: 7px 4px; }
+
+  /* App chrome */
+  #screen-main { overflow-x: hidden; }
+  .statusbar { display: none; }          /* hide on mobile — too wide */
+  .key-pill { max-width: 120px; overflow: hidden; }
+  .kv { max-width: 70px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+  /* Sidebar overlay */
   .params {
     position: fixed; top: 46px; left: 0; bottom: 0;
     width: 82vw; max-width: 300px; min-width: 0;
@@ -529,7 +537,7 @@ textarea, input, .img-prompt, .error-msg { user-select: text; }
   }
   #sidebar-backdrop.show { display: block; }
   .resize-handle { display: none !important; }
-  .content { border-left: none; }
+  .content { border-left: none; width: 100%; }
   #btn-sidebar-toggle {
     display: flex; align-items: center; justify-content: center;
     width: 32px; height: 32px; background: var(--s3);
@@ -538,14 +546,12 @@ textarea, input, .img-prompt, .error-msg { user-select: text; }
   }
   .prompt-zone { position: sticky; top: 0; z-index: 10; }
 
-  /* Gen-row: 2 Zeilen auf Mobile */
+  /* Gen-row: 2 Zeilen */
   .gen-row { flex-wrap: wrap; gap: 8px; }
-  /* Zeile 1: Upload + Vorlagen (füllen Zeile → erzwingen Wrap) */
-  #btn-upload  { order: 1; flex: 1 1 40%; }
-  #btn-tmpl    { order: 2; flex: 1 1 40%; }
-  /* Zeile 2: Optimieren + Generieren */
+  #btn-upload  { order: 1; flex: 1 1 calc(50% - 4px); }
+  #btn-tmpl    { order: 2; flex: 1 1 calc(50% - 4px); }
   #btn-improve { order: 3; flex: 0 0 auto; }
-  #btn-gen     { order: 3; flex: 1 1 auto; }
+  #btn-gen     { order: 3; flex: 1; }
   #btn-clear   { order: 4; }
 }
 </style>
