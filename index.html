@@ -553,13 +553,16 @@ textarea, input, .img-prompt, .error-msg { user-select: text; }
   }
   .prompt-zone { position: sticky; top: 0; z-index: 10; }
 
-  /* Gen-row: 2 Zeilen */
+  /* Gen-row: 2 Zeilen auf Mobile */
   .gen-row { flex-wrap: wrap; gap: 8px; }
-  #btn-upload  { order: 1; flex: 1 1 calc(50% - 4px); }
-  #btn-tmpl    { order: 2; flex: 1 1 calc(50% - 4px); }
-  #btn-improve { order: 3; flex: 0 0 auto; }
-  #btn-gen     { order: 3; flex: 1; }
-  #btn-clear   { order: 4; }
+  #gen-row-spacer { display: none; }
+  /* Zeile 1: Bilder + Vorlagen */
+  #btn-upload  { order: 1; flex: 0 0 calc(50% - 4px); }
+  #btn-tmpl    { order: 1; flex: 0 0 calc(50% - 4px); }
+  /* Zeile 2: Optimieren + Generieren */
+  #btn-improve { order: 2; flex: 0 0 auto; }
+  #btn-gen     { order: 2; flex: 1; }
+  #btn-clear   { order: 3; width: 100%; }
 }
 </style>
 </head>
@@ -895,7 +898,7 @@ textarea, input, .img-prompt, .error-msg { user-select: text; }
             <button class="btn btn-secondary" id="btn-tmpl" data-i18n="btn-tmpl" data-i18n-title="btn-tmpl-title" title="Prompt-Vorlagen — Tab springt zum nächsten Platzhalter">📋 Vorlagen</button>
             <button class="btn btn-secondary" id="btn-improve" data-i18n-title="btn-improve-title" title="Prompt mit KI automatisch verbessern und ausformulieren (Gemini)">✨</button>
             <button class="btn btn-primary" id="btn-gen" data-i18n="btn-gen" title="Bild generieren (Strg+Enter)">⚡ Generieren</button>
-            <div style="flex:1"></div>
+            <div id="gen-row-spacer" style="flex:1"></div>
             <button class="btn btn-ghost btn-sm" id="btn-clear" data-i18n="btn-clear" style="display:none;">Ergebnisse leeren</button>
           </div>
         </div>
