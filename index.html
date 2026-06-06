@@ -514,6 +514,13 @@ textarea, input, .img-prompt, .error-msg { user-select: text; }
   .setup-logo h1 { font-size: 26px; }
   .setup-card { padding: 18px 14px 16px; border-radius: 10px; }
   .setup-tab-btn { font-size: 11px; padding: 7px 4px; }
+  /* iOS auto-zoom fix: alle Inputs auf min. 16px */
+  .input-row input, .ctrl-ta, .ctrl-sel, .ctrl-num, #prompt, #neg-prompt {
+    font-size: 16px !important;
+  }
+  /* Footer: Separator ausblenden, Abteilung in neue Zeile */
+  #footer-sep  { display: none; }
+  #footer-dept { display: block; }
 
   /* App chrome */
   #screen-main { overflow-x: hidden; }
@@ -609,7 +616,7 @@ textarea, input, .img-prompt, .error-msg { user-select: text; }
         </div>
         <label class="field-lbl" for="key-input">API-Key <span style="color:var(--red);font-weight:700;">*</span></label>
         <div class="input-row">
-          <input type="password" id="key-input" placeholder="AIzaSy…" autocomplete="off" spellcheck="false">
+          <input type="password" id="key-input" placeholder="AIzaSy…" autocomplete="new-password" spellcheck="false">
           <div class="field-err" id="key-err" data-i18n="err-key">Kein gültiger Google API-Key (erwartet: AIza… oder AQ.…)</div>
         </div>
         <label class="field-lbl" for="name-input"><span data-i18n="lbl-name">Dein Name / Kürzel</span> <span data-i18n-html="lbl-name-opt" style="color:var(--dim);font-weight:400;text-transform:none;letter-spacing:0;">(optional · für die Kostenübersicht)</span></label>
@@ -630,7 +637,7 @@ textarea, input, .img-prompt, .error-msg { user-select: text; }
         </div>
         <label class="field-lbl" for="ws-pass-input"><span data-i18n="lbl-password">Passwort</span> <span style="color:var(--red);font-weight:700;">*</span></label>
         <div class="input-row">
-          <input type="password" id="ws-pass-input" data-i18n-placeholder="ph-password" placeholder="Kurs-Passwort" autocomplete="off" spellcheck="false">
+          <input type="password" id="ws-pass-input" data-i18n-placeholder="ph-password" placeholder="Kurs-Passwort" autocomplete="new-password" spellcheck="false">
           <div class="field-err" id="ws-err" data-i18n="err-password">Falsches Passwort — bitte nochmal versuchen.</div>
         </div>
         <label class="field-lbl" for="ws-name-input"><span data-i18n="lbl-name">Dein Name / Kürzel</span> <span data-i18n-html="lbl-name-opt" style="color:var(--dim);font-weight:400;text-transform:none;letter-spacing:0;">(optional · für die Kostenübersicht)</span></label>
@@ -664,7 +671,7 @@ textarea, input, .img-prompt, .error-msg { user-select: text; }
 
     </div>
     <div style="margin-top:20px;text-align:center;font-size:12px;line-height:2.0;">
-      <span style="font-weight:500;color:var(--muted);letter-spacing:0.1px;">Prof. Klaus Teltenkötter</span><span style="font-weight:300;color:var(--muted);letter-spacing:0.1px;"> &thinsp;|&thinsp; <a href="https://www.designstrategies.org" target="_blank" style="color:inherit;text-decoration:underline;text-decoration-color:var(--muted);text-underline-offset:3px;">Digitales Entwerfen</a> &amp; <a href="https://www.df-mainz.de" target="_blank" style="color:inherit;text-decoration:underline;text-decoration-color:var(--muted);text-underline-offset:3px;">Digitale Fertigung</a></span><br>
+      <span id="footer-name" style="font-weight:500;color:var(--muted);letter-spacing:0.1px;">Prof. Klaus Teltenkötter</span><span id="footer-sep" style="font-weight:300;color:var(--muted);"> &thinsp;|&thinsp; </span><span id="footer-dept" style="font-weight:300;color:var(--muted);letter-spacing:0.1px;"><a href="https://www.designstrategies.org" target="_blank" style="color:inherit;text-decoration:underline;text-decoration-color:var(--muted);text-underline-offset:3px;">Digitales Entwerfen</a> &amp; <a href="https://www.df-mainz.de" target="_blank" style="color:inherit;text-decoration:underline;text-decoration-color:var(--muted);text-underline-offset:3px;">Digitale Fertigung</a></span><br>
       <span style="font-weight:300;color:var(--muted);letter-spacing:0.1px;"><a href="https://ia-mainz.de/" target="_blank" style="color:inherit;text-decoration:underline;text-decoration-color:var(--muted);text-underline-offset:3px;">Innenarchitektur</a> &thinsp;|&thinsp; <a href="https://www.hs-mainz.de/studium/studiengaenge/gestaltung/bachelor-innenarchitektur/uebersicht/" target="_blank" style="color:inherit;text-decoration:underline;text-decoration-color:var(--muted);text-underline-offset:3px;">Hochschule Mainz</a></span><br>
       <span style="font-weight:300;color:var(--dim);font-size:11px;">v1.1 · Build Juni 2026<span id="view-count"></span></span>
     </div>
