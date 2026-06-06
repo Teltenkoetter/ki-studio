@@ -482,11 +482,25 @@ textarea, input, .img-prompt, .error-msg { user-select: text; }
   padding: 8px 10px 7px; border-bottom: 1px solid var(--bd); flex-shrink: 0;
 }
 .tmpl-head-title { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.6px; color: var(--muted); }
+.tmpl-cats-wrap {
+  position: relative; flex-shrink: 0; border-bottom: 1px solid var(--bd);
+}
 .tmpl-cats {
   display: flex; gap: 4px; padding: 7px 8px; overflow-x: auto; flex-shrink: 0;
-  border-bottom: 1px solid var(--bd);
+  scrollbar-width: none;
 }
-.tmpl-cats::-webkit-scrollbar { height: 3px; }
+.tmpl-cats::-webkit-scrollbar { display: none; }
+.tmpl-scroll-arrow {
+  position: absolute; top: 0; bottom: 0; width: 28px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 14px; font-weight: 300; color: var(--muted);
+  cursor: pointer; z-index: 3;
+  opacity: 0; pointer-events: none;
+  transition: opacity 0.18s;
+}
+.tmpl-scroll-arrow.left  { left: 0;  background: linear-gradient(to right, var(--s2) 55%, transparent); padding-left: 2px; }
+.tmpl-scroll-arrow.right { right: 0; background: linear-gradient(to left,  var(--s2) 55%, transparent); padding-right: 2px; }
+.tmpl-scroll-arrow.vis   { opacity: 1; pointer-events: auto; }
 .tmpl-cat-btn {
   font-size: 11px; padding: 3px 10px; border-radius: 20px; white-space: nowrap;
   background: transparent; border: 1px solid var(--bd); color: var(--muted);
@@ -1433,6 +1447,13 @@ function setLang(l) {
     });
     var activeBtn = q('#tmpl-cats .tmpl-cat-btn.on');
     if (activeBtn) renderTmplItems(parseInt(activeBtn.dataset.i));
+    /* Scroll-Pfeile nach Sprach-Wechsel neu prüfen */
+    setTimeout(function() {
+      var cats = q('#tmpl-cats'), aL = q('#tmpl-arrow-l'), aR = q('#tmpl-arrow-r');
+      if (!cats || !aL || !aR) return;
+      aL.classList.toggle('vis', cats.scrollLeft > 2);
+      aR.classList.toggle('vis', cats.scrollLeft + cats.clientWidth < cats.scrollWidth - 2);
+    }, 50);
   }
   /* Help modal language toggle */
   var hde = q('#help-body-de'), hen = q('#help-body-en'), ht = q('#help-title');
@@ -2871,15 +2892,34 @@ function initTemplates() {
         '<button class="btn btn-ghost tmpl-close-x" style="padding:3px 8px;font-size:12px;line-height:1;">✕</button>' +
       '</div>' +
     '</div>' +
-    '<div class="tmpl-cats" id="tmpl-cats">' + catsHtml + '</div>' +
+    '<div class="tmpl-cats-wrap">' +
+      '<div class="tmpl-scroll-arrow left"  id="tmpl-arrow-l">&#x2039;</div>' +
+      '<div class="tmpl-cats" id="tmpl-cats">' + catsHtml + '</div>' +
+      '<div class="tmpl-scroll-arrow right" id="tmpl-arrow-r">&#x203a;</div>' +
+    '</div>' +
     '<div class="tmpl-list" id="tmpl-list"></div>';
   renderTmplItems(0);
+  /* scroll-arrows */
+  function updateTmplArrows() {
+    var cats = q('#tmpl-cats'), aL = q('#tmpl-arrow-l'), aR = q('#tmpl-arrow-r');
+    if (!cats || !aL || !aR) return;
+    var atStart = cats.scrollLeft <= 2;
+    var atEnd   = cats.scrollLeft + cats.clientWidth >= cats.scrollWidth - 2;
+    aL.classList.toggle('vis', !atStart);
+    aR.classList.toggle('vis', !atEnd);
+  }
+  q('#tmpl-cats').addEventListener('scroll', updateTmplArrows);
+  q('#tmpl-arrow-l').addEventListener('click', function() { q('#tmpl-cats').scrollBy({ left: -120, behavior: 'smooth' }); });
+  q('#tmpl-arrow-r').addEventListener('click', function() { q('#tmpl-cats').scrollBy({ left: 120, behavior: 'smooth' }); });
+  setTimeout(updateTmplArrows, 50); /* nach Paint prüfen */
+
   q('#tmpl-cats').addEventListener('click', function(e) {
     var btn = e.target.closest('.tmpl-cat-btn');
     if (!btn) return;
     q('#tmpl-cats').querySelectorAll('.tmpl-cat-btn').forEach(function(b) { b.classList.remove('on'); });
     btn.classList.add('on');
     renderTmplItems(parseInt(btn.dataset.i));
+    updateTmplArrows();
   });
   q('#tmpl-list').addEventListener('click', function(e) {
     var item = e.target.closest('.tmpl-item');
