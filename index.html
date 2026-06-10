@@ -636,6 +636,13 @@ textarea, input, .img-prompt, .error-msg { user-select: text; }
           <input type="password" id="key-input" placeholder="AIzaSy…" autocomplete="new-password" spellcheck="false">
           <div class="field-err" id="key-err" data-i18n="err-key">Kein gültiger Google API-Key (erwartet: AIza… oder AQ.…)</div>
         </div>
+        <label class="field-lbl" style="margin-top:12px;" for="bfl-key-input">BFL API-Key <span style="color:var(--dim);font-weight:400;text-transform:none;letter-spacing:0;">(optional · schaltet FLUX.2 frei)</span></label>
+        <div class="input-row">
+          <input type="password" id="bfl-key-input" placeholder="z. B. your-bfl-key…" autocomplete="new-password" spellcheck="false">
+        </div>
+        <div style="font-size:10px;color:var(--dim);margin:-6px 0 10px;line-height:1.5;">
+          🇩🇪 <a href="https://api.bfl.ai" target="_blank" rel="noopener" style="color:var(--dim);text-decoration:underline;text-underline-offset:2px;">api.bfl.ai</a> — Black Forest Labs, München
+        </div>
         <label class="field-lbl" for="name-input"><span data-i18n="lbl-name">Dein Name / Kürzel</span> <span data-i18n-html="lbl-name-opt" style="color:var(--dim);font-weight:400;text-transform:none;letter-spacing:0;">(optional · für die Kostenübersicht)</span></label>
         <div class="input-row">
           <input type="text" id="name-input" data-i18n-placeholder="ph-name" placeholder="z. B. Julia M." maxlength="40" autocomplete="name" spellcheck="false">
@@ -746,12 +753,12 @@ textarea, input, .img-prompt, .error-msg { user-select: text; }
               <option value="gemini-3.1-flash-image-preview">Gemini 3.1 Flash (Preview) · ~0,05 €/Bild</option>
               <option value="gemini-3-pro-image-preview">Gemini 3 Pro (Preview) · ~0,13 €</option>
             </optgroup>
-            <optgroup label="Imagen 4 (Google · nur Text zu Bild)">
-              <option value="imagen-4.0-fast-generate-001">Imagen 4 Fast · ~0,02 €/Bild</option>
-              <option value="imagen-4.0-generate-001">Imagen 4 Standard · ~0,04 €</option>
-              <option value="imagen-4.0-ultra-generate-001">Imagen 4 Ultra · ~0,06 €</option>
+            <optgroup label="FLUX.2 · Black Forest Labs 🇩🇪 (BFL API-Key)" id="og-bfl">
+              <option value="bfl-flux2-pro"   id="opt-bfl-pro">FLUX.2 Pro · ~0,05 €/Bild</option>
+              <option value="bfl-flux2-max"   id="opt-bfl-max">FLUX.2 Max · ~0,08 € · höchste Qualität</option>
+              <option value="bfl-flux2-klein" id="opt-bfl-klein">FLUX.2 Klein 9B · ~0,01 € · schnell</option>
             </optgroup>
-            <optgroup label="FLUX · Black Forest Labs 🇩🇪 (kostenlos)">
+            <optgroup label="FLUX.1 · Black Forest Labs 🇩🇪 (kostenlos)">
               <option value="pollinations-flux">FLUX.1 Schnell · kostenlos (nur Text → Bild)</option>
               <option value="pollinations-flux-realism">FLUX Realism · kostenlos (nur Text → Bild)</option>
             </optgroup>
@@ -795,7 +802,7 @@ textarea, input, .img-prompt, .error-msg { user-select: text; }
         <div class="pgrp" id="grp-upscale-tip" style="display:none;">
           <div style="background:var(--acc-bg);border:1px solid rgba(255,255,255,0.1);border-radius:var(--r-sm);padding:9px 11px;">
             <div data-i18n="upscale-title" style="font-size:11px;font-weight:700;color:var(--accent);margin-bottom:4px;">💡 Höhere Auflösung</div>
-            <div data-i18n="upscale-text" class="param-note" style="color:var(--muted);">Imagen Fast gibt ~1024 px aus. Für Druckqualität: PNG in Photoshop öffnen → Bearbeiten → Generative Upscale (Adobe Firefly) → bis 4× ohne Qualitätsverlust.</div>
+            <div data-i18n="upscale-text" class="param-note" style="color:var(--muted);">Gemini gibt ~1024 px aus. Für Druckqualität: PNG in Photoshop öffnen → Bearbeiten → Generative Upscale (Adobe Firefly) → bis 4× ohne Qualitätsverlust.</div>
           </div>
         </div>
 
@@ -890,7 +897,7 @@ textarea, input, .img-prompt, .error-msg { user-select: text; }
           <button class="btn btn-ghost" id="btn-clear-imgs" style="padding:3px 8px;font-size:11px;">Alle ✕</button>
         </div>
 
-        <div class="upload-warn" id="upload-warn" data-i18n="upload-warn" style="display:none;">⚠️ Imagen-Modelle unterstützen keine Bild-Eingabe — bitte wechsle zu einem Gemini-Modell.</div>
+        <div class="upload-warn" id="upload-warn" data-i18n="upload-warn" style="display:none;">⚠️ FLUX.1 (kostenlos) unterstützt keine Bild-Eingabe — bitte wechsle zu Gemini oder FLUX.2.</div>
         <div id="ctx-badge" style="display:none;font-size:11px;padding:5px 10px;border-radius:var(--r-sm);margin-bottom:8px;line-height:1.4;"></div>
 
         <div class="mode-row" id="mode-row" style="display:none;">
@@ -999,10 +1006,10 @@ textarea, input, .img-prompt, .error-msg { user-select: text; }
         <ul>
           <li><strong>Gemini 3.1 Flash</strong> — ~0,05 €/Bild · Standard-Modell · nimmt Bilder als Eingabe · beste Stilkontrolle</li>
           <li><strong>Gemini 3 Pro</strong> — ~0,13 €/Bild · höchste Qualität · langsamer</li>
-          <li><strong>Imagen 4 Fast</strong> — ~0,02 €/Bild · schnell · bis 4 Bilder gleichzeitig · nur Text → Bild</li>
-          <li><strong>Imagen 4 Standard / Ultra</strong> — ~0,04–0,06 € · höhere Qualität · 2K wählbar</li>
-          <li><strong>FLUX (kostenlos)</strong> — Black Forest Labs 🇩🇪 · kein API-Key nötig · nur Text → Bild</li>
-          <li>Imagen und FLUX akzeptieren <em>keine</em> Bild-Eingabe</li>
+          <li><strong>FLUX.2 Pro</strong> — ~0,05 € · Black Forest Labs 🇩🇪 München · Text + Bild-Eingabe · BFL API-Key nötig</li>
+          <li><strong>FLUX.2 Max</strong> — ~0,08 € · höchste FLUX-Qualität · BFL API-Key nötig</li>
+          <li><strong>FLUX.2 Klein 9B</strong> — ~0,01 € · schnell · open weights · BFL API-Key nötig</li>
+          <li><strong>FLUX.1 (kostenlos)</strong> — kein API-Key nötig · nur Text → Bild (kein Bild-Upload)</li>
         </ul>
       </div>
 
@@ -1011,7 +1018,7 @@ textarea, input, .img-prompt, .error-msg { user-select: text; }
         <ul>
           <li><strong>System-Kontext</strong> — unsichtbarer Hintergrundprompt: „Aus" = freie Hand · „Expert" = photorealistisch, geometrisch präzise · „Graustufen" = Schwarz-Weiß</li>
           <li><strong>Thinking-Level</strong> — lässt Gemini länger über den Prompt nachdenken. Effekt auf Bildqualität ist begrenzt; langsamer und teurer. PIN-geschützt für Kurs-Logins.</li>
-          <li><strong>Auflösung</strong> — Gemini: aktuell nur <strong>1K</strong> (~1024 px). Imagen Standard/Ultra: 1K oder <strong>2K</strong> wählbar. Imagen Fast: immer 1K.</li>
+          <li><strong>Auflösung</strong> — Gemini: aktuell ~1024 px, nicht steuerbar. FLUX.2: bis 4 MP. FLUX.1: 1024 px.</li>
           <li><strong>Seed</strong> — Zufallszahl, die das Ergebnis reproduzierbar macht. Leer = zufällig. Bei gleichem Prompt + Seed sehr ähnliches Ergebnis.</li>
         </ul>
       </div>
@@ -1034,7 +1041,7 @@ textarea, input, .img-prompt, .error-msg { user-select: text; }
           <li><strong>„📎 Als Eingabe"</strong> — erscheint beim Überfahren eines generierten Bildes. Lädt dieses Bild direkt als Eingabe für die nächste Generierung. Kein Download, kein erneutes Hochladen nötig — ideal für schrittweise Überarbeitungen.</li>
           <li><strong>„✏️ Markieren"</strong> — zeichne mit rotem Stift einen Bereich ein, der überarbeitet werden soll. Anschließend „📎 Als Eingabe verwenden" → markiertes Bild wird als Eingabe geladen. Mit Vorlage <strong>6.5</strong> gezielt beschreiben, was im markierten Bereich geändert werden soll.</li>
           <li>Einzelne Bilder mit ✕ entfernen · alle mit „Alle ✕"</li>
-          <li>Imagen-Modelle unterstützen <em>keine</em> Bild-Eingabe</li>
+          <li>FLUX.1 (kostenlos) unterstützt <em>keine</em> Bild-Eingabe — für Bild-Workflows Gemini oder FLUX.2 nutzen</li>
         </ul>
       </div>
 
@@ -1062,7 +1069,7 @@ textarea, input, .img-prompt, .error-msg { user-select: text; }
 
       <div class="help-sec">
         <h3>💡 Höhere Auflösung</h3>
-        <p>Gemini und Imagen Fast liefern ~1024 px. <strong>2K und 4K</strong> werden aktuell noch nicht unterstützt und im Laufe des Jahres integriert.</p>
+        <p>Gemini liefert ~1024 px. FLUX.2 bis 4 MP. <strong>2K und 4K für Gemini</strong> werden im Laufe des Jahres integriert.</p>
         <p style="margin-top:6px;">Für Druckqualität jetzt: PNG in <strong>Photoshop</strong> öffnen → <strong>Bearbeiten → Generative Upscale</strong> (Adobe Firefly) → bis 4× Vergrößerung ohne sichtbaren Qualitätsverlust.</p>
       </div>
 
@@ -1096,10 +1103,10 @@ textarea, input, .img-prompt, .error-msg { user-select: text; }
         <ul>
           <li><strong>Gemini 3.1 Flash</strong> — ~€0.05/image · default model · accepts image input · best style control</li>
           <li><strong>Gemini 3 Pro</strong> — ~€0.13/image · highest quality · slower</li>
-          <li><strong>Imagen 4 Fast</strong> — ~€0.02/image · fast · up to 4 images at once · text to image only</li>
-          <li><strong>Imagen 4 Standard / Ultra</strong> — ~€0.04–0.06 · higher quality · 2K available</li>
-          <li><strong>FLUX (free)</strong> — Black Forest Labs 🇩🇪 · no API key needed · text to image only</li>
-          <li>Imagen and FLUX do <em>not</em> accept image input</li>
+          <li><strong>FLUX.2 Pro</strong> — ~€0.05 · Black Forest Labs 🇩🇪 Munich · text + image input · BFL API key required</li>
+          <li><strong>FLUX.2 Max</strong> — ~€0.08 · highest FLUX quality · BFL API key required</li>
+          <li><strong>FLUX.2 Klein 9B</strong> — ~€0.01 · fast · open weights · BFL API key required</li>
+          <li><strong>FLUX.1 (free)</strong> — no API key needed · text to image only (no image upload)</li>
         </ul>
       </div>
 
@@ -1108,7 +1115,7 @@ textarea, input, .img-prompt, .error-msg { user-select: text; }
         <ul>
           <li><strong>System Context</strong> — invisible background prompt: "Off" = free rein · "Expert" = photorealistic, geometrically precise · "Grayscale" = black &amp; white only</li>
           <li><strong>Thinking Level</strong> — lets Gemini think longer about the prompt. Effect on image quality is limited; slower and more expensive. PIN-protected for course logins.</li>
-          <li><strong>Resolution</strong> — Gemini: currently only <strong>1K</strong> (~1024 px). Imagen Standard/Ultra: 1K or <strong>2K</strong>. Imagen Fast: always 1K.</li>
+          <li><strong>Resolution</strong> — Gemini: ~1024 px, not controllable. FLUX.2: up to 4 MP. FLUX.1: 1024 px.</li>
           <li><strong>Seed</strong> — number that makes results reproducible. Empty = random. Same prompt + seed = very similar result.</li>
         </ul>
       </div>
@@ -1131,7 +1138,7 @@ textarea, input, .img-prompt, .error-msg { user-select: text; }
           <li><strong>"📎 As input"</strong> — appears when hovering a generated image. Loads it directly as input for the next generation. No download needed — ideal for step-by-step revisions.</li>
           <li><strong>"✏️ Mark"</strong> — draw a red marking over the area to edit. Then click "📎 Use as input" → the annotated image loads as input. Use template <strong>6.5</strong> to describe what should change in the marked area.</li>
           <li>Remove individual images with ✕ · remove all with "All ✕"</li>
-          <li>Imagen models do <em>not</em> support image input</li>
+          <li>FLUX.1 (free) does <em>not</em> support image input — use Gemini or FLUX.2 for image workflows</li>
         </ul>
       </div>
 
@@ -1159,7 +1166,7 @@ textarea, input, .img-prompt, .error-msg { user-select: text; }
 
       <div class="help-sec">
         <h3>💡 Higher Resolution</h3>
-        <p>Gemini and Imagen Fast output ~1024 px. <strong>2K and 4K</strong> are not yet supported and will be integrated later this year.</p>
+        <p>Gemini outputs ~1024 px. FLUX.2 up to 4 MP. <strong>2K and 4K for Gemini</strong> will be integrated later this year.</p>
         <p style="margin-top:6px;">For print quality now: open PNG in <strong>Photoshop</strong> → <strong>Edit → Generative Upscale</strong> (Adobe Firefly) → up to 4× enlargement without visible quality loss.</p>
       </div>
 
@@ -1211,27 +1218,27 @@ var MAX_IMAGES  = 5;
 const COSTS = {
   'gemini-3.1-flash-image-preview':      0.050,
   'gemini-3-pro-image-preview':          0.134,
-  'imagen-4.0-fast-generate-001':        0.020,
-  'imagen-4.0-generate-001':             0.040,
-  'imagen-4.0-ultra-generate-001':       0.060,
+  'bfl-flux2-pro':                       0.050,
+  'bfl-flux2-max':                       0.080,
+  'bfl-flux2-klein':                     0.012,
   'pollinations-flux':                   0,
   'pollinations-flux-realism':           0
 };
 const MODEL_LABEL = {
   'gemini-3.1-flash-image-preview':      'Gemini 3.1 Flash (Preview)',
   'gemini-3-pro-image-preview':          'Gemini 3 Pro (Preview)',
-  'imagen-4.0-fast-generate-001':        'Imagen 4 Fast',
-  'imagen-4.0-generate-001':             'Imagen 4 Standard',
-  'imagen-4.0-ultra-generate-001':       'Imagen 4 Ultra',
+  'bfl-flux2-pro':                       'FLUX.2 Pro',
+  'bfl-flux2-max':                       'FLUX.2 Max',
+  'bfl-flux2-klein':                     'FLUX.2 Klein 9B',
   'pollinations-flux':                   'FLUX.1 Schnell',
   'pollinations-flux-realism':           'FLUX Realism'
 };
 const MODEL_SHORT = {
   'gemini-3.1-flash-image-preview':      'GFlash',
   'gemini-3-pro-image-preview':          'GPro',
-  'imagen-4.0-fast-generate-001':        'IFast',
-  'imagen-4.0-generate-001':             'IStd',
-  'imagen-4.0-ultra-generate-001':       'IUltra',
+  'bfl-flux2-pro':                       'F2Pro',
+  'bfl-flux2-max':                       'F2Max',
+  'bfl-flux2-klein':                     'F2Kl',
   'pollinations-flux':                   'FLUX',
   'pollinations-flux-realism':           'FLUXr'
 };
@@ -1276,8 +1283,8 @@ var I18N = {
     'seed-placeholder':   'Leer = zufällig',
     'btn-dice-title':     'Zufalls-Seed generieren',
     'upscale-title':      '💡 Höhere Auflösung',
-    'upscale-text':       'Imagen Fast gibt ~1024 px aus. Für Druckqualität: PNG in Photoshop öffnen → Bearbeiten → Generative Upscale (Adobe Firefly) → bis 4× ohne Qualitätsverlust.',
-    'upload-warn':        '⚠️ Imagen-Modelle unterstützen keine Bild-Eingabe — bitte wechsle zu einem Gemini-Modell.',
+    'upscale-text':       'Gemini gibt ~1024 px aus. Für Druckqualität: PNG in Photoshop öffnen → Bearbeiten → Generative Upscale (Adobe Firefly) → bis 4× ohne Qualitätsverlust.',
+    'upload-warn':        '⚠️ FLUX.1 (kostenlos) unterstützt keine Bild-Eingabe — bitte wechsle zu Gemini oder FLUX.2.',
     'btn-improve-title':  'Prompt mit KI automatisch verbessern und ausformulieren (Gemini)',
     'btn-prompt-clear-title': 'Prompt leeren',
     'seg-new-title':      'Jeder Prompt startet frisch — kein Kontext aus vorherigen Generierungen',
@@ -1355,8 +1362,8 @@ var I18N = {
     'seed-placeholder':   'Empty = random',
     'btn-dice-title':     'Generate random seed',
     'upscale-title':      '💡 Higher resolution',
-    'upscale-text':       'Imagen Fast outputs ~1024 px. For print quality: open PNG in Photoshop → Edit → Generative Upscale (Adobe Firefly) → up to 4× without visible quality loss.',
-    'upload-warn':        '⚠️ Imagen models do not support image input — please switch to a Gemini model.',
+    'upscale-text':       'Gemini outputs ~1024 px. For print quality: open PNG in Photoshop → Edit → Generative Upscale (Adobe Firefly) → up to 4× without visible quality loss.',
+    'upload-warn':        '⚠️ FLUX.1 (free) does not support image input — please switch to Gemini or FLUX.2.',
     'btn-improve-title':  'Auto-improve and expand the prompt using AI (Gemini)',
     'btn-prompt-clear-title': 'Clear prompt',
     'seg-new-title':      'Each prompt starts fresh — no context from previous generations',
@@ -1677,7 +1684,7 @@ var TEMPLATE_NAMES_EN = {
 
 /* ── STATE ── */
 var S = {
-  key: '', name: 'Anonym', hfKey: '', gruppe: '', lbSeed: null,
+  key: '', bflKey: '', name: 'Anonym', hfKey: '', gruppe: '', lbSeed: null,
   model: 'gemini-3.1-flash-image-preview',
   temp: 1.0, thinking: 0,
   ratio: '1:1', count: 1, imageSize: '1K',
@@ -1762,11 +1769,14 @@ function doSave() {
     q('#key-input').focus();
     return;
   }
+  var bfl  = q('#bfl-key-input') ? q('#bfl-key-input').value.trim() : '';
   var name = q('#name-input').value.trim() || 'Anonym';
   sessionStorage.setItem('nb_key', k);
   sessionStorage.setItem('nb_name', name);
   sessionStorage.removeItem('nb_workshop');
-  S.key = k; S.name = name;
+  if (bfl) sessionStorage.setItem('nb_bfl_key', bfl);
+  else     sessionStorage.removeItem('nb_bfl_key');
+  S.key = k; S.bflKey = bfl; S.name = name;
   launchApp(k);
 }
 
@@ -1801,6 +1811,7 @@ function doWorkshopLogin() {
   var k = sessionStorage.getItem('nb_key');
   if (k && isValidApiKey(k)) {
     S.key    = k;
+    S.bflKey = sessionStorage.getItem('nb_bfl_key') || '';
     S.name   = sessionStorage.getItem('nb_name')   || 'Anonym';
     S.gruppe = sessionStorage.getItem('nb_gruppe') || '';
     launchApp(k);
@@ -1912,6 +1923,7 @@ function launchApp(key) {
         : '●●●● ' + key.slice(-4));
   q('#sb-dot').classList.add('on');
   q('#sb-api').textContent = isFree ? 'FLUX aktiv' : 'API aktiv';
+  updateBFLAvailability();
   updateModelStatus();
   if (TRACKER_URL) {
     q('#sb-track-item').style.display = '';
@@ -1932,9 +1944,28 @@ function launchApp(key) {
   setLang(LANG);
 }
 
+function updateBFLAvailability() {
+  var hasBFL = !!S.bflKey;
+  var og = q('#og-bfl');
+  if (!og) return;
+  og.disabled = !hasBFL;
+  var label = hasBFL
+    ? 'FLUX.2 · Black Forest Labs 🇩🇪 (BFL API-Key)'
+    : 'FLUX.2 · Black Forest Labs 🇩🇪 (kein BFL-Key — ausgegraut)';
+  og.label = label;
+  /* Falls aktuell FLUX.2 gewählt aber Key fehlt → zurück zu Gemini Flash */
+  if (!hasBFL && S.model.startsWith('bfl-')) {
+    S.model = 'gemini-3.1-flash-image-preview';
+    q('#sel-model').value = S.model;
+    updateModelStatus();
+    applyParamVisibility();
+  }
+}
+
 function applyFreeMode() {
   Array.from(q('#sel-model').querySelectorAll('optgroup')).forEach(function(og) {
-    og.disabled = og.label.indexOf('FLUX') === -1;
+    /* Im Free-Modus: nur FLUX.1 (Pollinations) erlaubt — kein Gemini, kein FLUX.2 */
+    og.disabled = og.label.indexOf('FLUX.1') === -1;
   });
   q('#sel-model').value = 'pollinations-flux';
   S.model = 'pollinations-flux';
@@ -1947,6 +1978,7 @@ function applyFreeMode() {
 function goToLogin() {
   if (!confirm('Zurück zum Login?')) return;
   sessionStorage.removeItem('nb_key');
+  sessionStorage.removeItem('nb_bfl_key');
   sessionStorage.removeItem('nb_workshop');
   sessionStorage.removeItem('nb_gruppe');
   sessionStorage.removeItem('nb_free');
@@ -1982,10 +2014,16 @@ function initResize() {
 /* ── PARAMS ── */
 function initParams() {
   q('#sel-model').addEventListener('change', function(e) {
-    /* Free-Mode: nur FLUX erlaubt */
+    /* Free-Mode: nur FLUX.1 erlaubt */
     if (sessionStorage.getItem('nb_free') === '1' && !e.target.value.startsWith('pollinations')) {
       e.target.value = S.model;
-      showToast('Im kostenlosen Modus nur FLUX-Modelle verfügbar');
+      showToast('Im kostenlosen Modus nur FLUX.1-Modelle verfügbar');
+      return;
+    }
+    /* BFL-Modelle ohne Key blockieren */
+    if (e.target.value.startsWith('bfl-') && !S.bflKey) {
+      e.target.value = S.model;
+      showToast('BFL API-Key fehlt — bitte im Login eintragen');
       return;
     }
     S.model = e.target.value;
@@ -2060,29 +2098,25 @@ function initSeg(id, cb) {
 function applyParamVisibility() {
   var m = S.model;
   var isGemini = m.startsWith('gemini');
-  var isImagen = m.startsWith('imagen');
+  var isBFL    = m.startsWith('bfl-');
   var isFlux   = m.startsWith('pollinations');
 
-  /* Temperatur hat bei Bildgenerierungsmodellen keinen messbaren Effekt → ausblenden */
-  setOff('grp-think',  !m.startsWith('gemini-2.5') && !m.startsWith('gemini-3'));
-  setOff('grp-count',  !isImagen);
-
-  /* Auflösung: Gemini bestimmt sie intern — Controls ausblenden */
+  setOff('grp-think',   !m.startsWith('gemini-2.5') && !m.startsWith('gemini-3'));
+  setOff('grp-count',   true); /* Imagen entfernt — count immer aus */
   setOff('grp-imagesize', true);
-  q('#grp-upscale-tip').style.display = (isImagen || isGemini) ? '' : 'none';
-  /* Hinweis für Gemini: Auflösung nicht steuerbar */
+
+  q('#grp-upscale-tip').style.display = isGemini ? '' : 'none';
   var upscaleTip = q('#grp-upscale-tip');
-  if (upscaleTip) {
+  if (upscaleTip && isGemini) {
     var tipNote = upscaleTip.querySelector('.param-note');
-    if (isGemini && tipNote) tipNote.innerHTML = 'Gemini gibt ~1024 px aus — nicht steuerbar. Für Druckqualität: PNG in <strong style="color:var(--text);">Photoshop</strong> → <strong style="color:var(--text);">Bearbeiten → Generative Upscale</strong>.';
-    if (isImagen && tipNote) tipNote.innerHTML = 'Imagen Fast gibt ~1024 px aus. Für Druckqualität: PNG in <strong style="color:var(--text);">Photoshop</strong> → <strong style="color:var(--text);">Bearbeiten → Generative Upscale</strong>.';
+    if (tipNote) tipNote.innerHTML = 'Gemini gibt ~1024 px aus — nicht steuerbar. Für Druckqualität: PNG in <strong style="color:var(--text);">Photoshop</strong> → <strong style="color:var(--text);">Bearbeiten → Generative Upscale</strong>.';
   }
 
-  setOff('grp-neg',     !isImagen);
-  setOff('grp-safety',  !isImagen);
-  setOff('grp-sysctx',  !isGemini);
-  q('#btn-improve').style.display  = isGemini ? '' : 'none';
-  q('#mode-row').style.display     = isGemini ? '' : 'none';
+  setOff('grp-neg',    true); /* Imagen entfernt — neg. Prompt immer aus */
+  setOff('grp-safety', true); /* Imagen entfernt */
+  setOff('grp-sysctx', !isGemini);
+  q('#btn-improve').style.display = isGemini ? '' : 'none';
+  q('#mode-row').style.display    = isGemini ? '' : 'none';
   updateUploadWarning();
 }
 
@@ -2185,8 +2219,7 @@ function clearInputImages() {
 }
 
 function updateUploadWarning() {
-  var show = S.inputImages.length > 0 &&
-             (S.model.startsWith('imagen') || S.model.startsWith('pollinations'));
+  var show = S.inputImages.length > 0 && S.model.startsWith('pollinations');
   q('#upload-warn').style.display = show ? 'block' : 'none';
 }
 
@@ -2282,13 +2315,12 @@ function generate() {
 
   var t0 = Date.now();
   var inputCount = S.inputImages.length;
-  var isImagen   = S.model.startsWith('imagen');
+  var isBFL      = S.model.startsWith('bfl-');
   var isFlux     = S.model.startsWith('pollinations');
-  /* Imagen-API unterstützt keinen seed — Gemini und FLUX schon */
-  var usedSeed   = isImagen ? null : getSeed();
-  if (!isImagen && usedSeed === null) usedSeed = Math.floor(Math.random() * 2147483647) + 1;
+  var usedSeed   = getSeed();
+  if (usedSeed === null) usedSeed = Math.floor(Math.random() * 2147483647) + 1;
   var promise;
-  if (isImagen)    promise = callImagen(text);
+  if (isBFL)       promise = callBFL(text, usedSeed);
   else if (isFlux) promise = callPollinations(text, usedSeed);
   else             promise = callGemini(text, usedSeed);
 
@@ -2381,34 +2413,6 @@ function callGemini(prompt, seed) {
 }
 
 /* ── IMAGEN API ── */
-function callImagen(prompt) {
-  var params = {
-    sampleCount:   S.count,
-    aspectRatio:   S.ratio,
-    safetySetting: S.safetyLess ? 'block_only_high' : 'block_low_and_above'
-  };
-  if (S.personGen) params.personGeneration = 'allow_adult';
-  var neg = q('#neg-prompt').value.trim();
-  if (neg) params.negativePrompt = neg;
-  /* seed nicht senden — Imagen 4 API unterstützt keinen seed-Parameter */
-
-  var url  = 'https://generativelanguage.googleapis.com/v1beta/models/' + S.model + ':predict?key=' + S.key;
-  var body = { instances: [{ prompt: prompt }], parameters: params };
-
-  return apiFetch(url, body).then(function(data) {
-    var predictions = (data && data.predictions) || [];
-    var images = predictions.map(function(p) { return p.bytesBase64Encoded; }).filter(Boolean);
-    if (!images.length) {
-      return Promise.reject({
-        code: 0, msg: 'Keine Bilder in der API-Antwort.',
-        hints: ['Bild wurde möglicherweise vom Sicherheitsfilter blockiert.',
-                'Prompt ändern oder Sicherheitsfilter auf „Weniger strikt" schalten.']
-      });
-    }
-    return images;
-  });
-}
-
 /* ── POLLINATIONS.AI / FLUX API ── */
 var FLUX_SIZES = {
   '1:1':  { width: 1024, height: 1024 },
@@ -2450,6 +2454,91 @@ function callPollinations(prompt, seed) {
         reader.readAsDataURL(blob);
       });
     });
+}
+
+/* ── BLACK FOREST LABS / FLUX.2 API ── */
+var BFL_ENDPOINTS = {
+  'bfl-flux2-pro':   'flux-2-pro',
+  'bfl-flux2-max':   'flux-2-max',
+  'bfl-flux2-klein': 'flux-2-klein-9b'
+};
+
+function callBFL(prompt, seed) {
+  var endpoint = BFL_ENDPOINTS[S.model] || 'flux-2-pro';
+  var sz = FLUX_SIZES[S.ratio] || FLUX_SIZES['1:1'];
+  var body = {
+    prompt:           prompt,
+    width:            sz.width,
+    height:           sz.height,
+    seed:             seed || undefined,
+    output_format:    'png',
+    safety_tolerance: 2
+  };
+  /* Bild-Eingaben weitergeben (bis zu 8) */
+  var imgFields = ['input_image','input_image_2','input_image_3','input_image_4',
+                   'input_image_5','input_image_6','input_image_7','input_image_8'];
+  S.inputImages.slice(0, 8).forEach(function(img, i) {
+    body[imgFields[i]] = img.dataUrl;
+  });
+
+  return fetch('https://api.bfl.ai/v1/' + endpoint, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', 'x-key': S.bflKey },
+    body: JSON.stringify(body)
+  })
+  .catch(function() {
+    return Promise.reject({ code: 0, msg: 'Netzwerkfehler — BFL API nicht erreichbar.', hints: ['Internetverbindung prüfen.'] });
+  })
+  .then(function(res) {
+    return res.json().then(function(d) {
+      if (!res.ok) {
+        var msg = (d && d.detail) ? String(d.detail) : 'BFL API Fehler (HTTP ' + res.status + ')';
+        var hints = res.status === 401 ? ['BFL API-Key ungültig oder abgelaufen.', 'Key unter api.bfl.ai prüfen.']
+                  : res.status === 402 ? ['Kein BFL-Guthaben. Konto unter api.bfl.ai aufladen.']
+                  : ['Prompt anpassen oder erneut versuchen.'];
+        return Promise.reject({ code: res.status, msg: msg, hints: hints });
+      }
+      if (!d.id) return Promise.reject({ code: 0, msg: 'BFL: Kein Task-ID erhalten.', hints: [] });
+      return pollBFL(d.id, d.polling_url);
+    });
+  });
+}
+
+function pollBFL(taskId, pollingUrl) {
+  var url = pollingUrl || ('https://api.bfl.ai/v1/get_result?id=' + taskId);
+  return new Promise(function(resolve, reject) {
+    var maxTries = 90, tries = 0;
+    function check() {
+      fetch(url, { headers: { 'x-key': S.bflKey } })
+        .then(function(r) { return r.json(); })
+        .then(function(d) {
+          if (d.status === 'Ready') {
+            var imgUrl = d.result && d.result.sample;
+            if (!imgUrl) return reject({ code: 0, msg: 'BFL: Kein Bild in der Antwort.', hints: [] });
+            return fetch(imgUrl)
+              .then(function(r) { return r.blob(); })
+              .then(function(blob) {
+                var reader = new FileReader();
+                reader.onloadend = function() {
+                  var b64 = reader.result.split(',')[1];
+                  b64 ? resolve([b64]) : reject({ code: 0, msg: 'Bild konnte nicht gelesen werden.', hints: [] });
+                };
+                reader.onerror = function() { reject({ code: 0, msg: 'FileReader-Fehler.', hints: [] }); };
+                reader.readAsDataURL(blob);
+              });
+          } else if (d.status === 'Error' || d.status === 'Failed' || d.status === 'Content Moderated') {
+            reject({ code: 0, msg: 'BFL: ' + (d.status === 'Content Moderated' ? 'Inhalt durch Sicherheitsfilter blockiert.' : 'Generierung fehlgeschlagen.'), hints: ['Prompt anpassen und erneut versuchen.'] });
+          } else {
+            /* Pending / Processing */
+            tries++;
+            if (tries >= maxTries) return reject({ code: 0, msg: 'BFL: Timeout — Bild nicht rechtzeitig generiert.', hints: ['Erneut versuchen.'] });
+            setTimeout(check, 2000);
+          }
+        })
+        .catch(function() { reject({ code: 0, msg: 'BFL: Netzwerkfehler beim Abrufen des Ergebnisses.', hints: [] }); });
+    }
+    setTimeout(check, 2000);
+  });
 }
 
 /* ── FETCH ── */
