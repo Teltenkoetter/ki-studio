@@ -636,12 +636,22 @@ textarea, input, .img-prompt, .error-msg { user-select: text; }
           <input type="password" id="key-input" placeholder="AIzaSy…" autocomplete="new-password" spellcheck="false">
           <div class="field-err" id="key-err" data-i18n="err-key">Kein gültiger Google API-Key (erwartet: AIza… oder AQ.…)</div>
         </div>
-        <label class="field-lbl" style="margin-top:12px;" for="bfl-key-input">BFL API-Key <span style="color:var(--dim);font-weight:400;text-transform:none;letter-spacing:0;">(optional · schaltet FLUX.2 frei)</span></label>
-        <div class="input-row">
-          <input type="password" id="bfl-key-input" placeholder="z. B. your-bfl-key…" autocomplete="new-password" spellcheck="false">
+        <div style="border-top:1px solid var(--bd);margin:16px 0 14px;"></div>
+        <div style="background:var(--s2);border:1px solid var(--bd);border-radius:var(--r-sm);padding:11px 13px;margin-bottom:12px;font-size:12px;line-height:1.7;color:var(--muted);">
+          <div style="display:flex;align-items:center;gap:8px;margin-bottom:7px;">
+            <span style="font-size:18px;line-height:1;">🌲</span>
+            <strong style="color:var(--text);font-size:12px;">FLUX.2 — Black Forest Labs, München 🇩🇪</strong>
+          </div>
+          FLUX.2 ist ein europäisches KI-Modell auf Weltklasse-Niveau — entwickelt von einem unabhängigen Münchner Startup. Qualität auf Augenhöhe mit Google, ohne Google-Abhängigkeit. Unterstützt Bild-Eingabe, Texte und bis zu 4 MP Auflösung.<br><br>
+          <strong style="color:var(--text);display:block;margin-bottom:4px;">So bekommst du deinen BFL API-Key:</strong>
+          <span style="color:var(--text);">1.</span> <a href="https://api.bfl.ai" target="_blank" rel="noopener" style="color:var(--accent);text-decoration:underline;text-underline-offset:2px;">api.bfl.ai</a> öffnen &amp; registrieren (E-Mail genügt)<br>
+          <span style="color:var(--text);">2.</span> Im Dashboard: <em>„API Keys" → „Create API Key"</em><br>
+          <span style="color:var(--text);">3.</span> Guthaben aufladen — FLUX.2 Klein ab <strong style="color:var(--text);">~0,01 €/Bild</strong>, Pro ab ~0,05 €<br>
+          <span style="color:var(--text);">4.</span> Key unten einfügen — schaltet FLUX.2 im Modell-Pulldown frei
         </div>
-        <div style="font-size:10px;color:var(--dim);margin:-6px 0 10px;line-height:1.5;">
-          🇩🇪 <a href="https://api.bfl.ai" target="_blank" rel="noopener" style="color:var(--dim);text-decoration:underline;text-underline-offset:2px;">api.bfl.ai</a> — Black Forest Labs, München
+        <label class="field-lbl" for="bfl-key-input">BFL API-Key <span style="color:var(--dim);font-weight:400;text-transform:none;letter-spacing:0;">(optional)</span></label>
+        <div class="input-row">
+          <input type="password" id="bfl-key-input" placeholder="Dein BFL API-Key…" autocomplete="new-password" spellcheck="false">
         </div>
         <label class="field-lbl" for="name-input"><span data-i18n="lbl-name">Dein Name / Kürzel</span> <span data-i18n-html="lbl-name-opt" style="color:var(--dim);font-weight:400;text-transform:none;letter-spacing:0;">(optional · für die Kostenübersicht)</span></label>
         <div class="input-row">
@@ -1949,11 +1959,15 @@ function updateBFLAvailability() {
   var og = q('#og-bfl');
   if (!og) return;
   og.disabled = !hasBFL;
-  var label = hasBFL
+  og.label = hasBFL
     ? 'FLUX.2 · Black Forest Labs 🇩🇪 (BFL API-Key)'
-    : 'FLUX.2 · Black Forest Labs 🇩🇪 (kein BFL-Key — ausgegraut)';
-  og.label = label;
-  /* Falls aktuell FLUX.2 gewählt aber Key fehlt → zurück zu Gemini Flash */
+    : 'FLUX.2 · Black Forest Labs 🇩🇪 (kein BFL-Key — nicht verfügbar)';
+  /* Einzelne Options auch deaktivieren — optgroup.disabled allein reicht nicht in allen Browsern */
+  ['opt-bfl-pro', 'opt-bfl-max', 'opt-bfl-klein'].forEach(function(id) {
+    var opt = q('#' + id);
+    if (opt) { opt.disabled = !hasBFL; opt.style.color = hasBFL ? '' : 'var(--muted)'; }
+  });
+  /* Falls FLUX.2 aktiv aber Key fehlt → zurück zu Gemini Flash */
   if (!hasBFL && S.model.startsWith('bfl-')) {
     S.model = 'gemini-3.1-flash-image-preview';
     q('#sel-model').value = S.model;
