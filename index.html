@@ -586,7 +586,7 @@ textarea, input, .img-prompt, .error-msg { user-select: text; }
 <div class="pin-modal-bg" id="pin-modal-bg">
   <div class="pin-modal">
     <h3>🔒 Feature-PIN</h3>
-    <p>Thinking erhöht die Kosten deutlich.<br>Bitte PIN eingeben zum Freischalten.</p>
+    <p id="pin-desc">Diese Funktion erhöht die Kosten.<br>Bitte PIN eingeben zum Freischalten.</p>
     <div class="pin-boxes" id="pin-boxes">
       <input class="pin-box" type="text" inputmode="numeric" maxlength="1" autocomplete="off">
       <input class="pin-box" type="text" inputmode="numeric" maxlength="1" autocomplete="off">
@@ -802,9 +802,9 @@ textarea, input, .img-prompt, .error-msg { user-select: text; }
         <div class="pgrp" id="grp-imagesize">
           <div class="pgrp-lbl" data-i18n="lbl-res">Auflösung</div>
           <div class="seg" id="seg-imagesize">
-            <button class="seg-btn on" data-v="1K" title="ca. 1024 × 1024 px — Standard">1K</button>
-            <button class="seg-btn" data-v="2K" title="ca. 2048 × 2048 px — gut für Druckausgabe">2K</button>
-            <button class="seg-btn" data-v="4K" id="btn-4k-opt" title="ca. 4096 × 4096 px — nur Gemini, maximale Detailgenauigkeit">4K</button>
+            <button class="seg-btn" data-v="1K" title="ca. 1024 × 1024 px (~1 MP) — Bildschirm, Tests">1K</button>
+            <button class="seg-btn on" data-v="2K" title="ca. 2048 × 2048 px (~4 MP) — Präsentation, kleiner Druck">2K</button>
+            <button class="seg-btn" data-v="4K" id="btn-4k-opt" title="ca. 4096 × 4096 px (~16 MP) — großer Druck · PIN nötig · höhere Kosten">4K 🔒</button>
           </div>
           <p class="param-note" id="imagesize-note"></p>
         </div>
@@ -1028,7 +1028,7 @@ textarea, input, .img-prompt, .error-msg { user-select: text; }
         <ul>
           <li><strong>System-Kontext</strong> — unsichtbarer Hintergrundprompt: „Aus" = freie Hand · „Expert" = photorealistisch, geometrisch präzise · „Graustufen" = Schwarz-Weiß</li>
           <li><strong>Thinking-Level</strong> — lässt Gemini länger über den Prompt nachdenken. Effekt auf Bildqualität ist begrenzt; langsamer und teurer. PIN-geschützt für Kurs-Logins.</li>
-          <li><strong>Auflösung</strong> — Gemini: aktuell ~1024 px, nicht steuerbar. FLUX.2: bis 4 MP. FLUX.1: 1024 px.</li>
+          <li><strong>Auflösung</strong> — Gemini 3: <strong>1K</strong> (~1024 px), <strong>2K</strong> (~2048 px) oder <strong>4K</strong> (~4096 px) wählbar. 4K verlangt bei <strong>jedem Bild</strong> den PIN und kostet rund das Doppelte. FLUX.2: bis 4 MP. FLUX.1: 1024 px.</li>
           <li><strong>Seed</strong> — Zufallszahl, die das Ergebnis reproduzierbar macht. Leer = zufällig. Bei gleichem Prompt + Seed sehr ähnliches Ergebnis.</li>
         </ul>
       </div>
@@ -1079,9 +1079,10 @@ textarea, input, .img-prompt, .error-msg { user-select: text; }
       </div>
 
       <div class="help-sec">
-        <h3>💡 Höhere Auflösung</h3>
-        <p>Gemini liefert ~1024 px. FLUX.2 bis 4 MP. <strong>2K und 4K für Gemini</strong> werden im Laufe des Jahres integriert.</p>
-        <p style="margin-top:6px;">Für Druckqualität jetzt: PNG in <strong>Photoshop</strong> öffnen → <strong>Bearbeiten → Generative Upscale</strong> (Adobe Firefly) → bis 4× Vergrößerung ohne sichtbaren Qualitätsverlust.</p>
+        <h3>💡 Auflösung &amp; Kosten</h3>
+        <p>Gemini 3 erzeugt jetzt direkt <strong>1K (~1024 px), 2K (~2048 px) und 4K (~4096 px)</strong> — wählbar im Parameter-Panel.</p>
+        <p style="margin-top:6px;"><strong>Spar-Workflow:</strong> erst in 1K/2K testen, nur das finale Bild in 4K rechnen — 4K kostet rund das Doppelte und verlangt bei jedem Bild den PIN. Bei Gemini 3 Pro ist 2K übrigens genauso teuer wie 1K.</p>
+        <p style="margin-top:6px;">Für noch höhere Auflösung: PNG in <strong>Photoshop</strong> öffnen → <strong>Bearbeiten → Generative Upscale</strong> (Adobe Firefly) → bis 4× ohne sichtbaren Qualitätsverlust.</p>
       </div>
 
     </div>
@@ -1126,7 +1127,7 @@ textarea, input, .img-prompt, .error-msg { user-select: text; }
         <ul>
           <li><strong>System Context</strong> — invisible background prompt: "Off" = free rein · "Expert" = photorealistic, geometrically precise · "Grayscale" = black &amp; white only</li>
           <li><strong>Thinking Level</strong> — lets Gemini think longer about the prompt. Effect on image quality is limited; slower and more expensive. PIN-protected for course logins.</li>
-          <li><strong>Resolution</strong> — Gemini: ~1024 px, not controllable. FLUX.2: up to 4 MP. FLUX.1: 1024 px.</li>
+          <li><strong>Resolution</strong> — Gemini 3: choose <strong>1K</strong> (~1024 px), <strong>2K</strong> (~2048 px) or <strong>4K</strong> (~4096 px). 4K asks for the PIN on <strong>every image</strong> and costs roughly double. FLUX.2: up to 4 MP. FLUX.1: 1024 px.</li>
           <li><strong>Seed</strong> — number that makes results reproducible. Empty = random. Same prompt + seed = very similar result.</li>
         </ul>
       </div>
@@ -1177,9 +1178,10 @@ textarea, input, .img-prompt, .error-msg { user-select: text; }
       </div>
 
       <div class="help-sec">
-        <h3>💡 Higher Resolution</h3>
-        <p>Gemini outputs ~1024 px. FLUX.2 up to 4 MP. <strong>2K and 4K for Gemini</strong> will be integrated later this year.</p>
-        <p style="margin-top:6px;">For print quality now: open PNG in <strong>Photoshop</strong> → <strong>Edit → Generative Upscale</strong> (Adobe Firefly) → up to 4× enlargement without visible quality loss.</p>
+        <h3>💡 Resolution &amp; Cost</h3>
+        <p>Gemini 3 now outputs <strong>1K (~1024 px), 2K (~2048 px) and 4K (~4096 px)</strong> directly — selectable in the parameter panel.</p>
+        <p style="margin-top:6px;"><strong>Cost-saving workflow:</strong> test in 1K/2K first, render only the final image in 4K — 4K costs roughly double and asks for the PIN on every image. On Gemini 3 Pro, 2K costs the same as 1K.</p>
+        <p style="margin-top:6px;">For even higher resolution: open PNG in <strong>Photoshop</strong> → <strong>Edit → Generative Upscale</strong> (Adobe Firefly) → up to 4× without visible quality loss.</p>
       </div>
 
     </div>
@@ -1193,6 +1195,7 @@ textarea, input, .img-prompt, .error-msg { user-select: text; }
 
 /* ── TRACKER ── Hier die Apps-Script-URL eintragen (leer = kein Tracking) */
 var APP_PIN          = '55116';
+var PinGate          = null; /* von initPinModal gesetzt: { appliesToLogin(), prompt(opts) } */
 var WORKSHOP_KEY_ENC = 'QVEuQWI4Uk42STM0S25kWldUakFkYWZZOExDU0huUHRsc1pBNnkwaTM0YTRrMjU1aFJNNGc=';
 
 /* Kurs-Logins — Passwörter base64-kodiert (Unicode-sicher) */
@@ -1236,6 +1239,17 @@ const COSTS = {
   'pollinations-flux':                   0,
   'pollinations-flux-realism':           0
 };
+/* Auflösungs-Pixel (quadratisch / 1:1) + ca.-Kosten-Multiplikatoren ggü. 1K.
+   Pro: 1K=2K gleich teuer, 4K ~1,8×. Flash: 2K ~1,5×, 4K ~2,25× (lt. Google-Token-Tabelle). */
+var IMG_SIZE_PX = { '1K': '1024 × 1024', '2K': '2048 × 2048', '4K': '4096 × 4096' };
+function costFor(model, size) {
+  var base = COSTS[model] || 0.04;
+  if (model.indexOf('gemini-3') === -1) return base; /* nur Gemini-3 skaliert mit Auflösung */
+  var mult;
+  if (model.indexOf('pro') !== -1) mult = (size === '4K') ? 1.79 : 1;                       /* Pro: 1K=2K, 4K höher */
+  else                             mult = (size === '4K') ? 2.25 : (size === '2K') ? 1.5 : 1; /* Flash */
+  return base * mult;
+}
 const MODEL_LABEL = {
   'gemini-3.1-flash-image-preview':      'Gemini 3.1 Flash (Preview)',
   'gemini-3-pro-image-preview':          'Gemini 3 Pro (Preview)',
@@ -1294,8 +1308,8 @@ var I18N = {
     'seed-note':          '— für alle Modelle',
     'seed-placeholder':   'Leer = zufällig',
     'btn-dice-title':     'Zufalls-Seed generieren',
-    'upscale-title':      '💡 Höhere Auflösung',
-    'upscale-text':       'Gemini gibt ~1024 px aus. Für Druckqualität: PNG in Photoshop öffnen → Bearbeiten → Generative Upscale (Adobe Firefly) → bis 4× ohne Qualitätsverlust.',
+    'upscale-title':      '💡 Spar-Tipp',
+    'upscale-text':       'Erst in 1K/2K testen, nur das finale Bild in 4K rechnen — 4K kostet rund das Doppelte. Für noch mehr Auflösung: PNG in Photoshop → Generative Upscale (Adobe Firefly).',
     'upload-warn':        '⚠️ FLUX.1 (kostenlos) unterstützt keine Bild-Eingabe — bitte wechsle zu Gemini oder FLUX.2.',
     'btn-improve-title':  'Prompt mit KI automatisch verbessern und ausformulieren (Gemini)',
     'btn-prompt-clear-title': 'Prompt leeren',
@@ -1373,8 +1387,8 @@ var I18N = {
     'seed-note':          '— for all models',
     'seed-placeholder':   'Empty = random',
     'btn-dice-title':     'Generate random seed',
-    'upscale-title':      '💡 Higher resolution',
-    'upscale-text':       'Gemini outputs ~1024 px. For print quality: open PNG in Photoshop → Edit → Generative Upscale (Adobe Firefly) → up to 4× without visible quality loss.',
+    'upscale-title':      '💡 Cost tip',
+    'upscale-text':       'Test in 1K/2K first, render only the final image in 4K — 4K costs roughly double. For even higher resolution: open PNG in Photoshop → Generative Upscale (Adobe Firefly).',
     'upload-warn':        '⚠️ FLUX.1 (free) does not support image input — please switch to Gemini or FLUX.2.',
     'btn-improve-title':  'Auto-improve and expand the prompt using AI (Gemini)',
     'btn-prompt-clear-title': 'Clear prompt',
@@ -1699,7 +1713,7 @@ var S = {
   key: '', bflKey: '', name: 'Anonym', hfKey: '', gruppe: '', lbSeed: null,
   model: 'gemini-3.1-flash-image-preview',
   temp: 1.0, thinking: 0,
-  ratio: '1:1', count: 1, imageSize: '1K',
+  ratio: '1:1', count: 1, imageSize: '2K',
   safetyLess: false,
   chatMode: 'new', chatHistory: [],
   busy: false, totalImages: 0, totalCost: 0,
@@ -1832,24 +1846,30 @@ function doWorkshopLogin() {
 
 /* ── PIN MODAL (Thinking-Schutz) ── */
 function initPinModal() {
-  var bg    = q('#pin-modal-bg');
-  var boxes = Array.prototype.slice.call(document.querySelectorAll('.pin-box'));
-  var errEl = q('#pin-err');
-  var pendingThinkVal = null;
+  var bg     = q('#pin-modal-bg');
+  var boxes  = Array.prototype.slice.call(document.querySelectorAll('.pin-box'));
+  var errEl  = q('#pin-err');
+  var descEl = q('#pin-desc');
+  var pending = null; /* { cache, toast, desc, onOk, onCancel } */
 
   function getPin() { return boxes.map(function(b) { return b.value; }).join(''); }
 
-  function closePinModal(success) {
+  function setSegOn(segId, matchFn) {
+    q('#' + segId).querySelectorAll('.seg-btn').forEach(function(b) {
+      b.classList.toggle('on', matchFn(b));
+    });
+  }
+
+  function clearBoxes() {
     bg.classList.remove('show');
     boxes.forEach(function(b) { b.value = ''; });
     errEl.classList.remove('show');
-    if (!success) {
-      /* reset thinking back to Aus */
-      S.thinking = 0;
-      q('#seg-think').querySelectorAll('.seg-btn').forEach(function(b) {
-        b.classList.toggle('on', b.dataset.v === '0');
-      });
-    }
+  }
+
+  function closePinModal(success) {
+    var p = pending; pending = null;
+    clearBoxes();
+    if (!success && p && p.onCancel) p.onCancel();
   }
 
   function shakeAndReset() {
@@ -1864,19 +1884,42 @@ function initPinModal() {
 
   function checkPin() {
     if (getPin() === APP_PIN) {
-      sessionStorage.setItem('nb_pinok', '1');
-      if (pendingThinkVal !== null) {
-        S.thinking = pendingThinkVal;
-        q('#seg-think').querySelectorAll('.seg-btn').forEach(function(b) {
-          b.classList.toggle('on', parseInt(b.dataset.v) === pendingThinkVal);
-        });
-      }
-      closePinModal(true);
-      showToast('🧠 Thinking freigeschaltet');
+      var p = pending; pending = null;
+      if (p && p.cache) sessionStorage.setItem('nb_pinok', '1'); /* nur cachebare Features (Thinking) */
+      clearBoxes();
+      if (p && p.toast) showToast(p.toast);
+      if (p && p.onOk) p.onOk();
     } else {
       shakeAndReset();
     }
   }
+
+  /* Gilt der PIN-Schutz für den aktuellen Login? (Kurs- oder Frei-Login, nicht Klaus) */
+  function appliesToLogin() {
+    if (S.gruppe === 'Klaus') return false;                       /* Klaus-Login — kein PIN */
+    if (sessionStorage.getItem('nb_workshop') !== '1' && sessionStorage.getItem('nb_free') !== '1') return false; /* eigener Key */
+    return true;
+  }
+  /* Thinking: einmal pro Sitzung (gecacht via nb_pinok) */
+  function needsPinCached() {
+    if (sessionStorage.getItem('nb_pinok') === '1') return false;
+    return appliesToLogin();
+  }
+
+  function openPin(p) {
+    pending = p;
+    if (descEl && p.desc) descEl.innerHTML = p.desc;
+    bg.classList.add('show');
+    setTimeout(function() { boxes[0].focus(); }, 80);
+  }
+
+  /* Nach außen: 4K-Sperre bei JEDEM Bild (nicht gecacht) — siehe generate() */
+  PinGate = {
+    appliesToLogin: appliesToLogin,
+    prompt: function(opts) {
+      openPin({ cache: false, desc: opts.desc, toast: opts.toast, onOk: opts.onOk, onCancel: opts.onCancel });
+    }
+  };
 
   boxes.forEach(function(box, i) {
     box.addEventListener('keydown', function(e) {
@@ -1905,22 +1948,29 @@ function initPinModal() {
   q('#pin-cancel').addEventListener('click', function() { closePinModal(false); });
   bg.addEventListener('click', function(e) { if (e.target === bg) closePinModal(false); });
 
-  /* Intercept thinking segment clicks */
+  /* Intercept thinking segment clicks — einmal pro Sitzung */
   q('#seg-think').addEventListener('click', function(e) {
     var btn = e.target.closest('.seg-btn');
     if (!btn) return;
     var v = parseInt(btn.dataset.v);
-    if (v === 0) return; /* "Aus" — always allowed */
-    if (sessionStorage.getItem('nb_pinok') === '1') return; /* already unlocked */
-    if (S.gruppe === 'Klaus') return; /* Klaus login — no PIN needed */
-    /* own API key login: not workshop, not free → no PIN needed */
-    if (sessionStorage.getItem('nb_workshop') !== '1' && sessionStorage.getItem('nb_free') !== '1') return;
-    /* Block: show PIN modal */
+    if (v === 0) return;       /* "Aus" — immer erlaubt */
+    if (!needsPinCached()) return;
     e.stopImmediatePropagation();
-    pendingThinkVal = v;
-    bg.classList.add('show');
-    setTimeout(function() { boxes[0].focus(); }, 80);
+    openPin({
+      cache: true, toast: '🧠 Thinking freigeschaltet',
+      desc: 'Thinking erhöht die Kosten deutlich.<br>Bitte PIN eingeben zum Freischalten.',
+      onOk: function() {
+        S.thinking = v;
+        setSegOn('seg-think', function(b) { return parseInt(b.dataset.v) === v; });
+      },
+      onCancel: function() {
+        S.thinking = 0;
+        setSegOn('seg-think', function(b) { return b.dataset.v === '0'; });
+      }
+    });
   }, true); /* capture phase → fires before initSeg handler */
+
+  /* 4K wird NICHT beim Auswählen gesperrt, sondern bei jedem Generieren — siehe generate() */
 }
 
 function launchApp(key) {
@@ -2051,7 +2101,7 @@ function initParams() {
   initSeg('seg-think',     function(v) { S.thinking = parseInt(v); });
   initSeg('seg-ratio',     function(v) { S.ratio = v; });
   initSeg('seg-count',     function(v) { S.count = parseInt(v); });
-  initSeg('seg-imagesize', function(v) { S.imageSize = v; });
+  initSeg('seg-imagesize', function(v) { S.imageSize = v; updateImageSizeNote(); });
   initSeg('seg-mode', function(v) {
     S.chatMode = v;
     if (v === 'new') { S.chatHistory = []; }
@@ -2113,20 +2163,17 @@ function initSeg(id, cb) {
 
 function applyParamVisibility() {
   var m = S.model;
-  var isGemini = m.startsWith('gemini');
+  var isGemini  = m.startsWith('gemini');
+  var isGemini3 = m.indexOf('gemini-3') !== -1;
   var isBFL    = m.startsWith('bfl-');
   var isFlux   = m.startsWith('pollinations');
 
   setOff('grp-think',   !m.startsWith('gemini-2.5') && !m.startsWith('gemini-3'));
   setOff('grp-count',   true); /* Imagen entfernt — count immer aus */
-  setOff('grp-imagesize', true);
+  setOff('grp-imagesize', !isGemini3); /* 1K/2K/4K nur bei Gemini-3 */
+  updateImageSizeNote();
 
-  q('#grp-upscale-tip').style.display = isGemini ? '' : 'none';
-  var upscaleTip = q('#grp-upscale-tip');
-  if (upscaleTip && isGemini) {
-    var tipNote = upscaleTip.querySelector('.param-note');
-    if (tipNote) tipNote.innerHTML = 'Gemini gibt ~1024 px aus — nicht steuerbar. Für Druckqualität: PNG in <strong style="color:var(--text);">Photoshop</strong> → <strong style="color:var(--text);">Bearbeiten → Generative Upscale</strong>.';
-  }
+  q('#grp-upscale-tip').style.display = isGemini3 ? '' : 'none'; /* Tipp-Text via i18n (upscale-text) */
 
   setOff('grp-neg',    true); /* Imagen entfernt — neg. Prompt immer aus */
   setOff('grp-safety', true); /* Imagen entfernt */
@@ -2137,6 +2184,15 @@ function applyParamVisibility() {
 }
 
 function setOff(id, off) { q('#' + id).classList.toggle('off', off); }
+
+function updateImageSizeNote() {
+  var el = q('#imagesize-note');
+  if (!el) return;
+  var px   = IMG_SIZE_PX[S.imageSize] || '';
+  var cost = costFor(S.model, S.imageSize);
+  var eur  = '~' + cost.toFixed(2).replace('.', ',') + ' €/Bild';
+  el.textContent = px + ' px · ' + eur + (S.imageSize === '4K' ? ' · 🔒 PIN' : '');
+}
 
 function updateChatDepth() {
   var depth = Math.floor(S.chatHistory.length / 2);
@@ -2321,6 +2377,18 @@ function generate() {
     ta.addEventListener('animationend', function() { ta.classList.remove('shake'); }, { once: true });
     ta.focus(); return;
   }
+  /* 4K: PIN bei JEDEM Bild (nicht gecacht) — nur Gemini-3 & Kurs-/Frei-Login */
+  if (S.imageSize === '4K' && S.model.indexOf('gemini-3') !== -1 && PinGate && PinGate.appliesToLogin()) {
+    PinGate.prompt({
+      desc: '4K kostet rund das Doppelte.<br>PIN zur Bestätigung dieses 4K-Bildes eingeben.',
+      onOk: function() { runGeneration(text); }
+    });
+    return;
+  }
+  runGeneration(text);
+}
+
+function runGeneration(text) {
   S.busy = true;
   var btn = q('#btn-gen');
   btn.classList.add('busy'); btn.disabled = true; btn.textContent = t('btn-gen-busy');
@@ -2342,7 +2410,7 @@ function generate() {
 
   promise.then(function(images) {
     var elapsed = ((Date.now() - t0) / 1000).toFixed(1);
-    var cost    = COSTS[S.model] || 0.04;
+    var cost    = costFor(S.model, S.imageSize);
     loading.remove();
     var grid = document.createElement('div');
     grid.className = 'img-grid' + (images.length === 1 ? ' single' : '');
@@ -2373,6 +2441,10 @@ function callGemini(prompt, seed) {
     cfg.thinkingConfig = { thinkingBudget: S.thinking };
   }
   if (seed !== null && seed !== undefined) cfg.seed = seed;
+  /* Auflösung + Seitenverhältnis (nur Gemini-3 Bild-Modelle unterstützen imageConfig) */
+  if (S.model.indexOf('gemini-3') !== -1) {
+    cfg.imageConfig = { imageSize: S.imageSize, aspectRatio: S.ratio };
+  }
 
   /* Kontext direkt in den Prompt injizieren — zuverlässiger als systemInstruction allein */
   var ctxPrefix = '';
