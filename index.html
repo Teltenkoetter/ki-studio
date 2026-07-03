@@ -3231,9 +3231,11 @@ function downloadAll() {
   if (!imgs.length) { showToast('Keine Bilder zum Herunterladen'); return; }
   imgs.forEach(function(item, i) {
     setTimeout(function() {
+      var b64 = (item.src.split(',')[1]) || '';
+      var sn  = sniffImage(b64);
       var a = document.createElement('a');
-      a.href = item.src;
-      a.download = makeFilename(item.seed, item.model) + '.png';
+      a.href = 'data:' + sn.mime + ';base64,' + b64;
+      a.download = makeFilename(item.seed, item.model) + '.' + sn.ext;
       a.click();
     }, i * 380);
   });
@@ -3262,12 +3264,25 @@ function makeFilename(seed, modelKey) {
 }
 
 /* ── DOWNLOAD / COPY ── */
+/* Erkennt das echte Bildformat an den ersten Base64-Zeichen (Magic Bytes),
+   damit die Dateiendung zum Inhalt passt. Gemini liefert je nach Auflösung
+   PNG oder JPEG — eine als .png benannte JPEG-Datei zeigt Adobe Bridge sonst
+   nicht als Vorschau an. */
+function sniffImage(b64) {
+  if (!b64) return { ext: 'png', mime: 'image/png' };
+  if (b64.indexOf('/9j/') === 0)         return { ext: 'jpg',  mime: 'image/jpeg' }; /* FF D8 FF */
+  if (b64.indexOf('iVBORw0KGgo') === 0)  return { ext: 'png',  mime: 'image/png' };  /* 89 50 4E 47 */
+  if (b64.indexOf('UklGR') === 0)        return { ext: 'webp', mime: 'image/webp' }; /* RIFF…WEBP */
+  return { ext: 'png', mime: 'image/png' };
+}
+
 function doDownload(url, prompt, seed, modelKey, template, sysCtx) {
   var base = makeFilename(seed, modelKey);
-  /* PNG */
+  var b64  = (url.split(',')[1]) || '';
+  var sn   = sniffImage(b64);
   var a = document.createElement('a');
-  a.href = url;
-  a.download = base + '.png';
+  a.href = 'data:' + sn.mime + ';base64,' + b64;
+  a.download = base + '.' + sn.ext;
   a.click();
   /* TXT metadata companion — only if enabled */
   if (!S.exportMeta) return;
