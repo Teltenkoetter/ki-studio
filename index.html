@@ -85,10 +85,14 @@ textarea, input, .img-prompt, .error-msg { user-select: text; }
 /* ── SETUP ── */
 #screen-setup {
   height: 100vh; height: 100dvh;
-  align-items: center; justify-content: center;
+  align-items: flex-start; justify-content: center;
+  overflow-y: auto; overflow-x: hidden;
+  padding: 24px 0;
   background: radial-gradient(ellipse 50% 35% at 50% -5%, rgba(255,255,255,0.025) 0%, transparent 70%);
 }
-.setup-wrap { width: 420px; }
+/* margin:auto zentriert vertikal, wenn Platz ist — bei Überlänge sackt der Inhalt
+   nach oben und bleibt per Scroll erreichbar (kein Abschneiden mehr). */
+.setup-wrap { width: 420px; margin: auto 0; }
 .setup-logo { text-align: center; margin-bottom: 28px; }
 .setup-logo .icon { font-size: 48px; line-height: 1; display: block; margin-bottom: 10px; }
 .setup-logo h1   { font-size: 20px; font-weight: 700; letter-spacing: -0.4px; }
@@ -523,7 +527,7 @@ textarea, input, .img-prompt, .error-msg { user-select: text; }
 
   /* Login */
   #screen-setup { align-items: stretch; justify-content: flex-start; overflow-y: auto; overflow-x: hidden; padding: 20px 16px 32px; }
-  .setup-wrap { width: 100%; max-width: 100%; }
+  .setup-wrap { width: 100%; max-width: 100%; margin: 0; }
   .setup-logo { margin-bottom: 18px; }
   .setup-logo h1 { font-size: 26px; }
   .setup-card { padding: 18px 14px 16px; border-radius: 10px; }
