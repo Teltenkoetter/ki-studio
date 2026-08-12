@@ -624,10 +624,10 @@ textarea, input, .img-prompt, .error-msg { user-select: text; }
       <!-- Pane: Eigener API-Key -->
       <div class="setup-pane on" id="pane-api">
         <!-- Einleitung: zwei gleichwertige Anbieter -->
-        <p class="desc" data-i18n-html="api-intro">Melde dich mit deinem eigenen API-Schlüssel an — <strong>zwei gleichwertige Optionen</strong>, einer davon genügt:<br>
-          <strong style="color:var(--text);">🔹 Google Gemini</strong> — kostenlose Stufe (Tageslimit), darüber Preisstufen ab ~0,04 €/Bild.<br>
-          <strong style="color:var(--text);">🌲 FLUX.2 · Black Forest Labs</strong> 🇩🇪 — europäische Alternative, Guthaben ab ~0,01 €/Bild.<br>
-          <span style="color:var(--dim);">Schritt-für-Schritt-Anleitungen weiter unten ↓</span></p>
+        <p class="desc" data-i18n-html="api-intro">Deine <strong>Prompt-Vorlagen funktionieren in jedem KI-Tool</strong> — nutze sie überall. Zum Generieren <strong>direkt in KI Studio</strong> brauchst du einen eigenen API-Key <strong>mit aktivierter Abrechnung</strong> (die Gemini-Bildmodelle haben kein Gratis-Tier mehr) — zwei gleichwertige Optionen:<br>
+          <strong style="color:var(--text);">🔹 Google Gemini</strong> — ~0,04–0,13 €/Bild.<br>
+          <strong style="color:var(--text);">🌲 FLUX.2 · Black Forest Labs</strong> 🇩🇪 — ab ~0,01 €/Bild.<br>
+          <span style="color:var(--dim);">Ganz ohne Key &amp; Kosten: Tab „🆓 Kostenlos" (FLUX.1, nur Text → Bild). Anleitungen unten ↓</span></p>
 
         <!-- AKTION: Felder + Button zuerst -->
         <label class="field-lbl" for="key-input">Google Gemini API-Key</label>
@@ -650,11 +650,11 @@ textarea, input, .img-prompt, .error-msg { user-select: text; }
 
         <!-- INFO: Google Gemini -->
         <div data-i18n-html="api-howto" style="background:var(--s2);border:1px solid var(--bd);border-radius:var(--r-sm);padding:11px 13px;margin-bottom:12px;font-size:12px;line-height:1.8;color:var(--muted);">
-          <strong style="color:var(--text);display:block;margin-bottom:5px;">🔹 Google Gemini — kostenlosen API-Key holen:</strong>
-          <span style="color:var(--text);">1.</span> <a href="https://aistudio.google.com/apikey" target="_blank" rel="noopener" style="color:var(--accent);text-decoration:underline;text-underline-offset:2px;">aistudio.google.com/apikey</a> öffnen<br>
-          <span style="color:var(--text);">2.</span> Mit Google-Account anmelden &amp; <em>„API-Schlüssel erstellen"</em> klicken<br>
-          <span style="color:var(--text);">3.</span> Key kopieren und oben einfügen — fertig.<br>
-          <span style="color:var(--dim);">Kostenlose Stufe: keine Kreditkarte, Tageslimit. Mehr Kontingent/4K optional per Abrechnung (~0,04–0,13 €/Bild).</span>
+          <strong style="color:var(--text);display:block;margin-bottom:5px;">🔹 Google Gemini — Key + Abrechnung einrichten:</strong>
+          <span style="color:var(--text);">1.</span> <a href="https://aistudio.google.com/apikey" target="_blank" rel="noopener" style="color:var(--accent);text-decoration:underline;text-underline-offset:2px;">aistudio.google.com/apikey</a> öffnen, anmelden &amp; <em>„API-Schlüssel erstellen"</em><br>
+          <span style="color:var(--text);">2.</span> <strong style="color:var(--text);">Abrechnung aktivieren</strong> — die Bildmodelle sind kostenpflichtig (kein Gratis-Tier mehr)<br>
+          <span style="color:var(--text);">3.</span> Key oben einfügen — fertig.<br>
+          <span style="color:var(--dim);">~0,04–0,13 €/Bild. Tipp: in der Google Cloud Console ein Budget-Limit setzen.</span>
         </div>
 
         <!-- INFO: FLUX.2 / BFL -->
@@ -692,6 +692,7 @@ textarea, input, .img-prompt, .error-msg { user-select: text; }
         <div data-i18n-html="flux-warning" style="background:rgba(251,146,60,0.07);border:1px solid rgba(251,146,60,0.2);border-radius:var(--r-sm);padding:9px 12px;margin-bottom:16px;font-size:11px;color:#fb923c;line-height:1.55;">
           ⚠️ <strong>Nur Text → Bild</strong> — kein Bild-Upload möglich. Für den vollen Workflow (Skizze, Foto als Eingabe) bitte einen eigenen API-Key nutzen.
         </div>
+        <p class="param-note" data-i18n="prompts-anywhere" style="margin:-8px 0 16px;color:var(--dim);line-height:1.5;">💡 Tipp: Die <strong style="color:var(--muted);">Prompt-Vorlagen</strong> in KI Studio funktionieren auch in jedem anderen KI-Tool (z. B. gemini.google.com, ChatGPT) — du bist frei in der Wahl.</p>
         <label class="field-lbl" for="free-name-input"><span data-i18n="lbl-name">Dein Name / Kürzel</span> <span data-i18n="lbl-name-opt-short" style="color:var(--dim);font-weight:400;text-transform:none;letter-spacing:0;">(optional)</span></label>
         <div class="input-row">
           <input type="text" id="free-name-input" data-i18n-placeholder="ph-name" placeholder="z. B. Julia M." maxlength="40" autocomplete="name" spellcheck="false">
@@ -1320,10 +1321,9 @@ var I18N = {
     'login-subtitle': 'KI-Bildgenerierung in der Lehre für Innenarchitektur und Architektur',
     'tab-ws':         '🎓 Lehre',
     'tab-free':       '🆓 Kostenlos',
-    'api-desc':       'Du brauchst einen eigenen <strong>Google Gemini API-Key</strong> — für Studierende <strong>kostenlos</strong>: Ein Google-Konto genügt, <strong>keine Kreditkarte</strong> nötig (kostenloses Tageskontingent). Wer mehr braucht, kann später Abrechnung aktivieren.',
-    'api-intro':      'Melde dich mit deinem eigenen API-Schlüssel an — <strong>zwei gleichwertige Optionen</strong>, einer davon genügt:<br><strong style="color:var(--text);">🔹 Google Gemini</strong> — kostenlose Stufe (Tageslimit), darüber Preisstufen ab ~0,04 €/Bild.<br><strong style="color:var(--text);">🌲 FLUX.2 · Black Forest Labs</strong> 🇩🇪 — europäische Alternative, Guthaben ab ~0,01 €/Bild.<br><span style="color:var(--dim);">Schritt-für-Schritt-Anleitungen weiter unten ↓</span>',
+    'api-intro':      'Deine <strong>Prompt-Vorlagen funktionieren in jedem KI-Tool</strong> — nutze sie überall. Zum Generieren <strong>direkt in KI Studio</strong> brauchst du einen eigenen API-Key <strong>mit aktivierter Abrechnung</strong> (die Gemini-Bildmodelle haben kein Gratis-Tier mehr) — zwei gleichwertige Optionen:<br><strong style="color:var(--text);">🔹 Google Gemini</strong> — ~0,04–0,13 €/Bild.<br><strong style="color:var(--text);">🌲 FLUX.2 · Black Forest Labs</strong> 🇩🇪 — ab ~0,01 €/Bild.<br><span style="color:var(--dim);">Ganz ohne Key &amp; Kosten: Tab „🆓 Kostenlos" (FLUX.1, nur Text → Bild). Anleitungen unten ↓</span>',
     'api-onekey':     'Mindestens einer der beiden Schlüssel genügt.',
-    'api-howto':      '<strong style="color:var(--text);display:block;margin-bottom:5px;">🔹 Google Gemini — kostenlosen API-Key holen:</strong><span style="color:var(--text);">1.</span> <a href="https://aistudio.google.com/apikey" target="_blank" rel="noopener" style="color:var(--accent);text-decoration:underline;text-underline-offset:2px;">aistudio.google.com/apikey</a> öffnen<br><span style="color:var(--text);">2.</span> Mit Google-Account anmelden &amp; <em>„API-Schlüssel erstellen"</em> klicken<br><span style="color:var(--text);">3.</span> Key kopieren und oben einfügen — fertig.<br><span style="color:var(--dim);">Kostenlose Stufe: keine Kreditkarte, Tageslimit. Mehr Kontingent/4K optional per Abrechnung (~0,04–0,13 €/Bild).</span>',
+    'api-howto':      '<strong style="color:var(--text);display:block;margin-bottom:5px;">🔹 Google Gemini — Key + Abrechnung einrichten:</strong><span style="color:var(--text);">1.</span> <a href="https://aistudio.google.com/apikey" target="_blank" rel="noopener" style="color:var(--accent);text-decoration:underline;text-underline-offset:2px;">aistudio.google.com/apikey</a> öffnen, anmelden &amp; <em>„API-Schlüssel erstellen"</em><br><span style="color:var(--text);">2.</span> <strong style="color:var(--text);">Abrechnung aktivieren</strong> — die Bildmodelle sind kostenpflichtig (kein Gratis-Tier mehr)<br><span style="color:var(--text);">3.</span> Key oben einfügen — fertig.<br><span style="color:var(--dim);">~0,04–0,13 €/Bild. Tipp: in der Google Cloud Console ein Budget-Limit setzen.</span>',
     'api-security':   '<strong>Sicherheit:</strong> Diesen Key niemals weitergeben — er wird in <strong>diesem Browser</strong> gespeichert und bleibt auch nach dem Schließen erhalten. Nur auf deinem eigenen Gerät nutzen; zum Entfernen oben auf den Titel klicken bzw. „Key entfernen".',
     'err-key':        'Kein gültiger Google API-Key (erwartet: AIza… oder AQ.…)',
     'err-nokey':      'Bitte mindestens einen API-Key eingeben — Google Gemini oder FLUX.2 (BFL).',
@@ -1341,6 +1341,7 @@ var I18N = {
     'flux-sub':       'Open Source · Freiburg im Breisgau 🇩🇪 · kostenlos',
     'flux-desc':      'Weltklasse-Bildgenerierung aus dem Schwarzwald — kein Account, kein API-Key, 0,00 €/Bild.',
     'flux-warning':   '⚠️ <strong>Nur Text → Bild</strong> — kein Bild-Upload möglich. Für den vollen Workflow (Skizze, Foto als Eingabe) bitte einen eigenen API-Key nutzen.',
+    'prompts-anywhere': '💡 Tipp: Die <strong style="color:var(--muted);">Prompt-Vorlagen</strong> in KI Studio funktionieren auch in jedem anderen KI-Tool (z. B. gemini.google.com, ChatGPT) — du bist frei in der Wahl.',
     'btn-free':       '🌲 Kostenlos starten'
   },
   en: {
@@ -1402,10 +1403,9 @@ var I18N = {
     'login-subtitle': 'AI Image Generation in Education for Interior and Architecture',
     'tab-ws':         '🎓 Course',
     'tab-free':       '🆓 Free',
-    'api-desc':       'You need your own <strong>Google Gemini API key</strong> — <strong>free</strong> for students: just a Google account, <strong>no credit card</strong> required (free daily quota). Need more? You can enable billing later.',
-    'api-intro':      'Sign in with your own API key — <strong>two equal options</strong>, either one is enough:<br><strong style="color:var(--text);">🔹 Google Gemini</strong> — free tier (daily limit), then paid tiers from ~€0.04/image.<br><strong style="color:var(--text);">🌲 FLUX.2 · Black Forest Labs</strong> 🇩🇪 — European alternative, credits from ~€0.01/image.<br><span style="color:var(--dim);">Step-by-step guides below ↓</span>',
+    'api-intro':      'Your <strong>prompt templates work in any AI tool</strong> — use them anywhere. To generate <strong>inside KI Studio</strong> you need your own API key <strong>with billing enabled</strong> (Gemini image models no longer have a free tier) — two equal options:<br><strong style="color:var(--text);">🔹 Google Gemini</strong> — ~€0.04–0.13/image.<br><strong style="color:var(--text);">🌲 FLUX.2 · Black Forest Labs</strong> 🇩🇪 — from ~€0.01/image.<br><span style="color:var(--dim);">Fully free, no key: the „🆓 Free" tab (FLUX.1, text → image only). Guides below ↓</span>',
     'api-onekey':     'At least one of the two keys is enough.',
-    'api-howto':      '<strong style="color:var(--text);display:block;margin-bottom:5px;">🔹 Google Gemini — get a free API key:</strong><span style="color:var(--text);">1.</span> Open <a href="https://aistudio.google.com/apikey" target="_blank" rel="noopener" style="color:var(--accent);text-decoration:underline;text-underline-offset:2px;">aistudio.google.com/apikey</a><br><span style="color:var(--text);">2.</span> Sign in with your Google account &amp; click <em>"Create API key"</em><br><span style="color:var(--text);">3.</span> Copy the key and paste above — done.<br><span style="color:var(--dim);">Free tier: no credit card, daily limit. More quota/4K optionally via billing (~€0.04–0.13/image).</span>',
+    'api-howto':      '<strong style="color:var(--text);display:block;margin-bottom:5px;">🔹 Google Gemini — set up key + billing:</strong><span style="color:var(--text);">1.</span> Open <a href="https://aistudio.google.com/apikey" target="_blank" rel="noopener" style="color:var(--accent);text-decoration:underline;text-underline-offset:2px;">aistudio.google.com/apikey</a>, sign in &amp; <em>"Create API key"</em><br><span style="color:var(--text);">2.</span> <strong style="color:var(--text);">Enable billing</strong> — image models are paid (no free tier anymore)<br><span style="color:var(--text);">3.</span> Paste the key above — done.<br><span style="color:var(--dim);">~€0.04–0.13/image. Tip: set a budget limit in the Google Cloud Console.</span>',
     'api-security':   '<strong>Security:</strong> Never share this key — it is stored in <strong>this browser</strong> and persists after closing. Use only on your own device; to remove it, click the title at the top or “Remove key”.',
     'err-key':        'Not a valid Google API key (expected: AIza… or AQ.…)',
     'err-nokey':      'Please enter at least one API key — Google Gemini or FLUX.2 (BFL).',
@@ -1423,6 +1423,7 @@ var I18N = {
     'flux-sub':       'Open Source · Freiburg im Breisgau 🇩🇪 · free',
     'flux-desc':      'World-class image generation from the Black Forest — no account, no API key, €0.00 per image.',
     'flux-warning':   '⚠️ <strong>Text → Image only</strong> — no image upload. For the full workflow (sketch, photo as input) use your own API key.',
+    'prompts-anywhere': '💡 Tip: The <strong style="color:var(--muted);">prompt templates</strong> in KI Studio also work in any other AI tool (e.g. gemini.google.com, ChatGPT) — you are free to choose.',
     'btn-free':       '🌲 Start free'
   }
 };
@@ -2003,7 +2004,7 @@ function updateBFLAvailability() {
     });
   }
   setGroup('og-gemini', ['opt-gem-flash', 'opt-gem-pro'], hasG,
-    'Gemini (Google · Nano Banana)', 'Gemini (kein Google-Key — nicht verfügbar)');
+    'Gemini (Google · Abrechnung nötig)', 'Gemini (kein Google-Key — nicht verfügbar)');
   setGroup('og-bfl', ['opt-bfl-pro', 'opt-bfl-max', 'opt-bfl-klein'], hasB,
     'FLUX.2 · Black Forest Labs 🇩🇪 (BFL API-Key)', 'FLUX.2 · Black Forest Labs 🇩🇪 (kein BFL-Key — nicht verfügbar)');
   /* Aktuelles Modell nicht verfügbar → auf ein verfügbares wechseln */
@@ -2629,7 +2630,16 @@ function apiFetch(url, body) {
         var hints;
         if (res.status === 400) hints = ['API-Key ungültig oder abgelaufen.', 'Modell nicht freigeschaltet.', 'Prompt könnte gegen Richtlinien verstoßen.'];
         else if (res.status === 403) hints = ['Billing nicht aktiviert.', 'Key hat keine Berechtigung für dieses Modell.'];
-        else if (res.status === 429) hints = ['30–60 Sekunden warten und erneut versuchen.', 'Free Quota möglicherweise erschöpft.'];
+        else if (res.status === 429) {
+          if (/free_tier/i.test(m) && /limit:\s*0/i.test(m)) {
+            hints = ['Gemini-Bildmodelle haben kein Gratis-Tier mehr — sie sind kostenpflichtig.',
+                     'Lösung: Abrechnung im Google-Konto aktivieren (console.cloud.google.com → Abrechnung).',
+                     'Ganz ohne Kosten: im Login den Tab „Kostenlos" (FLUX.1, nur Text → Bild) nutzen.'];
+          } else {
+            hints = ['Rate-Limit — 30–60 Sekunden warten und erneut versuchen.',
+                     'Bei „limit: 0": Abrechnung aktivieren oder FLUX.1 (kostenlos) nutzen.'];
+          }
+        }
         else hints = ['Unbekannter Serverfehler.'];
         return Promise.reject({ code: res.status, msg: m, hints: hints });
       });
