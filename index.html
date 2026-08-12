@@ -619,16 +619,16 @@ textarea, input, .img-prompt, .error-msg { user-select: text; }
 
       <!-- Pane: Eigener API-Key -->
       <div class="setup-pane on" id="pane-api">
-        <p class="desc" data-i18n="api-desc">Du benötigst einen eigenen <strong>Google Gemini API-Key</strong>. Dieser erfordert ein Google-Konto mit <strong>hinterlegter Kreditkarte</strong> — die Nutzung wird pro generiertem Bild abgerechnet (ca. 0,02–0,13 € je nach Modell). Google bietet wahlweise ein monatliches Budget oder direkte Abrechnung nach Verbrauch.</p>
+        <p class="desc" data-i18n="api-desc">Du brauchst einen eigenen <strong>Google Gemini API-Key</strong> — für Studierende <strong>kostenlos</strong>: Ein Google-Konto genügt, <strong>keine Kreditkarte</strong> nötig (kostenloses Tageskontingent). Wer mehr braucht, kann später Abrechnung aktivieren.</p>
         <div data-i18n-html="api-howto" style="background:var(--s2);border:1px solid var(--bd);border-radius:var(--r-sm);padding:11px 13px;margin-bottom:14px;font-size:12px;line-height:1.8;color:var(--muted);">
-          <strong style="color:var(--text);display:block;margin-bottom:5px;">So bekommst du deinen API-Key:</strong>
+          <strong style="color:var(--text);display:block;margin-bottom:5px;">So bekommst du deinen kostenlosen API-Key:</strong>
           <span style="color:var(--text);">1.</span> <a href="https://aistudio.google.com/apikey" target="_blank" rel="noopener" style="color:var(--accent);text-decoration:underline;text-underline-offset:2px;">aistudio.google.com/apikey</a> öffnen<br>
-          <span style="color:var(--text);">2.</span> Mit Google-Account anmelden &amp; <em>„Create API key"</em> klicken<br>
+          <span style="color:var(--text);">2.</span> Mit Google-Account anmelden &amp; <em>„API-Schlüssel erstellen"</em> klicken<br>
           <span style="color:var(--text);">3.</span> Key kopieren und unten einfügen — fertig.
         </div>
         <div class="warn-box">
           <span>⚠️</span>
-          <span data-i18n-html="api-security"><strong>Sicherheit:</strong> Diesen Key niemals weitergeben — er ist nur im aktuellen Browser-Tab gespeichert und wird beim Schließen automatisch gelöscht.</span>
+          <span data-i18n-html="api-security"><strong>Sicherheit:</strong> Diesen Key niemals weitergeben — er wird in <strong>diesem Browser</strong> gespeichert und bleibt auch nach dem Schließen erhalten. Nur auf deinem eigenen Gerät nutzen; zum Entfernen oben auf den Titel klicken bzw. „Key entfernen".</span>
         </div>
         <label class="field-lbl" for="key-input">API-Key <span style="color:var(--red);font-weight:700;">*</span></label>
         <div class="input-row">
@@ -1302,9 +1302,9 @@ var I18N = {
     'login-subtitle': 'KI-Bildgenerierung in der Lehre für Innenarchitektur und Architektur',
     'tab-ws':         '🎓 Lehre',
     'tab-free':       '🆓 Kostenlos',
-    'api-desc':       'Du benötigst einen eigenen <strong>Google Gemini API-Key</strong>. Dieser erfordert ein Google-Konto mit <strong>hinterlegter Kreditkarte</strong> — die Nutzung wird pro generiertem Bild abgerechnet (ca. 0,02–0,13 € je nach Modell).',
-    'api-howto':      '<strong style="color:var(--text);display:block;margin-bottom:5px;">So bekommst du deinen API-Key:</strong><span style="color:var(--text);">1.</span> <a href="https://aistudio.google.com/apikey" target="_blank" rel="noopener" style="color:var(--accent);text-decoration:underline;text-underline-offset:2px;">aistudio.google.com/apikey</a> öffnen<br><span style="color:var(--text);">2.</span> Mit Google-Account anmelden &amp; <em>„Create API key"</em> klicken<br><span style="color:var(--text);">3.</span> Key kopieren und unten einfügen — fertig.',
-    'api-security':   '<strong>Sicherheit:</strong> Diesen Key niemals weitergeben — er ist nur im aktuellen Browser-Tab gespeichert und wird beim Schließen automatisch gelöscht.',
+    'api-desc':       'Du brauchst einen eigenen <strong>Google Gemini API-Key</strong> — für Studierende <strong>kostenlos</strong>: Ein Google-Konto genügt, <strong>keine Kreditkarte</strong> nötig (kostenloses Tageskontingent). Wer mehr braucht, kann später Abrechnung aktivieren.',
+    'api-howto':      '<strong style="color:var(--text);display:block;margin-bottom:5px;">So bekommst du deinen kostenlosen API-Key:</strong><span style="color:var(--text);">1.</span> <a href="https://aistudio.google.com/apikey" target="_blank" rel="noopener" style="color:var(--accent);text-decoration:underline;text-underline-offset:2px;">aistudio.google.com/apikey</a> öffnen<br><span style="color:var(--text);">2.</span> Mit Google-Account anmelden &amp; <em>„API-Schlüssel erstellen"</em> klicken<br><span style="color:var(--text);">3.</span> Key kopieren und unten einfügen — fertig.',
+    'api-security':   '<strong>Sicherheit:</strong> Diesen Key niemals weitergeben — er wird in <strong>diesem Browser</strong> gespeichert und bleibt auch nach dem Schließen erhalten. Nur auf deinem eigenen Gerät nutzen; zum Entfernen oben auf den Titel klicken bzw. „Key entfernen".',
     'err-key':        'Kein gültiger Google API-Key (erwartet: AIza… oder AQ.…)',
     'lbl-name':       'Dein Name / Kürzel',
     'lbl-name-opt':   '(optional · für die Kostenübersicht)',
@@ -1381,9 +1381,9 @@ var I18N = {
     'login-subtitle': 'AI Image Generation in Education for Interior and Architecture',
     'tab-ws':         '🎓 Course',
     'tab-free':       '🆓 Free',
-    'api-desc':       'You need your own <strong>Google Gemini API key</strong>. This requires a Google account with a <strong>credit card on file</strong> — usage is billed per generated image (approx. €0.02–0.13 depending on model).',
-    'api-howto':      '<strong style="color:var(--text);display:block;margin-bottom:5px;">How to get your API key:</strong><span style="color:var(--text);">1.</span> Open <a href="https://aistudio.google.com/apikey" target="_blank" rel="noopener" style="color:var(--accent);text-decoration:underline;text-underline-offset:2px;">aistudio.google.com/apikey</a><br><span style="color:var(--text);">2.</span> Sign in with your Google account &amp; click <em>"Create API key"</em><br><span style="color:var(--text);">3.</span> Copy the key and paste below — done.',
-    'api-security':   '<strong>Security:</strong> Never share this key — it is stored only in the current browser tab and deleted automatically when closed.',
+    'api-desc':       'You need your own <strong>Google Gemini API key</strong> — <strong>free</strong> for students: just a Google account, <strong>no credit card</strong> required (free daily quota). Need more? You can enable billing later.',
+    'api-howto':      '<strong style="color:var(--text);display:block;margin-bottom:5px;">How to get your free API key:</strong><span style="color:var(--text);">1.</span> Open <a href="https://aistudio.google.com/apikey" target="_blank" rel="noopener" style="color:var(--accent);text-decoration:underline;text-underline-offset:2px;">aistudio.google.com/apikey</a><br><span style="color:var(--text);">2.</span> Sign in with your Google account &amp; click <em>"Create API key"</em><br><span style="color:var(--text);">3.</span> Copy the key and paste below — done.',
+    'api-security':   '<strong>Security:</strong> Never share this key — it is stored in <strong>this browser</strong> and persists after closing. Use only on your own device; to remove it, click the title at the top or “Remove key”.',
     'err-key':        'Not a valid Google API key (expected: AIza… or AQ.…)',
     'lbl-name':       'Your name / abbreviation',
     'lbl-name-opt':   '(optional · for cost overview)',
@@ -1729,10 +1729,10 @@ q('#free-name-input').addEventListener('keydown', function(e) { if (e.key === 'E
 
 function doFreeLogin() {
   var name = q('#free-name-input').value.trim() || 'Gast';
-  sessionStorage.setItem('nb_free', '1');
-  sessionStorage.setItem('nb_name', name);
-  sessionStorage.removeItem('nb_key');
-  sessionStorage.removeItem('nb_workshop');
+  localStorage.setItem('nb_free', '1');
+  localStorage.setItem('nb_name', name);
+  localStorage.removeItem('nb_key');
+  localStorage.removeItem('nb_workshop');
   S.name = name; S.gruppe = 'Gast-Free'; S.key = '';
   launchApp('');
 }
@@ -1751,30 +1751,30 @@ function doSave() {
   }
   var bfl  = q('#bfl-key-input') ? q('#bfl-key-input').value.trim() : '';
   var name = q('#name-input').value.trim() || 'Anonym';
-  sessionStorage.setItem('nb_key', k);
-  sessionStorage.setItem('nb_name', name);
-  sessionStorage.removeItem('nb_workshop');
-  if (bfl) sessionStorage.setItem('nb_bfl_key', bfl);
-  else     sessionStorage.removeItem('nb_bfl_key');
+  localStorage.setItem('nb_key', k);
+  localStorage.setItem('nb_name', name);
+  localStorage.removeItem('nb_workshop');
+  if (bfl) localStorage.setItem('nb_bfl_key', bfl);
+  else     localStorage.removeItem('nb_bfl_key');
   S.key = k; S.bflKey = bfl; S.name = name;
   launchApp(k);
 }
 
 /* ── AUTO-LOGIN ── */
 (function() {
-  if (sessionStorage.getItem('nb_free') === '1') {
-    S.name   = sessionStorage.getItem('nb_name')   || 'Gast';
+  if (localStorage.getItem('nb_free') === '1') {
+    S.name   = localStorage.getItem('nb_name')   || 'Gast';
     S.gruppe = 'Gast-Free';
     S.key    = '';
     launchApp('');
     return;
   }
-  var k = sessionStorage.getItem('nb_key');
+  var k = localStorage.getItem('nb_key');
   if (k && isValidApiKey(k)) {
     S.key    = k;
-    S.bflKey = sessionStorage.getItem('nb_bfl_key') || '';
-    S.name   = sessionStorage.getItem('nb_name')   || 'Anonym';
-    S.gruppe = sessionStorage.getItem('nb_gruppe') || '';
+    S.bflKey = localStorage.getItem('nb_bfl_key') || '';
+    S.name   = localStorage.getItem('nb_name')   || 'Anonym';
+    S.gruppe = localStorage.getItem('nb_gruppe') || '';
     launchApp(k);
   }
 })();
@@ -1820,7 +1820,7 @@ function initPinModal() {
   function checkPin() {
     if (getPin() === APP_PIN) {
       var p = pending; pending = null;
-      if (p && p.cache) sessionStorage.setItem('nb_pinok', '1'); /* nur cachebare Features (Thinking) */
+      if (p && p.cache) localStorage.setItem('nb_pinok', '1'); /* nur cachebare Features (Thinking) */
       clearBoxes();
       if (p && p.toast) showToast(p.toast);
       if (p && p.onOk) p.onOk();
@@ -1832,12 +1832,12 @@ function initPinModal() {
   /* Gilt der PIN-Schutz für den aktuellen Login? (Kurs- oder Frei-Login, nicht Klaus) */
   function appliesToLogin() {
     if (S.gruppe === 'Klaus') return false;                       /* Klaus-Login — kein PIN */
-    if (sessionStorage.getItem('nb_workshop') !== '1' && sessionStorage.getItem('nb_free') !== '1') return false; /* eigener Key */
+    if (localStorage.getItem('nb_workshop') !== '1' && localStorage.getItem('nb_free') !== '1') return false; /* eigener Key */
     return true;
   }
   /* Thinking: einmal pro Sitzung (gecacht via nb_pinok) */
   function needsPinCached() {
-    if (sessionStorage.getItem('nb_pinok') === '1') return false;
+    if (localStorage.getItem('nb_pinok') === '1') return false;
     return appliesToLogin();
   }
 
@@ -1909,13 +1909,13 @@ function initPinModal() {
 }
 
 function launchApp(key) {
-  var isFree = sessionStorage.getItem('nb_free') === '1';
-  var gruppe = S.gruppe || sessionStorage.getItem('nb_gruppe') || '';
+  var isFree = localStorage.getItem('nb_free') === '1';
+  var gruppe = S.gruppe || localStorage.getItem('nb_gruppe') || '';
   q('#screen-setup').classList.remove('active');
   q('#screen-main').classList.add('active');
   q('#key-display').textContent = isFree
     ? '🌲 Kostenlos'
-    : (sessionStorage.getItem('nb_workshop') === '1'
+    : (localStorage.getItem('nb_workshop') === '1'
         ? '🎓 ' + (gruppe || 'Kurs')
         : '●●●● ' + key.slice(-4));
   q('#sb-dot').classList.add('on');
@@ -1978,11 +1978,11 @@ function applyFreeMode() {
 /* ── REMOVE KEY / BACK TO LOGIN ── */
 function goToLogin() {
   if (!confirm('Zurück zum Login?')) return;
-  sessionStorage.removeItem('nb_key');
-  sessionStorage.removeItem('nb_bfl_key');
-  sessionStorage.removeItem('nb_workshop');
-  sessionStorage.removeItem('nb_gruppe');
-  sessionStorage.removeItem('nb_free');
+  localStorage.removeItem('nb_key');
+  localStorage.removeItem('nb_bfl_key');
+  localStorage.removeItem('nb_workshop');
+  localStorage.removeItem('nb_gruppe');
+  localStorage.removeItem('nb_free');
   location.reload();
 }
 q('#btn-remove-key').addEventListener('click', goToLogin);
@@ -2016,7 +2016,7 @@ function initResize() {
 function initParams() {
   q('#sel-model').addEventListener('change', function(e) {
     /* Free-Mode: nur FLUX.1 erlaubt */
-    if (sessionStorage.getItem('nb_free') === '1' && !e.target.value.startsWith('pollinations')) {
+    if (localStorage.getItem('nb_free') === '1' && !e.target.value.startsWith('pollinations')) {
       e.target.value = S.model;
       showToast('Im kostenlosen Modus nur FLUX.1-Modelle verfügbar');
       return;
