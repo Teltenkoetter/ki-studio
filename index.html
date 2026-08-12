@@ -619,23 +619,41 @@ textarea, input, .img-prompt, .error-msg { user-select: text; }
 
       <!-- Pane: Eigener API-Key -->
       <div class="setup-pane on" id="pane-api">
-        <p class="desc" data-i18n="api-desc">Du brauchst einen eigenen <strong>Google Gemini API-Key</strong> — für Studierende <strong>kostenlos</strong>: Ein Google-Konto genügt, <strong>keine Kreditkarte</strong> nötig (kostenloses Tageskontingent). Wer mehr braucht, kann später Abrechnung aktivieren.</p>
-        <div data-i18n-html="api-howto" style="background:var(--s2);border:1px solid var(--bd);border-radius:var(--r-sm);padding:11px 13px;margin-bottom:14px;font-size:12px;line-height:1.8;color:var(--muted);">
-          <strong style="color:var(--text);display:block;margin-bottom:5px;">So bekommst du deinen kostenlosen API-Key:</strong>
-          <span style="color:var(--text);">1.</span> <a href="https://aistudio.google.com/apikey" target="_blank" rel="noopener" style="color:var(--accent);text-decoration:underline;text-underline-offset:2px;">aistudio.google.com/apikey</a> öffnen<br>
-          <span style="color:var(--text);">2.</span> Mit Google-Account anmelden &amp; <em>„API-Schlüssel erstellen"</em> klicken<br>
-          <span style="color:var(--text);">3.</span> Key kopieren und unten einfügen — fertig.
-        </div>
-        <div class="warn-box">
-          <span>⚠️</span>
-          <span data-i18n-html="api-security"><strong>Sicherheit:</strong> Diesen Key niemals weitergeben — er wird in <strong>diesem Browser</strong> gespeichert und bleibt auch nach dem Schließen erhalten. Nur auf deinem eigenen Gerät nutzen; zum Entfernen oben auf den Titel klicken bzw. „Key entfernen".</span>
-        </div>
-        <label class="field-lbl" for="key-input">API-Key <span style="color:var(--red);font-weight:700;">*</span></label>
+        <!-- Einleitung: zwei gleichwertige Anbieter -->
+        <p class="desc" data-i18n-html="api-intro">Melde dich mit deinem eigenen API-Schlüssel an — <strong>zwei gleichwertige Optionen</strong>, einer davon genügt:<br>
+          <strong style="color:var(--text);">🔹 Google Gemini</strong> — kostenlose Stufe (Tageslimit), darüber Preisstufen ab ~0,04 €/Bild.<br>
+          <strong style="color:var(--text);">🌲 FLUX.2 · Black Forest Labs</strong> 🇩🇪 — europäische Alternative, Guthaben ab ~0,01 €/Bild.<br>
+          <span style="color:var(--dim);">Schritt-für-Schritt-Anleitungen weiter unten ↓</span></p>
+
+        <!-- AKTION: Felder + Button zuerst -->
+        <label class="field-lbl" for="key-input">Google Gemini API-Key</label>
         <div class="input-row">
-          <input type="password" id="key-input" placeholder="AIzaSy…" autocomplete="new-password" spellcheck="false">
+          <input type="password" id="key-input" placeholder="AIzaSy… oder AQ.…" autocomplete="new-password" spellcheck="false">
           <div class="field-err" id="key-err" data-i18n="err-key">Kein gültiger Google API-Key (erwartet: AIza… oder AQ.…)</div>
         </div>
-        <div style="border-top:1px solid var(--bd);margin:16px 0 14px;"></div>
+        <label class="field-lbl" for="bfl-key-input">FLUX.2 / BFL API-Key</label>
+        <div class="input-row">
+          <input type="password" id="bfl-key-input" placeholder="Dein BFL API-Key…" autocomplete="new-password" spellcheck="false">
+        </div>
+        <p class="param-note" data-i18n="api-onekey" style="margin:-2px 0 12px;color:var(--dim);">Mindestens einer der beiden Schlüssel genügt.</p>
+        <label class="field-lbl" for="name-input"><span data-i18n="lbl-name">Dein Name / Kürzel</span> <span data-i18n-html="lbl-name-opt" style="color:var(--dim);font-weight:400;text-transform:none;letter-spacing:0;">(optional · für die Kostenübersicht)</span></label>
+        <div class="input-row">
+          <input type="text" id="name-input" data-i18n-placeholder="ph-name" placeholder="z. B. Julia M." maxlength="40" autocomplete="name" spellcheck="false">
+        </div>
+        <button class="btn btn-primary btn-full" id="btn-save" data-i18n="btn-save">Speichern &amp; starten</button>
+
+        <div style="border-top:1px solid var(--bd);margin:18px 0 14px;"></div>
+
+        <!-- INFO: Google Gemini -->
+        <div data-i18n-html="api-howto" style="background:var(--s2);border:1px solid var(--bd);border-radius:var(--r-sm);padding:11px 13px;margin-bottom:12px;font-size:12px;line-height:1.8;color:var(--muted);">
+          <strong style="color:var(--text);display:block;margin-bottom:5px;">🔹 Google Gemini — kostenlosen API-Key holen:</strong>
+          <span style="color:var(--text);">1.</span> <a href="https://aistudio.google.com/apikey" target="_blank" rel="noopener" style="color:var(--accent);text-decoration:underline;text-underline-offset:2px;">aistudio.google.com/apikey</a> öffnen<br>
+          <span style="color:var(--text);">2.</span> Mit Google-Account anmelden &amp; <em>„API-Schlüssel erstellen"</em> klicken<br>
+          <span style="color:var(--text);">3.</span> Key kopieren und oben einfügen — fertig.<br>
+          <span style="color:var(--dim);">Kostenlose Stufe: keine Kreditkarte, Tageslimit. Mehr Kontingent/4K optional per Abrechnung (~0,04–0,13 €/Bild).</span>
+        </div>
+
+        <!-- INFO: FLUX.2 / BFL -->
         <div style="background:var(--s2);border:1px solid var(--bd);border-radius:var(--r-sm);padding:11px 13px;margin-bottom:12px;font-size:12px;line-height:1.7;color:var(--muted);">
           <div style="display:flex;align-items:center;gap:8px;margin-bottom:7px;">
             <span style="font-size:18px;line-height:1;">🌲</span>
@@ -646,17 +664,13 @@ textarea, input, .img-prompt, .error-msg { user-select: text; }
           <span style="color:var(--text);">1.</span> <a href="https://api.bfl.ai" target="_blank" rel="noopener" style="color:var(--accent);text-decoration:underline;text-underline-offset:2px;">api.bfl.ai</a> öffnen &amp; registrieren (E-Mail genügt)<br>
           <span style="color:var(--text);">2.</span> Im Dashboard: <em>„API Keys" → „Create API Key"</em><br>
           <span style="color:var(--text);">3.</span> Guthaben aufladen — FLUX.2 Klein ab <strong style="color:var(--text);">~0,01 €/Bild</strong>, Pro ab ~0,05 €<br>
-          <span style="color:var(--text);">4.</span> Key unten einfügen — schaltet FLUX.2 im Modell-Pulldown frei
+          <span style="color:var(--text);">4.</span> Key oben einfügen — schaltet FLUX.2 im Modell-Pulldown frei
         </div>
-        <label class="field-lbl" for="bfl-key-input">BFL API-Key <span style="color:var(--dim);font-weight:400;text-transform:none;letter-spacing:0;">(optional)</span></label>
-        <div class="input-row">
-          <input type="password" id="bfl-key-input" placeholder="Dein BFL API-Key…" autocomplete="new-password" spellcheck="false">
+
+        <div class="warn-box">
+          <span>⚠️</span>
+          <span data-i18n-html="api-security"><strong>Sicherheit:</strong> Diesen Key niemals weitergeben — er wird in <strong>diesem Browser</strong> gespeichert und bleibt auch nach dem Schließen erhalten. Nur auf deinem eigenen Gerät nutzen; zum Entfernen oben auf den Titel klicken bzw. „Key entfernen".</span>
         </div>
-        <label class="field-lbl" for="name-input"><span data-i18n="lbl-name">Dein Name / Kürzel</span> <span data-i18n-html="lbl-name-opt" style="color:var(--dim);font-weight:400;text-transform:none;letter-spacing:0;">(optional · für die Kostenübersicht)</span></label>
-        <div class="input-row">
-          <input type="text" id="name-input" data-i18n-placeholder="ph-name" placeholder="z. B. Julia M." maxlength="40" autocomplete="name" spellcheck="false">
-        </div>
-        <button class="btn btn-primary btn-full" id="btn-save" data-i18n="btn-save">Speichern &amp; starten</button>
       </div>
 
       <!-- Pane: Kostenlos (FLUX / Pollinations) -->
@@ -740,9 +754,9 @@ textarea, input, .img-prompt, .error-msg { user-select: text; }
         <div class="pgrp">
           <div class="pgrp-lbl" data-i18n="lbl-model">Modell</div>
           <select class="ctrl-sel" id="sel-model">
-            <optgroup label="Gemini (Google · Nano Banana)">
-              <option value="gemini-3.1-flash-image-preview">Gemini 3.1 Flash (Preview) · ~0,05 €/Bild</option>
-              <option value="gemini-3-pro-image-preview">Gemini 3 Pro (Preview) · ~0,13 €</option>
+            <optgroup label="Gemini (Google · Nano Banana)" id="og-gemini">
+              <option value="gemini-3.1-flash-image-preview" id="opt-gem-flash">Gemini 3.1 Flash (Preview) · ~0,05 €/Bild</option>
+              <option value="gemini-3-pro-image-preview" id="opt-gem-pro">Gemini 3 Pro (Preview) · ~0,13 €</option>
             </optgroup>
             <optgroup label="FLUX.2 · Black Forest Labs 🇩🇪 (BFL API-Key)" id="og-bfl">
               <option value="bfl-flux2-pro"   id="opt-bfl-pro">FLUX.2 Pro · ~0,05 €/Bild</option>
@@ -1303,9 +1317,12 @@ var I18N = {
     'tab-ws':         '🎓 Lehre',
     'tab-free':       '🆓 Kostenlos',
     'api-desc':       'Du brauchst einen eigenen <strong>Google Gemini API-Key</strong> — für Studierende <strong>kostenlos</strong>: Ein Google-Konto genügt, <strong>keine Kreditkarte</strong> nötig (kostenloses Tageskontingent). Wer mehr braucht, kann später Abrechnung aktivieren.',
-    'api-howto':      '<strong style="color:var(--text);display:block;margin-bottom:5px;">So bekommst du deinen kostenlosen API-Key:</strong><span style="color:var(--text);">1.</span> <a href="https://aistudio.google.com/apikey" target="_blank" rel="noopener" style="color:var(--accent);text-decoration:underline;text-underline-offset:2px;">aistudio.google.com/apikey</a> öffnen<br><span style="color:var(--text);">2.</span> Mit Google-Account anmelden &amp; <em>„API-Schlüssel erstellen"</em> klicken<br><span style="color:var(--text);">3.</span> Key kopieren und unten einfügen — fertig.',
+    'api-intro':      'Melde dich mit deinem eigenen API-Schlüssel an — <strong>zwei gleichwertige Optionen</strong>, einer davon genügt:<br><strong style="color:var(--text);">🔹 Google Gemini</strong> — kostenlose Stufe (Tageslimit), darüber Preisstufen ab ~0,04 €/Bild.<br><strong style="color:var(--text);">🌲 FLUX.2 · Black Forest Labs</strong> 🇩🇪 — europäische Alternative, Guthaben ab ~0,01 €/Bild.<br><span style="color:var(--dim);">Schritt-für-Schritt-Anleitungen weiter unten ↓</span>',
+    'api-onekey':     'Mindestens einer der beiden Schlüssel genügt.',
+    'api-howto':      '<strong style="color:var(--text);display:block;margin-bottom:5px;">🔹 Google Gemini — kostenlosen API-Key holen:</strong><span style="color:var(--text);">1.</span> <a href="https://aistudio.google.com/apikey" target="_blank" rel="noopener" style="color:var(--accent);text-decoration:underline;text-underline-offset:2px;">aistudio.google.com/apikey</a> öffnen<br><span style="color:var(--text);">2.</span> Mit Google-Account anmelden &amp; <em>„API-Schlüssel erstellen"</em> klicken<br><span style="color:var(--text);">3.</span> Key kopieren und oben einfügen — fertig.<br><span style="color:var(--dim);">Kostenlose Stufe: keine Kreditkarte, Tageslimit. Mehr Kontingent/4K optional per Abrechnung (~0,04–0,13 €/Bild).</span>',
     'api-security':   '<strong>Sicherheit:</strong> Diesen Key niemals weitergeben — er wird in <strong>diesem Browser</strong> gespeichert und bleibt auch nach dem Schließen erhalten. Nur auf deinem eigenen Gerät nutzen; zum Entfernen oben auf den Titel klicken bzw. „Key entfernen".',
     'err-key':        'Kein gültiger Google API-Key (erwartet: AIza… oder AQ.…)',
+    'err-nokey':      'Bitte mindestens einen API-Key eingeben — Google Gemini oder FLUX.2 (BFL).',
     'lbl-name':       'Dein Name / Kürzel',
     'lbl-name-opt':   '(optional · für die Kostenübersicht)',
     'lbl-name-opt-short': '(optional)',
@@ -1382,9 +1399,12 @@ var I18N = {
     'tab-ws':         '🎓 Course',
     'tab-free':       '🆓 Free',
     'api-desc':       'You need your own <strong>Google Gemini API key</strong> — <strong>free</strong> for students: just a Google account, <strong>no credit card</strong> required (free daily quota). Need more? You can enable billing later.',
-    'api-howto':      '<strong style="color:var(--text);display:block;margin-bottom:5px;">How to get your free API key:</strong><span style="color:var(--text);">1.</span> Open <a href="https://aistudio.google.com/apikey" target="_blank" rel="noopener" style="color:var(--accent);text-decoration:underline;text-underline-offset:2px;">aistudio.google.com/apikey</a><br><span style="color:var(--text);">2.</span> Sign in with your Google account &amp; click <em>"Create API key"</em><br><span style="color:var(--text);">3.</span> Copy the key and paste below — done.',
+    'api-intro':      'Sign in with your own API key — <strong>two equal options</strong>, either one is enough:<br><strong style="color:var(--text);">🔹 Google Gemini</strong> — free tier (daily limit), then paid tiers from ~€0.04/image.<br><strong style="color:var(--text);">🌲 FLUX.2 · Black Forest Labs</strong> 🇩🇪 — European alternative, credits from ~€0.01/image.<br><span style="color:var(--dim);">Step-by-step guides below ↓</span>',
+    'api-onekey':     'At least one of the two keys is enough.',
+    'api-howto':      '<strong style="color:var(--text);display:block;margin-bottom:5px;">🔹 Google Gemini — get a free API key:</strong><span style="color:var(--text);">1.</span> Open <a href="https://aistudio.google.com/apikey" target="_blank" rel="noopener" style="color:var(--accent);text-decoration:underline;text-underline-offset:2px;">aistudio.google.com/apikey</a><br><span style="color:var(--text);">2.</span> Sign in with your Google account &amp; click <em>"Create API key"</em><br><span style="color:var(--text);">3.</span> Copy the key and paste above — done.<br><span style="color:var(--dim);">Free tier: no credit card, daily limit. More quota/4K optionally via billing (~€0.04–0.13/image).</span>',
     'api-security':   '<strong>Security:</strong> Never share this key — it is stored in <strong>this browser</strong> and persists after closing. Use only on your own device; to remove it, click the title at the top or “Remove key”.',
     'err-key':        'Not a valid Google API key (expected: AIza… or AQ.…)',
+    'err-nokey':      'Please enter at least one API key — Google Gemini or FLUX.2 (BFL).',
     'lbl-name':       'Your name / abbreviation',
     'lbl-name-opt':   '(optional · for cost overview)',
     'lbl-name-opt-short': '(optional)',
@@ -1740,24 +1760,43 @@ function doFreeLogin() {
 function isValidApiKey(k) {
   return k.length >= 20 && (k.startsWith('AIza') || k.startsWith('AQ.'));
 }
+function isValidBflKey(k) {
+  return k.length >= 8; /* BFL-Keys sind lange Token; locker prüfen */
+}
 
 function doSave() {
-  var k = q('#key-input').value.trim();
-  if (!isValidApiKey(k)) {
-    q('#key-err').classList.add('show');
+  var gk   = q('#key-input').value.trim();
+  var bfl  = q('#bfl-key-input') ? q('#bfl-key-input').value.trim() : '';
+  var hasG = isValidApiKey(gk);
+  var hasB = isValidBflKey(bfl);
+  var errEl = q('#key-err');
+  /* Google-Feld ausgefüllt, aber ungültig → gezielt melden */
+  if (gk && !hasG) {
+    errEl.textContent = t('err-key');
+    errEl.classList.add('show');
     q('#key-input').classList.add('err');
     q('#key-input').focus();
     return;
   }
-  var bfl  = q('#bfl-key-input') ? q('#bfl-key-input').value.trim() : '';
+  /* Mindestens einer der beiden Schlüssel nötig */
+  if (!hasG && !hasB) {
+    errEl.textContent = t('err-nokey');
+    errEl.classList.add('show');
+    q('#key-input').classList.add('err');
+    q('#key-input').focus();
+    return;
+  }
   var name = q('#name-input').value.trim() || 'Anonym';
-  localStorage.setItem('nb_key', k);
+  if (hasG) localStorage.setItem('nb_key', gk); else localStorage.removeItem('nb_key');
   localStorage.setItem('nb_name', name);
   localStorage.removeItem('nb_workshop');
-  if (bfl) localStorage.setItem('nb_bfl_key', bfl);
-  else     localStorage.removeItem('nb_bfl_key');
-  S.key = k; S.bflKey = bfl; S.name = name;
-  launchApp(k);
+  if (hasB) localStorage.setItem('nb_bfl_key', bfl); else localStorage.removeItem('nb_bfl_key');
+  S.key = hasG ? gk : '';
+  S.bflKey = hasB ? bfl : '';
+  S.name = name;
+  /* Standard-Modell passend zum vorhandenen Key */
+  S.model = hasG ? 'gemini-3.1-flash-image-preview' : 'bfl-flux2-pro';
+  launchApp(S.key);
 }
 
 /* ── AUTO-LOGIN ── */
@@ -1769,13 +1808,17 @@ function doSave() {
     launchApp('');
     return;
   }
-  var k = localStorage.getItem('nb_key');
-  if (k && isValidApiKey(k)) {
-    S.key    = k;
-    S.bflKey = localStorage.getItem('nb_bfl_key') || '';
+  var k    = localStorage.getItem('nb_key');
+  var bfl  = localStorage.getItem('nb_bfl_key') || '';
+  var hasG = k && isValidApiKey(k);
+  var hasB = bfl && isValidBflKey(bfl);
+  if (hasG || hasB) {
+    S.key    = hasG ? k : '';
+    S.bflKey = hasB ? bfl : '';
     S.name   = localStorage.getItem('nb_name')   || 'Anonym';
     S.gruppe = localStorage.getItem('nb_gruppe') || '';
-    launchApp(k);
+    if (!hasG && hasB) S.model = 'bfl-flux2-pro';
+    launchApp(S.key);
   }
 })();
 
@@ -1915,9 +1958,8 @@ function launchApp(key) {
   q('#screen-main').classList.add('active');
   q('#key-display').textContent = isFree
     ? '🌲 Kostenlos'
-    : (localStorage.getItem('nb_workshop') === '1'
-        ? '🎓 ' + (gruppe || 'Kurs')
-        : '●●●● ' + key.slice(-4));
+    : (key ? '●●●● ' + key.slice(-4)
+           : (S.bflKey ? '🌲 FLUX.2 ●●' + S.bflKey.slice(-4) : '●●●●'));
   q('#sb-dot').classList.add('on');
   q('#sb-api').textContent = isFree ? 'FLUX aktiv' : 'API aktiv';
   updateBFLAvailability();
@@ -1941,26 +1983,34 @@ function launchApp(key) {
   setLang(LANG);
 }
 
+/* Aktiviert/deaktiviert Modell-Gruppen je nach vorhandenem Key.
+   Gemini braucht Google-Key, FLUX.2 braucht BFL-Key, FLUX.1 ist immer frei. */
 function updateBFLAvailability() {
-  var hasBFL = !!S.bflKey;
-  var og = q('#og-bfl');
-  if (!og) return;
-  og.disabled = !hasBFL;
-  og.label = hasBFL
-    ? 'FLUX.2 · Black Forest Labs 🇩🇪 (BFL API-Key)'
-    : 'FLUX.2 · Black Forest Labs 🇩🇪 (kein BFL-Key — nicht verfügbar)';
-  /* Einzelne Options auch deaktivieren — optgroup.disabled allein reicht nicht in allen Browsern */
-  ['opt-bfl-pro', 'opt-bfl-max', 'opt-bfl-klein'].forEach(function(id) {
-    var opt = q('#' + id);
-    if (opt) { opt.disabled = !hasBFL; opt.style.color = hasBFL ? '' : 'var(--muted)'; }
-  });
-  /* Falls FLUX.2 aktiv aber Key fehlt → zurück zu Gemini Flash */
-  if (!hasBFL && S.model.startsWith('bfl-')) {
-    S.model = 'gemini-3.1-flash-image-preview';
-    q('#sel-model').value = S.model;
+  var hasG = !!S.key;
+  var hasB = !!S.bflKey;
+  function setGroup(ogId, optIds, on, labelOn, labelOff) {
+    var og = q('#' + ogId);
+    if (!og) return;
+    og.disabled = !on;
+    og.label = on ? labelOn : labelOff;
+    optIds.forEach(function(id) {
+      var opt = q('#' + id);
+      if (opt) { opt.disabled = !on; opt.style.color = on ? '' : 'var(--muted)'; }
+    });
+  }
+  setGroup('og-gemini', ['opt-gem-flash', 'opt-gem-pro'], hasG,
+    'Gemini (Google · Nano Banana)', 'Gemini (kein Google-Key — nicht verfügbar)');
+  setGroup('og-bfl', ['opt-bfl-pro', 'opt-bfl-max', 'opt-bfl-klein'], hasB,
+    'FLUX.2 · Black Forest Labs 🇩🇪 (BFL API-Key)', 'FLUX.2 · Black Forest Labs 🇩🇪 (kein BFL-Key — nicht verfügbar)');
+  /* Aktuelles Modell nicht verfügbar → auf ein verfügbares wechseln */
+  var m = S.model;
+  var unavailable = (m.indexOf('gemini') === 0 && !hasG) || (m.indexOf('bfl-') === 0 && !hasB);
+  if (unavailable) {
+    S.model = hasG ? 'gemini-3.1-flash-image-preview' : (hasB ? 'bfl-flux2-pro' : 'pollinations-flux');
     updateModelStatus();
     applyParamVisibility();
   }
+  if (q('#sel-model')) q('#sel-model').value = S.model;
 }
 
 function applyFreeMode() {
@@ -2025,6 +2075,12 @@ function initParams() {
     if (e.target.value.startsWith('bfl-') && !S.bflKey) {
       e.target.value = S.model;
       showToast('BFL API-Key fehlt — bitte im Login eintragen');
+      return;
+    }
+    /* Gemini-Modelle ohne Google-Key blockieren */
+    if (e.target.value.startsWith('gemini') && !S.key) {
+      e.target.value = S.model;
+      showToast('Google API-Key fehlt — bitte im Login eintragen');
       return;
     }
     S.model = e.target.value;
