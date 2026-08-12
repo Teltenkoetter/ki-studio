@@ -613,13 +613,12 @@ textarea, input, .img-prompt, .error-msg { user-select: text; }
     <div class="setup-card">
       <!-- Tabs -->
       <div class="setup-tabs">
-        <button class="setup-tab-btn on" id="tab-ws" onclick="switchSetupTab('ws')" data-i18n="tab-ws">🎓 Lehre</button>
-        <button class="setup-tab-btn" id="tab-api" onclick="switchSetupTab('api')">🔑 API-Key</button>
+        <button class="setup-tab-btn on" id="tab-api" onclick="switchSetupTab('api')">🔑 API-Key</button>
         <button class="setup-tab-btn" id="tab-free" onclick="switchSetupTab('free')" data-i18n="tab-free">🆓 Kostenlos</button>
       </div>
 
       <!-- Pane: Eigener API-Key -->
-      <div class="setup-pane" id="pane-api">
+      <div class="setup-pane on" id="pane-api">
         <p class="desc" data-i18n="api-desc">Du benötigst einen eigenen <strong>Google Gemini API-Key</strong>. Dieser erfordert ein Google-Konto mit <strong>hinterlegter Kreditkarte</strong> — die Nutzung wird pro generiertem Bild abgerechnet (ca. 0,02–0,13 € je nach Modell). Google bietet wahlweise ein monatliches Budget oder direkte Abrechnung nach Verbrauch.</p>
         <div data-i18n-html="api-howto" style="background:var(--s2);border:1px solid var(--bd);border-radius:var(--r-sm);padding:11px 13px;margin-bottom:14px;font-size:12px;line-height:1.8;color:var(--muted);">
           <strong style="color:var(--text);display:block;margin-bottom:5px;">So bekommst du deinen API-Key:</strong>
@@ -660,24 +659,6 @@ textarea, input, .img-prompt, .error-msg { user-select: text; }
         <button class="btn btn-primary btn-full" id="btn-save" data-i18n="btn-save">Speichern &amp; starten</button>
       </div>
 
-      <!-- Pane: Zugang Lehre -->
-      <div class="setup-pane on" id="pane-ws">
-        <p class="desc" data-i18n="ws-desc">Du hast einen Kurs-Zugang erhalten? Gib das Kurs-Passwort ein.</p>
-<div data-i18n="ws-warning" style="background:rgba(251,146,60,0.07);border:1px solid rgba(251,146,60,0.2);border-radius:var(--r-sm);padding:9px 12px;margin-bottom:16px;font-size:11px;color:#fb923c;line-height:1.55;">
-          ⚠️ Das Passwort ist vertraulich — bitte nicht weitergeben. Übermäßige Nutzung durch Dritte kann zur Sperrung des Kurs-Zugangs führen.
-        </div>
-        <label class="field-lbl" for="ws-pass-input"><span data-i18n="lbl-password">Passwort</span> <span style="color:var(--red);font-weight:700;">*</span></label>
-        <div class="input-row">
-          <input type="password" id="ws-pass-input" data-i18n-placeholder="ph-password" placeholder="Kurs-Passwort" autocomplete="new-password" spellcheck="false">
-          <div class="field-err" id="ws-err" data-i18n="err-password">Falsches Passwort — bitte nochmal versuchen.</div>
-        </div>
-        <label class="field-lbl" for="ws-name-input"><span data-i18n="lbl-name">Dein Name / Kürzel</span> <span data-i18n-html="lbl-name-opt" style="color:var(--dim);font-weight:400;text-transform:none;letter-spacing:0;">(optional · für die Kostenübersicht)</span></label>
-        <div class="input-row">
-          <input type="text" id="ws-name-input" data-i18n-placeholder="ph-name" placeholder="z. B. Julia M." maxlength="40" autocomplete="name" spellcheck="false">
-        </div>
-        <button class="btn btn-primary btn-full" id="btn-ws-login" data-i18n="btn-login">Einloggen</button>
-      </div>
-
       <!-- Pane: Kostenlos (FLUX / Pollinations) -->
       <div class="setup-pane" id="pane-free">
         <div style="background:rgba(255,255,255,0.03);border:1px solid var(--bd-hi);border-radius:var(--r-sm);padding:13px 15px;margin-bottom:16px;">
@@ -691,7 +672,7 @@ textarea, input, .img-prompt, .error-msg { user-select: text; }
           <p data-i18n="flux-desc" style="font-size:12px;color:var(--muted);line-height:1.6;margin:0;">Weltklasse-Bildgenerierung aus dem Schwarzwald — kein Account, kein API-Key, 0,00 €/Bild.</p>
         </div>
         <div data-i18n-html="flux-warning" style="background:rgba(251,146,60,0.07);border:1px solid rgba(251,146,60,0.2);border-radius:var(--r-sm);padding:9px 12px;margin-bottom:16px;font-size:11px;color:#fb923c;line-height:1.55;">
-          ⚠️ <strong>Nur Text → Bild</strong> — kein Bild-Upload möglich. Für den vollen Workflow (Skizze, Foto als Eingabe) bitte den Kurs-Zugang oder eigenen API-Key nutzen.
+          ⚠️ <strong>Nur Text → Bild</strong> — kein Bild-Upload möglich. Für den vollen Workflow (Skizze, Foto als Eingabe) bitte einen eigenen API-Key nutzen.
         </div>
         <label class="field-lbl" for="free-name-input"><span data-i18n="lbl-name">Dein Name / Kürzel</span> <span data-i18n="lbl-name-opt-short" style="color:var(--dim);font-weight:400;text-transform:none;letter-spacing:0;">(optional)</span></label>
         <div class="input-row">
@@ -804,7 +785,7 @@ textarea, input, .img-prompt, .error-msg { user-select: text; }
           <div class="seg" id="seg-imagesize">
             <button class="seg-btn" data-v="1K" title="ca. 1024 × 1024 px (~1 MP) — Bildschirm, Tests">1K</button>
             <button class="seg-btn on" data-v="2K" title="ca. 2048 × 2048 px (~4 MP) — Präsentation, kleiner Druck">2K</button>
-            <button class="seg-btn" data-v="4K" id="btn-4k-opt" title="ca. 4096 × 4096 px (~16 MP) — großer Druck · PIN nötig · höhere Kosten">4K 🔒</button>
+            <button class="seg-btn" data-v="4K" id="btn-4k-opt" title="ca. 4096 × 4096 px (~16 MP) — großer Druck · höhere Kosten (rund das Doppelte)">4K</button>
           </div>
           <p class="param-note" id="imagesize-note"></p>
         </div>
@@ -1027,8 +1008,8 @@ textarea, input, .img-prompt, .error-msg { user-select: text; }
         <h3>⚙️ Parameter erklärt</h3>
         <ul>
           <li><strong>System-Kontext</strong> — unsichtbarer Hintergrundprompt: „Aus" = freie Hand · „Expert" = photorealistisch, geometrisch präzise · „Graustufen" = Schwarz-Weiß</li>
-          <li><strong>Thinking-Level</strong> — lässt Gemini länger über den Prompt nachdenken. Effekt auf Bildqualität ist begrenzt; langsamer und teurer. PIN-geschützt für Kurs-Logins.</li>
-          <li><strong>Auflösung</strong> — Gemini 3: <strong>1K</strong> (~1024 px), <strong>2K</strong> (~2048 px) oder <strong>4K</strong> (~4096 px) wählbar. 4K verlangt bei <strong>jedem Bild</strong> den PIN und kostet rund das Doppelte. FLUX.2: bis 4 MP. FLUX.1: 1024 px.</li>
+          <li><strong>Thinking-Level</strong> — lässt Gemini länger über den Prompt nachdenken. Effekt auf Bildqualität ist begrenzt; langsamer und teurer.</li>
+          <li><strong>Auflösung</strong> — Gemini 3: <strong>1K</strong> (~1024 px), <strong>2K</strong> (~2048 px) oder <strong>4K</strong> (~4096 px) wählbar. 4K kostet rund das Doppelte. FLUX.2: bis 4 MP. FLUX.1: 1024 px.</li>
           <li><strong>Seed</strong> — Zufallszahl, die das Ergebnis reproduzierbar macht. Leer = zufällig. Bei gleichem Prompt + Seed sehr ähnliches Ergebnis.</li>
         </ul>
       </div>
@@ -1081,7 +1062,7 @@ textarea, input, .img-prompt, .error-msg { user-select: text; }
       <div class="help-sec">
         <h3>💡 Auflösung &amp; Kosten</h3>
         <p>Gemini 3 erzeugt jetzt direkt <strong>1K (~1024 px), 2K (~2048 px) und 4K (~4096 px)</strong> — wählbar im Parameter-Panel.</p>
-        <p style="margin-top:6px;"><strong>Spar-Workflow:</strong> erst in 1K/2K testen, nur das finale Bild in 4K rechnen — 4K kostet rund das Doppelte und verlangt bei jedem Bild den PIN. Bei Gemini 3 Pro ist 2K übrigens genauso teuer wie 1K.</p>
+        <p style="margin-top:6px;"><strong>Spar-Workflow:</strong> erst in 1K/2K testen, nur das finale Bild in 4K rechnen — 4K kostet rund das Doppelte. Bei Gemini 3 Pro ist 2K übrigens genauso teuer wie 1K.</p>
         <p style="margin-top:6px;">Für noch höhere Auflösung: PNG in <strong>Photoshop</strong> öffnen → <strong>Bearbeiten → Generative Upscale</strong> (Adobe Firefly) → bis 4× ohne sichtbaren Qualitätsverlust.</p>
       </div>
 
@@ -1126,8 +1107,8 @@ textarea, input, .img-prompt, .error-msg { user-select: text; }
         <h3>⚙️ Parameters explained</h3>
         <ul>
           <li><strong>System Context</strong> — invisible background prompt: "Off" = free rein · "Expert" = photorealistic, geometrically precise · "Grayscale" = black &amp; white only</li>
-          <li><strong>Thinking Level</strong> — lets Gemini think longer about the prompt. Effect on image quality is limited; slower and more expensive. PIN-protected for course logins.</li>
-          <li><strong>Resolution</strong> — Gemini 3: choose <strong>1K</strong> (~1024 px), <strong>2K</strong> (~2048 px) or <strong>4K</strong> (~4096 px). 4K asks for the PIN on <strong>every image</strong> and costs roughly double. FLUX.2: up to 4 MP. FLUX.1: 1024 px.</li>
+          <li><strong>Thinking Level</strong> — lets Gemini think longer about the prompt. Effect on image quality is limited; slower and more expensive.</li>
+          <li><strong>Resolution</strong> — Gemini 3: choose <strong>1K</strong> (~1024 px), <strong>2K</strong> (~2048 px) or <strong>4K</strong> (~4096 px). 4K costs roughly double. FLUX.2: up to 4 MP. FLUX.1: 1024 px.</li>
           <li><strong>Seed</strong> — number that makes results reproducible. Empty = random. Same prompt + seed = very similar result.</li>
         </ul>
       </div>
@@ -1180,7 +1161,7 @@ textarea, input, .img-prompt, .error-msg { user-select: text; }
       <div class="help-sec">
         <h3>💡 Resolution &amp; Cost</h3>
         <p>Gemini 3 now outputs <strong>1K (~1024 px), 2K (~2048 px) and 4K (~4096 px)</strong> directly — selectable in the parameter panel.</p>
-        <p style="margin-top:6px;"><strong>Cost-saving workflow:</strong> test in 1K/2K first, render only the final image in 4K — 4K costs roughly double and asks for the PIN on every image. On Gemini 3 Pro, 2K costs the same as 1K.</p>
+        <p style="margin-top:6px;"><strong>Cost-saving workflow:</strong> test in 1K/2K first, render only the final image in 4K — 4K costs roughly double. On Gemini 3 Pro, 2K costs the same as 1K.</p>
         <p style="margin-top:6px;">For even higher resolution: open PNG in <strong>Photoshop</strong> → <strong>Edit → Generative Upscale</strong> (Adobe Firefly) → up to 4× without visible quality loss.</p>
       </div>
 
@@ -1196,18 +1177,9 @@ textarea, input, .img-prompt, .error-msg { user-select: text; }
 /* ── TRACKER ── Hier die Apps-Script-URL eintragen (leer = kein Tracking) */
 var APP_PIN          = '55116';
 var PinGate          = null; /* von initPinModal gesetzt: { appliesToLogin(), prompt(opts) } */
-var WORKSHOP_KEY_ENC = 'QVEuQWI4Uk42STM0S25kWldUakFkYWZZOExDU0huUHRsc1pBNnkwaTM0YTRrMjU1aFJNNGc=';
-
-/* Kurs-Logins — Passwörter base64-kodiert (Unicode-sicher) */
-var COURSES = [
-  { gruppe: 'DE1',     label: 'Digitales Entwerfen 1', enc: 'Rm9ybUZvbGxvd3MyNiE=' },
-  { gruppe: 'DE2',     label: 'Digitales Entwerfen 2', enc: 'VGFidWxhUmFzYTI2IQ==' },
-  { gruppe: 'DE3',     label: 'Digitales Entwerfen 3', enc: 'R2VuaXVzTG9jaTI2IQ==' },
-  { gruppe: 'Entwurf', label: 'Entwurf',               enc: 'TGVzc01vcmUyNiE='     },
-  { gruppe: 'Gast1',   label: 'Gast 1',                enc: 'V2Vpw59yYXVtMjYh'    },
-  { gruppe: 'Gast2',   label: 'Gast 2',                enc: 'QmF1aGF1czI2IQ=='    },
-  { gruppe: 'Klaus',  label: 'Klaus',                 enc: 'TWlmdW5lIT8h'        }
-];
+/* Hinweis: Kein eingebetteter Sammel-API-Key mehr. Jeder nutzt seinen eigenen
+   Key (nur im Browser gespeichert) oder das kostenlose FLUX. Grund: ein im
+   öffentlichen Code eingebetteter Schlüssel wurde abgegriffen und missbraucht. */
 
 /* FLUX via Pollinations.ai (kein Token nötig) */
 var TRACKER_URL = 'https://script.google.com/macros/s/AKfycbxtKc7OSeIHt9qEYF4EOoYgDXohfazAsW2wGXtm_LB0dn3fvsR_AlDpsZrEOc7NR3-g8w/exec';
@@ -1347,7 +1319,7 @@ var I18N = {
     'btn-login':      'Einloggen',
     'flux-sub':       'Open Source · Freiburg im Breisgau 🇩🇪 · kostenlos',
     'flux-desc':      'Weltklasse-Bildgenerierung aus dem Schwarzwald — kein Account, kein API-Key, 0,00 €/Bild.',
-    'flux-warning':   '⚠️ <strong>Nur Text → Bild</strong> — kein Bild-Upload möglich. Für den vollen Workflow (Skizze, Foto als Eingabe) bitte den Kurs-Zugang oder eigenen API-Key nutzen.',
+    'flux-warning':   '⚠️ <strong>Nur Text → Bild</strong> — kein Bild-Upload möglich. Für den vollen Workflow (Skizze, Foto als Eingabe) bitte einen eigenen API-Key nutzen.',
     'btn-free':       '🌲 Kostenlos starten'
   },
   en: {
@@ -1426,7 +1398,7 @@ var I18N = {
     'btn-login':      'Log in',
     'flux-sub':       'Open Source · Freiburg im Breisgau 🇩🇪 · free',
     'flux-desc':      'World-class image generation from the Black Forest — no account, no API key, €0.00 per image.',
-    'flux-warning':   '⚠️ <strong>Text → Image only</strong> — no image upload. For the full workflow (sketch, photo as input) use a course login or your own API key.',
+    'flux-warning':   '⚠️ <strong>Text → Image only</strong> — no image upload. For the full workflow (sketch, photo as input) use your own API key.',
     'btn-free':       '🌲 Start free'
   }
 };
@@ -1734,7 +1706,7 @@ function getSeed() { var v = parseInt(q('#seed-input').value); return (isNaN(v) 
 
 /* ── SETUP TABS ── */
 function switchSetupTab(tab) {
-  ['ws', 'api', 'free'].forEach(function(t) {
+  ['api', 'free'].forEach(function(t) {
     q('#tab-'  + t).classList.toggle('on', t === tab);
     q('#pane-' + t).classList.toggle('on', t === tab);
   });
@@ -1765,24 +1737,6 @@ function doFreeLogin() {
   launchApp('');
 }
 
-/* ── KURS LOGIN ── */
-q('#btn-ws-login').addEventListener('click', doWorkshopLogin);
-q('#ws-pass-input').addEventListener('keydown', function(e) {
-  if (e.key === 'Enter') { e.preventDefault(); q('#ws-name-input').focus(); }
-  q('#ws-err').classList.remove('show');
-  q('#ws-pass-input').classList.remove('err');
-});
-q('#ws-name-input').addEventListener('keydown', function(e) {
-  if (e.key === 'Enter') doWorkshopLogin();
-});
-
-function findCourse(pass) {
-  for (var i = 0; i < COURSES.length; i++) {
-    if (decodeURIComponent(escape(atob(COURSES[i].enc))) === pass) return COURSES[i];
-  }
-  return null;
-}
-
 function isValidApiKey(k) {
   return k.length >= 20 && (k.startsWith('AIza') || k.startsWith('AQ.'));
 }
@@ -1804,25 +1758,6 @@ function doSave() {
   else     sessionStorage.removeItem('nb_bfl_key');
   S.key = k; S.bflKey = bfl; S.name = name;
   launchApp(k);
-}
-
-function doWorkshopLogin() {
-  var pass   = q('#ws-pass-input').value;
-  var course = findCourse(pass);
-  if (!course) {
-    q('#ws-err').classList.add('show');
-    q('#ws-pass-input').classList.add('err');
-    q('#ws-pass-input').focus();
-    return;
-  }
-  var name = q('#ws-name-input').value.trim() || course.label;
-  var key  = atob(WORKSHOP_KEY_ENC);
-  sessionStorage.setItem('nb_key',      key);
-  sessionStorage.setItem('nb_name',     name);
-  sessionStorage.setItem('nb_workshop', '1');
-  sessionStorage.setItem('nb_gruppe',   course.gruppe);
-  S.key = key; S.name = name; S.gruppe = course.gruppe;
-  launchApp(key);
 }
 
 /* ── AUTO-LOGIN ── */
@@ -2191,7 +2126,7 @@ function updateImageSizeNote() {
   var px   = IMG_SIZE_PX[S.imageSize] || '';
   var cost = costFor(S.model, S.imageSize);
   var eur  = '~' + cost.toFixed(2).replace('.', ',') + ' €/Bild';
-  el.textContent = px + ' px · ' + eur + (S.imageSize === '4K' ? ' · 🔒 PIN' : '');
+  el.textContent = px + ' px · ' + eur;
 }
 
 function updateChatDepth() {
@@ -2376,14 +2311,6 @@ function generate() {
     ta.classList.add('shake');
     ta.addEventListener('animationend', function() { ta.classList.remove('shake'); }, { once: true });
     ta.focus(); return;
-  }
-  /* 4K: PIN bei JEDEM Bild (nicht gecacht) — nur Gemini-3 & Kurs-/Frei-Login */
-  if (S.imageSize === '4K' && S.model.indexOf('gemini-3') !== -1 && PinGate && PinGate.appliesToLogin()) {
-    PinGate.prompt({
-      desc: '4K kostet rund das Doppelte.<br>PIN zur Bestätigung dieses 4K-Bildes eingeben.',
-      onOk: function() { runGeneration(text); }
-    });
-    return;
   }
   runGeneration(text);
 }
