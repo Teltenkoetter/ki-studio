@@ -896,9 +896,9 @@ textarea, input, .img-prompt, .error-msg { user-select: text; }
       <div class="prompt-zone">
         <div class="prompt-box" id="prompt-box">
           <div id="prompt-hl" class="prompt-hl"></div>
-          <textarea id="prompt" data-i18n-placeholder="prompt-placeholder" placeholder="Prompt eingeben — beschreibe das Bild, das generiert werden soll…" maxlength="800"></textarea>
+          <textarea id="prompt" data-i18n-placeholder="prompt-placeholder" placeholder="Prompt eingeben — beschreibe das Bild, das generiert werden soll…" maxlength="2000"></textarea>
           <button class="prompt-clear" id="btn-prompt-clear" data-i18n-title="btn-prompt-clear-title" title="Prompt leeren">✕</button>
-          <span class="cc" id="char-count">0 / 800</span>
+          <span class="cc" id="char-count">0 / 2000</span>
         </div>
 
         <div class="upload-strip" id="upload-strip" style="display:none;">
@@ -2298,8 +2298,8 @@ function initPrompt() {
   var clr = q('#btn-prompt-clear');
   ta.addEventListener('input', function() {
     var n = ta.value.length;
-    cc.textContent = n + ' / 800';
-    cc.className = 'cc' + (n > 720 ? ' near' : '') + (n >= 800 ? ' full' : '');
+    cc.textContent = n + ' / 2000';
+    cc.className = 'cc' + (n > 1800 ? ' near' : '') + (n >= 2000 ? ' full' : '');
     clr.style.display = n > 0 ? '' : 'none';
     updatePromptHL();
   });
@@ -3203,7 +3203,7 @@ function improvePrompt() {
       var parts = (((data.candidates || [])[0] || {}).content || {}).parts || [];
       var improved = parts.reduce(function(acc, p) { return acc + (p.text || ''); }, '').trim();
       if (improved) {
-        ta.value = improved.slice(0, 800);
+        ta.value = improved.slice(0, 2000);
         ta.dispatchEvent(new Event('input'));
         showToast('✨ Prompt ausformuliert — prüfe das Ergebnis');
       } else {
