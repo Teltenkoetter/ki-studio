@@ -427,6 +427,13 @@ textarea, input, .img-prompt, .error-msg { user-select: text; }
 .error-hints { list-style: none; display: flex; flex-direction: column; gap: 2px; }
 .error-hints li { font-size: 11px; color: rgba(252,165,165,0.55); padding-left: 12px; position: relative; }
 .error-hints li::before { content: '›'; position: absolute; left: 0; }
+/* ruhige Hilfe-Karte (kein Key) + „So kommst du weiter"-Block */
+.help-card { background: var(--s2); border: 1px solid var(--bd-hi); border-radius: var(--r); padding: 14px 15px 13px; margin-bottom: 12px; }
+.help-card .hc-title { font-size: 13px; font-weight: 600; color: var(--text); margin-bottom: 5px; }
+.help-card .hc-why { font-size: 12px; color: var(--muted); line-height: 1.55; }
+.continue-hints { margin-top: 12px; padding: 11px 13px; background: var(--s2); border: 1px solid var(--bd); border-radius: var(--r-sm); font-size: 12px; line-height: 1.8; color: var(--muted); }
+.continue-hints .ch-head { display: block; color: var(--text); font-weight: 600; margin-bottom: 5px; }
+.continue-hints a { color: var(--accent); cursor: pointer; text-decoration: underline; text-underline-offset: 2px; }
 
 /* ── HISTORY ── */
 .history-sep {
@@ -2374,7 +2381,16 @@ function generate() {
     ta.addEventListener('animationend', function() { ta.classList.remove('shake'); }, { once: true });
     ta.focus(); return;
   }
+  /* Key-Vorabcheck: fehlt der nötige Key fürs gewählte Modell → ruhige Hinweis-Karte statt Fehler */
+  if (S.model.indexOf('bfl-') === 0 && !S.bflKey)  { showKeyHelp('bfl');    return; }
+  if (S.model.indexOf('gemini') === 0 && !S.key)   { showKeyHelp('gemini'); return; }
   runGeneration(text);
+}
+
+function showKeyHelp(kind) {
+  showResultsHeader();
+  prependResult(makeKeyHelpCard(kind));
+  var r = q('.results'); if (r) r.scrollTop = 0;
 }
 
 function runGeneration(text) {
@@ -2416,7 +2432,12 @@ function runGeneration(text) {
     trackCost(S.model, cost * images.length, images.length, text);
   }).catch(function(err) {
     loading.remove();
-    prependResult(makeErrorCard(err));
+    var needsKey = S.model.indexOf('pollinations') !== 0;
+    if (needsKey && (err.code === 401 || err.code === 403)) {
+      prependResult(makeKeyHelpCard(S.model.indexOf('bfl-') === 0 ? 'bfl' : 'gemini'));
+    } else {
+      prependResult(makeErrorCard(err));
+    }
   }).finally(function() {
     S.busy = false;
     btn.classList.remove('busy'); btn.disabled = false; btn.textContent = t('btn-gen');
@@ -2733,13 +2754,57 @@ function makeImageCard(b64, prompt, elapsed, cost, inputCount, isHistory, seed, 
   return card;
 }
 
+/* Wechselt auf das kostenlose FLUX.1 (ohne Key) */
+function useFluxFree() {
+  S.model = 'pollinations-flux';
+  var sel = q('#sel-model'); if (sel) sel.value = 'pollinations-flux';
+  updateModelStatus();
+  applyParamVisibility();
+  showToast(LANG === 'en' ? '🌲 FLUX.1 (free) active' : '🌲 FLUX.1 (kostenlos) aktiv');
+}
+
+/* „So kommst du weiter"-Block: kostenlose Wege + Nutzung ohne Key */
+function continueHintsHTML() {
+  var de = LANG !== 'en';
+  var isFlux1 = S.model.indexOf('pollinations') === 0;
+  var h = '<div class="continue-hints"><span class="ch-head">' + (de ? 'So kommst du weiter' : 'How to continue') + '</span>';
+  if (!isFlux1) {
+    h += '🌲 <a onclick="useFluxFree();return false;">' + (de ? 'FLUX.1 (kostenlos) wählen' : 'Switch to FLUX.1 (free)') + '</a> — ' +
+         (de ? 'läuft ohne Key (Text → Bild).' : 'works without a key (text → image).') + '<br>';
+  }
+  h += '🔑 ' + (de ? 'Eigenen API-Key eintragen: oben auf <strong style="color:var(--text);">„KI studio"</strong> klicken → Login.'
+                   : 'Add your own API key: click <strong style="color:var(--text);">“KI studio”</strong> at the top → login.') + '<br>';
+  h += '📋 ' + (de ? 'Vorlagen öffnen und kopieren — sie funktionieren in jedem KI-Tool.'
+                   : 'Open and copy templates — they work in any AI tool.') + '<br>';
+  h += '↗ ' + (de ? 'Prompt-Galerie mit Beispielbildern ansehen.'
+                   : 'Browse the prompt gallery with example images.');
+  return h + '</div>';
+}
+
+/* Ruhige Hinweis-Karte, wenn für das gewählte Modell ein Key fehlt (kein roter Fehler) */
+function makeKeyHelpCard(kind) {
+  var de = LANG !== 'en';
+  var why = kind === 'bfl'
+    ? (de ? 'FLUX.2-Modelle benötigen einen <strong style="color:var(--text);">BFL-API-Key</strong>.'
+          : 'FLUX.2 models require a <strong style="color:var(--text);">BFL API key</strong>.')
+    : (de ? 'Gemini-Modelle benötigen einen <strong style="color:var(--text);">Google-API-Key mit aktivierter Abrechnung</strong>.'
+          : 'Gemini models require a <strong style="color:var(--text);">Google API key with billing enabled</strong>.');
+  var d = mk('help-card');
+  d.innerHTML =
+    '<div class="hc-title">🔑 ' + (de ? 'Für dieses Modell fehlt ein API-Key' : 'This model needs an API key') + '</div>' +
+    '<div class="hc-why">' + why + '</div>' +
+    continueHintsHTML();
+  return d;
+}
+
 function makeErrorCard(err) {
   var d = mk('error-card');
   var hints = (err.hints || []).map(function(h) { return '<li>' + esc(h) + '</li>'; }).join('');
   d.innerHTML =
     '<div class="error-title">⚠️ Fehler' + (err.code ? ' ' + err.code : '') + '</div>' +
     '<div class="error-msg">' + esc(err.msg || 'Unbekannter Fehler') + '</div>' +
-    (hints ? '<ul class="error-hints">' + hints + '</ul>' : '');
+    (hints ? '<ul class="error-hints">' + hints + '</ul>' : '') +
+    continueHintsHTML();
   return d;
 }
 
